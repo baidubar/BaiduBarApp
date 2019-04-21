@@ -34,6 +34,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="1">
                 <EditText
+                    android:maxLines="1"
+                    android:maxLength="16"
                     android:id="@+id/et_account"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -51,6 +53,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="1">
                 <EditText
+                    android:maxLength="16"
+                    android:maxLines="1"
                     android:id="@+id/et_password"
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"
@@ -61,6 +65,7 @@
                     android:background="@drawable/et_rectangle"
                     android:textColorHint="#999B9B9B"
                     android:hint=" 密码"
+                    android:inputType="textPassword"
                     android:layout_centerInParent="true"/>
             </RelativeLayout>
             <RelativeLayout
@@ -69,6 +74,7 @@
                 android:layout_weight="1"
                 android:layout_marginTop="10dp">
                 <Button
+                    android:enabled="false"
                     android:id="@+id/btn_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
