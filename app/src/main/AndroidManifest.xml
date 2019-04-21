@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RegisterInfor"></activity>
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".RegisterInterest" />
+        <activity android:name=".RegisterInfor" />
         <activity android:name=".Register_user" />
         <activity
             android:name=".RegisterEmail"
@@ -19,7 +21,7 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
