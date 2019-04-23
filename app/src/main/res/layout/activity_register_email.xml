@@ -24,6 +24,7 @@
         android:layout_weight="2"
         android:orientation="vertical">
         <EditText
+            android:maxLines="1"
             android:id="@+id/et_email"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
@@ -35,6 +36,7 @@
             android:textColorHint="#999B9B9B"
             android:hint=" 邮箱" />
         <EditText
+            android:maxLines="1"
             android:id="@+id/et_code"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
@@ -56,6 +58,7 @@
             android:textColor="#FFFFFF"
             android:layout_centerInParent="true"/>
         <Button
+            android:enabled="false"
             android:id="@+id/btn_next"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

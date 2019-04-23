@@ -11,6 +11,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegisterInfor extends AppCompatActivity {
     private RadioGroup rg_sex;
@@ -22,6 +24,7 @@ public class RegisterInfor extends AppCompatActivity {
     private int year;
     private int month;
     private int day;
+    private String temp = null;
     private Button btn_ignore;
     Button btn_next;
     EditText et_nickName;
@@ -42,12 +45,11 @@ public class RegisterInfor extends AppCompatActivity {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             // TODO Auto-generated method stub
-            String temp=null;
             if(RegisterInfor.this.rb_male.getId()==checkedId){
-                temp="男";
+                temp = "男";
             }
             if(RegisterInfor.this.rb_female.getId()==checkedId){
-                temp="女";
+                temp = "女";
             }
         }
         });

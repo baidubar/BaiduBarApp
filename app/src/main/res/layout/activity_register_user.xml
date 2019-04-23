@@ -23,6 +23,8 @@
         android:layout_weight="2"
         android:orientation="vertical">
         <EditText
+            android:maxLines="1"
+            android:maxLength="16"
             android:id="@+id/et_account"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
@@ -32,8 +34,10 @@
             android:layout_height="30dp"
             android:background="@drawable/et_rectangle"
             android:textColorHint="#999B9B9B"
-            android:hint=" 用户名" />
+            android:hint=" 用户名（（长度为1—16位））" />
         <EditText
+            android:maxLength="16"
+            android:maxLines="1"
             android:id="@+id/et_password"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
@@ -43,8 +47,11 @@
             android:layout_height="30dp"
             android:background="@drawable/et_rectangle"
             android:textColorHint="#999B9B9B"
-            android:hint=" 密码"/>
+            android:inputType="textPassword"
+            android:hint=" 密码（长度为6—16位）"/>
         <EditText
+            android:maxLength="16"
+            android:maxLines="1"
             android:id="@+id/et_confirmPassword"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
@@ -54,7 +61,8 @@
             android:layout_height="30dp"
             android:background="@drawable/et_rectangle"
             android:textColorHint="#999B9B9B"
-            android:hint=" 确认密码"/>
+            android:inputType="textPassword"
+            android:hint=" 确认密码（长度为6—16位）"/>
         <Button
             android:id="@+id/btn_next"
             android:layout_width="match_parent"
