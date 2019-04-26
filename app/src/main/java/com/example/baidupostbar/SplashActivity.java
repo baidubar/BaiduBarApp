@@ -3,19 +3,29 @@ package com.example.baidupostbar;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
+
+import com.hanks.htextview.base.HTextView;
 
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
 
+    private HTextView textView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-//        HTextView hTextView = (HTextView) findViewById(R.id.text);
-//        hTextView.setAnimateType(HTextViewType.LINE);
-//        hTextView.animateText("new simple string"); // animate
+        /*set it to be no title*/
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        startActivity(new Intent(this,LoginActivity.class));
-        finish();
+        /*set it to be full screen*/
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_splash);
+        textView = (HTextView) findViewById(R.id.textview3);
+        textView.setOnClickListener(new ClickListener());
+        textView.setAnimationListener(new SimpleAnimationListener(this));
+
+
     }
 }

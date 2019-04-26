@@ -41,4 +41,5 @@ dependencies {
     implementation "com.hanks:htextview-fall:$htextview_version"        // optional
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'de.hdodenhof:circleimageview:2.1.0'
+    implementation 'com.hjm:BottomTabBar:1.2.2'
 }
