@@ -33,37 +33,20 @@ public class LoginActivity extends AppCompatActivity {
         btn_login = findViewById(R.id.btn_login);
         btn_register = findViewById(R.id.btn_register);
 
-        et_password.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        SetonClickListener();
+        SetTextWatcher();
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                 if(!et_password.getText().toString().equals("")&&!et_account.getText().toString().equals("")){
-                     btn_login.setEnabled(true);
-                     btn_login.setBackgroundColor(Color.parseColor("#6495ED"));
-                 }else {
-                     btn_login.setEnabled(false);
-                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                         btn_login.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
-                     }
-
-                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+    }
+    private void SetonClickListener(){
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String account = et_account.getText().toString();
                 String password = et_password.getText().toString();
                 //post
+                Intent intent = new Intent();
+                intent.setClass(LoginActivity.this,MainActivity.class);
+                startActivity(intent);
             }
         });
         btn_register.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +57,51 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
+    private void SetTextWatcher() {
+        et_account.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                judgeStateAndChange();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        et_password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                judgeStateAndChange();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+    private void judgeStateAndChange(){
+        if(!et_password.getText().toString().equals("")&&!et_account.getText().toString().equals("")){
+            btn_login.setEnabled(true);
+            btn_login.setBackgroundColor(Color.parseColor("#6495ED"));
+        }else {
+            btn_login.setEnabled(false);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                btn_login.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
+            }
+
+        }
+    }
 }

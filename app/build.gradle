@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -39,6 +43,8 @@ dependencies {
     implementation "com.hanks:htextview-scale:$htextview_version"       // optional
     implementation "com.hanks:htextview-evaporate:$htextview_version"   // optional
     implementation "com.hanks:htextview-fall:$htextview_version"        // optional
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.0'
     implementation 'de.hdodenhof:circleimageview:2.1.0'
+    implementation 'com.hjm:BottomTabBar:1.2.2'
+    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46'
 }

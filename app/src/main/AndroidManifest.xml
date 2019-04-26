@@ -17,7 +17,9 @@
         android:supportsRtl="true"
         android:launchMode="singleTask"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity">
+        </activity>
+        <activity android:name=".RegisterInterest" />
         <activity android:name=".RegisterInfor" />
         <activity android:name=".Register_user" />
         <activity
@@ -26,10 +28,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"
-            android:label="BaiduBar"
+            android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>

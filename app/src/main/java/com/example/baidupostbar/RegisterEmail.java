@@ -45,31 +45,7 @@ public class RegisterEmail extends AppCompatActivity {
             }
         });
         //EditText监听
-        et_code.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!et_code.getText().toString().equals("")&&!et_email.getText().toString().equals("")){
-                    btn_next.setEnabled(true);
-                    btn_next.setBackgroundColor(Color.parseColor("#6495ED"));
-                }
-                if(et_code.getText().toString().equals("")||et_email.getText().toString().equals("")){
-                    btn_next.setEnabled(false);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        btn_next.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
-                    }
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+        SetTextWatcher();
         //下一步
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +84,53 @@ public class RegisterEmail extends AppCompatActivity {
         public void onFinish() { //计时结束回调该方法
             btn_getCode.setClickable(true);
             btn_getCode.setText("重新发送");
+        }
+    }
+    private void SetTextWatcher(){
+        et_email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                judgeAndChange();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        et_code.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                judgeAndChange();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+    }
+    private void judgeAndChange(){
+        if(!et_code.getText().toString().equals("")&&!et_email.getText().toString().equals("")){
+            btn_next.setEnabled(true);
+            btn_next.setBackgroundColor(Color.parseColor("#6495ED"));
+        }
+        if(et_code.getText().toString().equals("")||et_email.getText().toString().equals("")){
+            btn_next.setEnabled(false);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                btn_next.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
+            }
         }
     }
     public static boolean checkEmail(String email){
