@@ -11,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -26,6 +28,12 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*set it to be no title*/
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        /*set it to be full screen*/
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
         et_account = findViewById(R.id.et_account);
         et_password = findViewById(R.id.et_password);
@@ -47,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setClass(LoginActivity.this,MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         btn_register.setOnClickListener(new View.OnClickListener() {

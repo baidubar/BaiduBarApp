@@ -1,4 +1,6 @@
 package com.example.baidupostbar.fragment;
 
-public class BarFragment {
+import android.support.v4.app.Fragment;
+
+public class BarFragment extends Fragment {
 }

@@ -22,6 +22,8 @@
         <activity android:name=".RegisterInterest" />
         <activity android:name=".RegisterInfor" />
         <activity android:name=".Register_user" />
+        <activity android:name=".DetailPostActivity">
+        </activity>
         <activity
             android:name=".RegisterEmail"
             android:label="@string/title_activity_register_email"
@@ -33,8 +35,9 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
         </activity>
     </application>
 

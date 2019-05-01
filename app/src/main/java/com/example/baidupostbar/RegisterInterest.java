@@ -1,7 +1,12 @@
 package com.example.baidupostbar;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,12 +16,21 @@ import com.example.baidupostbar.bean.TestBean;
 import java.util.ArrayList;
 
 public class RegisterInterest extends AppCompatActivity {
-
+Button btn_finish;
+Button btn_ignore;
     private LabelsView labelsView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*set it to be no title*/
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        /*set it to be full screen*/
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_register_interest);
+        btn_finish = findViewById(R.id.btn_finish);
+        btn_ignore = findViewById(R.id.btn_ignore);
         labelsView = (LabelsView) findViewById(R.id.labels);
         ArrayList<TestBean> testList = new ArrayList<>();
         testList.add(new TestBean("体育",1));
@@ -44,6 +58,20 @@ public class RegisterInterest extends AppCompatActivity {
             public void onLabelClick(TextView label, Object data, int position) {
                 Toast.makeText(RegisterInterest.this, position + " : " + data,
                         Toast.LENGTH_LONG).show();
+            }
+        });
+        btn_finish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterInterest.this,MainActivity.class);
+                startActivity(intent);
+            }
+        });
+        btn_ignore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterInterest.this,MainActivity.class);
+                startActivity(intent);
             }
         });
     }
