@@ -22,6 +22,9 @@
         <activity android:name=".RegisterInterest" />
         <activity android:name=".RegisterInfor" />
         <activity android:name=".Register_user" />
+        <activity android:name=".RegisterInterest"/>
+        <activity android:name=".BaseActivity"/>
+        <activity android:name=".MainActivity"/>
         <activity
             android:name=".RegisterEmail"
             android:label="@string/title_activity_register_email"
