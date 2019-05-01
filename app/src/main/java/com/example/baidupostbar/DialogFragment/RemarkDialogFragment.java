@@ -1,28 +1,23 @@
 package com.example.baidupostbar.DialogFragment;
 
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
-import android.widget.Toolbar;
+import android.widget.TextView;
 
-import com.example.baidupostbar.Adapter.RemarkAdapter;
 import com.example.baidupostbar.R;
+import com.example.baidupostbar.Adapter.RemarkAdapter;
 import com.example.baidupostbar.bean.Remark;
 
 import java.util.ArrayList;
@@ -45,6 +40,21 @@ public class RemarkDialogFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialogfragment_remark,container, false);
         return view;
+    }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        recyclerView = view.findViewById(R.id.df_remark_recyclerView);
+        list = new ArrayList<>();
+        for(int i = 0;i<15;i++){
+            Remark remark = new Remark();
+            remark.setRemarkContent("第"+ i + "条内容");
+            list.add(remark);
+        }
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(manager);
+        RemarkAdapter remarkAdapter = new RemarkAdapter(R.layout.item_remark,list);
+        recyclerView.setAdapter(remarkAdapter);
     }
 
     @Override
@@ -106,23 +116,7 @@ public class RemarkDialogFragment extends DialogFragment {
 //        getDialog().getWindow().setLayout((int) (1000 ), ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        recyclerView = view.findViewById(R.id.df_remark_recyclerView);
-        list = new ArrayList<>();
-        Remark remark;
-        for (int i = 0; i < 15; i++) {
-            remark = new Remark();
-            remark.setRemarkAuthorName(String.valueOf(i));
-            remark.setRemarkContent("第" + i + "条内容,aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-            list.add(remark);
-        }
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(manager);
-        RemarkAdapter adapter = new RemarkAdapter(R.layout.item_remark,list);
-        recyclerView.setAdapter(adapter);
-    }
+
 
     @Override
     public void onResume() {

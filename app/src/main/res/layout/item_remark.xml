@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         tools:ignore="MissingConstraints" />
     <TextView
-        android:maxLines="5"
         android:id="@+id/remark_tv_content"
         android:layout_width="match_parent"
         android:layout_height="60dp"

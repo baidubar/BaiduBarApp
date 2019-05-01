@@ -5,29 +5,23 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.example.baidupostbar.Adapter.ViewPagerAdpter;
-import com.example.baidupostbar.Adapter.recommendAdapter;
 import com.example.baidupostbar.DetailPostActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.Utils.CheckNetUtil;
 import com.example.baidupostbar.Utils.HttpUtil;
+import com.example.baidupostbar.Adapter.RecommendAdapter;
 import com.example.baidupostbar.bean.Recommend;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class RecommendFragment extends Fragment {
     private RecyclerView recyclerView;
@@ -62,7 +56,7 @@ public class RecommendFragment extends Fragment {
         }
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
-        recommendAdapter adapter = new recommendAdapter(R.layout.item_post,list);
+        RecommendAdapter adapter = new RecommendAdapter(R.layout.item_post,list);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -89,7 +83,7 @@ public class RecommendFragment extends Fragment {
             public void run() {
                 LinearLayoutManager manager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(manager);
-                recommendAdapter adapter = new recommendAdapter(R.layout.item_post,list);
+                RecommendAdapter adapter = new RecommendAdapter(R.layout.item_post,list);
                 recyclerView.setAdapter(adapter);
             }
         });

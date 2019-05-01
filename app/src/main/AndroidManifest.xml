@@ -18,11 +18,13 @@
         android:launchMode="singleTask"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
+
         </activity>
         <activity android:name=".RegisterInterest" />
         <activity android:name=".RegisterInfor" />
         <activity android:name=".Register_user" />
         <activity android:name=".DetailPostActivity">
+
         </activity>
         <activity
             android:name=".RegisterEmail"
@@ -37,7 +39,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
     </application>
 

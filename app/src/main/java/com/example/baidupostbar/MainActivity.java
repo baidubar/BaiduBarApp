@@ -1,32 +1,18 @@
 package com.example.baidupostbar;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.baidupostbar.Adapter.ViewPagerAdpter;
 import com.example.baidupostbar.fragment.BarFragment;
 import com.example.baidupostbar.fragment.MessageFragment;
 import com.example.baidupostbar.fragment.RecommendFragment;
 import com.example.baidupostbar.fragment.UserFragment;
 import com.hjm.bottomtabbar.BottomTabBar;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
 
     private BottomTabBar mBottomTabBar;
-//    private FragmentManager fragmentManager;
-//    private ViewPagerAdpter viewPagerAdpter;
-//    private List<Fragment> fragments_list;
-//    private RecommendFragment recommendFragment;
-//    private BarFragment barFragment;
-//    private MessageFragment messageFragment;
-//    private UserFragment userFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
