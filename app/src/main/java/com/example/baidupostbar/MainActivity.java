@@ -1,24 +1,38 @@
 package com.example.baidupostbar;
 
-import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
+import com.example.baidupostbar.Adapter.ViewPagerAdpter;
 import com.example.baidupostbar.fragment.BarFragment;
-import com.example.baidupostbar.fragment.FirstFragment;
 import com.example.baidupostbar.fragment.MessageFragment;
+import com.example.baidupostbar.fragment.RecommendFragment;
 import com.example.baidupostbar.fragment.UserFragment;
 import com.hjm.bottomtabbar.BottomTabBar;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private BottomTabBar mBottomTabBar;
+//    private FragmentManager fragmentManager;
+//    private ViewPagerAdpter viewPagerAdpter;
+//    private List<Fragment> fragments_list;
+//    private RecommendFragment recommendFragment;
+//    private BarFragment barFragment;
+//    private MessageFragment messageFragment;
+//    private UserFragment userFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         mBottomTabBar = findViewById(R.id.bottom_tab_bar);
 
         mBottomTabBar.init(getSupportFragmentManager(), 720, 1280)
@@ -26,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 //                .setFontSize(14)
 //                .setTabPadding(5, 0, 5)
 //                .setChangeColor(Color.parseColor("#FF00F0"),Color.parseColor("#CCCCCC"))
-                .addTabItem("首页", R.drawable.discover_fill, R.drawable.discover, FirstFragment.class)
+                .addTabItem("首页", R.drawable.discover_fill, R.drawable.discover, RecommendFragment.class)
                 .addTabItem("进吧",R.drawable.bar_fill, R.drawable.bar, BarFragment.class)
                 .addTabItem("消息",R.drawable.notice_fill, R.drawable.notice, MessageFragment.class)
                 .addTabItem("我的",R.drawable.people_fill, R.drawable.people, UserFragment.class)

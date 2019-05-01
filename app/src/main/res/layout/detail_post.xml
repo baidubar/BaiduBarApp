@@ -12,4 +12,11 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
     </android.support.v7.widget.Toolbar>
+    <TextView
+        android:layout_gravity="center"
+        android:text="点击弹出卡片"
+        android:textSize="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_out"/>
 </LinearLayout>
