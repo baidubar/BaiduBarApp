@@ -2,18 +2,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.baidupostbar">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name=".AppApplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RegisterInfor"></activity>
+        <activity android:name=".DetailPost"></activity>
+        <activity android:name=".RegisterInfor" />
         <activity android:name=".Register_user" />
-        <activity android:name=".RegisterInterest"/>
-        <activity android:name=".BaseActivity"/>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".RegisterInterest" />
+        <activity android:name=".BaseActivity" />
+        <activity android:name=".MainActivity" />
         <activity
             android:name=".RegisterEmail"
             android:label="@string/title_activity_register_email"
