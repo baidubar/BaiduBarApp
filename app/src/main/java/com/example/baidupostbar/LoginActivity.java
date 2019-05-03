@@ -1,6 +1,8 @@
 package com.example.baidupostbar;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +19,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.baidupostbar.Utils.HttpUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import okhttp3.FormBody;
 
 public class LoginActivity extends AppCompatActivity {
     EditText et_account;
@@ -52,6 +61,12 @@ public class LoginActivity extends AppCompatActivity {
                 String account = et_account.getText().toString();
                 String password = et_password.getText().toString();
                 //post
+                HttpUtil httpUtil = new HttpUtil();
+                FormBody formBody = new FormBody.Builder()
+                        .add("username",account)
+                        .add("password",password)
+                        .build();
+                String responseData = httpUtil.PostUtils("http://139.199.84.147/mytieba.api/login",formBody);
                 Intent intent = new Intent();
                 intent.setClass(LoginActivity.this,MainActivity.class);
                 startActivity(intent);
@@ -111,6 +126,33 @@ public class LoginActivity extends AppCompatActivity {
                 btn_login.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
             }
 
+        }
+    }
+    private void praseWithJsonData(String jsonData)  {
+        try {
+            JSONObject jsonObject = new JSONObject(jsonData);
+            boolean status = jsonObject.getBoolean("status");
+            if(status){
+                String name = jsonObject.getString("username");
+                String user_id = jsonObject.getString("user_id");
+                String avatar = jsonObject.getString("avatar");
+                String username = jsonObject.getString("username");
+                SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("username",name);
+                editor.putString("user_id",user_id);
+                editor.putString("avatar",avatar);
+                editor.putString("username",username);
+                editor.apply();
+                Intent intent = new Intent();
+                intent.setClass(getApplicationContext(),MainActivity.class);
+                startActivity(intent);
+            }else {
+                String msg = jsonObject.getString("msg");
+                Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 }
