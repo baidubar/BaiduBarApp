@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.baidupostbar.R;
-import com.example.baidupostbar.adapter.FragmentLabelAdapter;
+import com.example.baidupostbar.Adapter.FragmentLabelAdapter;
 import com.example.baidupostbar.bean.FragmentLabel;
 
 import java.util.ArrayList;

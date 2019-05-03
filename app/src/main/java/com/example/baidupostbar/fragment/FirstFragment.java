@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.baidupostbar.R;
-import com.example.baidupostbar.adapter.NineGridTest2Adapter;
+import com.example.baidupostbar.Adapter.NineGridTest2Adapter;
 import com.example.baidupostbar.model.NineGridTestModel;
 import com.nostra13.universalimageloader.core.ImageLoader;
 

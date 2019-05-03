@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.example.baidupostbar.adapter.PostDetailAdapter;
+import com.example.baidupostbar.Adapter.PostDetailAdapter;
 import com.example.baidupostbar.bean.PostDetail;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.example.baidupostbar.adapter;
+package com.example.baidupostbar.Adapter;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
