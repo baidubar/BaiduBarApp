@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.baidupostbar.R;
 import com.example.baidupostbar.Adapter.NineGridTest2Adapter;
+import com.example.baidupostbar.R;
 import com.example.baidupostbar.model.NineGridTestModel;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -59,6 +59,7 @@ public class FirstFragment extends Fragment {
 
         initData();
         initView();
+
     }
     private void initData() {
         initListData();

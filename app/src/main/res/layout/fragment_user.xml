@@ -19,10 +19,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:textColor="#01579b"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:text="Baidu"/>
+                android:textColor="#000000"
+                android:textSize="17sp"
+                android:text="我的"/>
         </android.support.v7.widget.Toolbar>
         <View
             android:layout_width="match_parent"

@@ -1,12 +1,14 @@
 package com.example.baidupostbar.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.baidupostbar.ListBarActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.bean.FragmentLabel;
 
@@ -29,6 +31,16 @@ public class FragmentLabelAdapter extends RecyclerView.Adapter<FragmentLabelAdap
         //加载item 布局文件
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fragment_label, parent, false);
         final ViewHolder viewHolder = new ViewHolder(view);
+        viewHolder.labelView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = viewHolder.getAdapterPosition();
+                FragmentLabel fragmentLabel = data.get(position);
+                Intent intent = new Intent();
+                intent.setClass(view.getContext(), ListBarActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
         return  viewHolder;
     }
 
@@ -46,9 +58,11 @@ public class FragmentLabelAdapter extends RecyclerView.Adapter<FragmentLabelAdap
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView beautyImage;
+        View labelView;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            labelView = itemView;
             beautyImage = itemView.findViewById(R.id.image_item);
         }
     }

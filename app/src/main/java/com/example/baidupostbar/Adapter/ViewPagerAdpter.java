@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ViewPagerAdpter extends FragmentPagerAdapter {
@@ -11,6 +12,10 @@ public class ViewPagerAdpter extends FragmentPagerAdapter {
 
     public ViewPagerAdpter(FragmentManager fm) {
         super(fm);
+    }
+    public ViewPagerAdpter(FragmentManager fragmentManager, ArrayList<Fragment> fragments){
+        super(fragmentManager);
+        list = fragments;
     }
 
     public void setList(List<Fragment> list) {

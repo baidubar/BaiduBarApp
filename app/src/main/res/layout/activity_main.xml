@@ -14,12 +14,12 @@
         android:layout_height="match_parent"
         hjm:tab_bar_background="#FFFFFF"
     hjm:tab_divider_background="#D3D3D3"
-    hjm:tab_font_size="8sp"
-    hjm:tab_img_height="50px"
-    hjm:tab_img_width="50px"
+    hjm:tab_font_size="6sp"
+    hjm:tab_img_height="47px"
+    hjm:tab_img_width="47px"
     hjm:tab_isshow_divider="true"
-    hjm:tab_padding_bottom="5px"
-    hjm:tab_padding_top="5px"
-    hjm:tab_selected_color="#0277bd"
-    hjm:tab_unselected_color="#cdcdcd"/>
+    hjm:tab_padding_bottom="4px"
+    hjm:tab_padding_top="4px"
+    hjm:tab_selected_color="#000000"
+    hjm:tab_unselected_color="#000000"/>
 </LinearLayout>

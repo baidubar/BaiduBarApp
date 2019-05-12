@@ -8,8 +8,8 @@
                 android:bottomRightRadius="35dp"
                 android:bottomLeftRadius="35dp"/>
             <stroke
-                android:width="3px"
-                android:color="#01579b"/>
+                android:width="7px"
+                android:color="#63FFFFFF"/>
             <!--圆角矩形白色背景蓝色边框-->
         </shape>
     </item>

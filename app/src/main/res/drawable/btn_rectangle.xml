@@ -4,8 +4,8 @@
         <shape android:shape="rectangle" android:padding="10dp">
             <solid android:color="#FFFFFF"/>
             <stroke
-                android:width="3px"
-                android:color="#01579b"/>
+                android:width="4px"
+                android:color="#1976D2"/>
             <!--圆角矩形白色背景蓝色边框-->
         </shape>
     </item>

@@ -38,8 +38,10 @@
                 android:text="2019-01-01"/>
         </LinearLayout>
         <Button
-            android:layout_width="50dp"
-            android:layout_height="25dp"
+            android:layout_width="54dp"
+            android:layout_height="27dp"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
             android:layout_gravity="center_vertical"
             android:text="+关注"
             android:textSize="12sp"

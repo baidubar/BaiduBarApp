@@ -1,9 +1,8 @@
 package com.example.baidupostbar;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -12,11 +11,11 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import java.util.Calendar;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import cn.qqtheme.framework.util.ConvertUtils;
 
 public class RegisterInfor extends AppCompatActivity {
     private RadioGroup rg_sex;
@@ -24,7 +23,7 @@ public class RegisterInfor extends AppCompatActivity {
     private RadioButton rb_female;
     private DatePicker datapicker;
     private Calendar cal;//显示当前日期
-    private EditText et_birthDay;
+    private TextView tv_birthDay;
     private int year;
     private int month;
     private int day;
@@ -49,7 +48,7 @@ public class RegisterInfor extends AppCompatActivity {
         rg_sex = findViewById(R.id.rg_sex);
         rb_female = findViewById(R.id.rb_female);
         rb_male = findViewById(R.id.rb_male);
-        //et_birthDay = findViewById(R.id.et_birthDay);
+        tv_birthDay = findViewById(R.id.tv_birthDay);
 
         rg_sex.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
         @Override
@@ -65,26 +64,6 @@ public class RegisterInfor extends AppCompatActivity {
         });
 
         //datapicker = (DatePicker) findViewById(R.id.id_datePicker1);
-        //获取日历的对象
-        cal=Calendar.getInstance();
-        //获取年月日时分秒信息
-        year = cal.get(Calendar.YEAR);
-        month = cal.get(Calendar.MONTH)+1;//注意点 ，要加一
-        day = cal.get(Calendar.DAY_OF_MONTH);
-//        et_birthDay.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-        new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                // TODO Auto-generated method stub
-                setTitle("当前时间："+year+"年-"+month+"月-"+day+"日 ");
-            }
-        }, year, cal.get(Calendar.MONTH), day).show(); //后三个参数相当于初始化
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,5 +71,40 @@ public class RegisterInfor extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    public void onYearMonthDayPicker(View view) {
+        final cn.qqtheme.framework.picker.DatePicker picker = new cn.qqtheme.framework.picker.DatePicker(this);
+        picker.setCanceledOnTouchOutside(true);
+        picker.setUseWeight(true);
+        picker.setTopPadding(ConvertUtils.toPx(this, 10));
+        picker.setRangeEnd(2050, 12, 31);
+        picker.setRangeStart(1950, 1, 1);
+        picker.setSelectedItem(2019, 5, 26);
+        picker.setResetWhileWheel(false);
+        picker.setTextSize(18);
+        picker.setOnDatePickListener(new cn.qqtheme.framework.picker.DatePicker.OnYearMonthDayPickListener() {
+            @Override
+            public void onDatePicked(String year, String month, String day) {
+                //showToast(year + "-" + month + "-" + day);
+                tv_birthDay.setText(year + "-" + month + "-" + day);
+            }
+        });
+        picker.setOnWheelListener(new cn.qqtheme.framework.picker.DatePicker.OnWheelListener() {
+            @Override
+            public void onYearWheeled(int index, String year) {
+                picker.setTitleText(year + "-" + picker.getSelectedMonth() + "-" + picker.getSelectedDay());
+            }
+
+            @Override
+            public void onMonthWheeled(int index, String month) {
+                picker.setTitleText(picker.getSelectedYear() + "-" + month + "-" + picker.getSelectedDay());
+            }
+
+            @Override
+            public void onDayWheeled(int index, String day) {
+                picker.setTitleText(picker.getSelectedYear() + "-" + picker.getSelectedMonth() + "-" + day);
+            }
+        });
+        picker.show();
     }
 }
