@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.baidupostbar.Utils.HttpUtil;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,9 +73,10 @@ public class Register_user extends AppCompatActivity {
                 String rePassword = et_confirmPassword.getText().toString();
                 if(checkName(name)){
                     if(password.equals(rePassword)){
-                        //post
                         Intent intent = new Intent();
                         intent.setClass(Register_user.this,RegisterInfor.class);
+                        intent.putExtra("name",name);
+                        intent.putExtra("password",password);
                         startActivity(intent);
                     }else {
                         Toast.makeText(Register_user.this,"两次密码不一致",Toast.LENGTH_LONG).show();
