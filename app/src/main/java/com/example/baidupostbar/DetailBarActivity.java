@@ -31,9 +31,10 @@ import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
+import static com.example.baidupostbar.R.layout.header_detail_bar;
+
 public class DetailBarActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, BGANinePhotoLayout.Delegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener {
     private ArrayList<Post> mDataList;
-    private RecyclerView mRecyclerView;
     private FloatingActionButton fab;
 
     private static final int PRC_PHOTO_PREVIEW = 1;
@@ -56,7 +57,7 @@ public class DetailBarActivity extends AppCompatActivity implements EasyPermissi
             public void onClick(View v) {
                 Intent intent = new Intent(DetailBarActivity.this,CreatePostActivity.class);
                 startActivity(intent);
-                startActivityForResult(new Intent(DetailBarActivity.this, CreatePostActivity.class),1);
+                //startActivityForResult(new Intent(DetailBarActivity.this, CreatePostActivity.class),1);
             }
         });
         mMomentRv = findViewById(R.id.recyclerView);
@@ -69,6 +70,9 @@ public class DetailBarActivity extends AppCompatActivity implements EasyPermissi
         mMomentRv.setAdapter(postAdapter);
 
         addNetImageTestData();
+        addBannerHeader();
+        // 当有 Header 或者 Footer 时，需要传入 mAdapter.getHeaderAndFooterAdapter()
+        mMomentRv.setAdapter(postAdapter.getHeaderAndFooterAdapter());
 //        initData();
 //        initAdapter();
     }
@@ -93,6 +97,25 @@ public class DetailBarActivity extends AppCompatActivity implements EasyPermissi
         moments.add(new Post("8张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered11.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered12.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered13.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered14.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered15.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered16.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered17.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered18.png"))));
 
         postAdapter.setData(moments);
+
+    }
+    private void addBannerHeader() {
+        // 初始化HeaderView
+        View headerView = View.inflate(DetailBarActivity.this, header_detail_bar, null);
+//        mBanner = headerView.findViewById(R.id.banner);
+//        mBanner.setAdapter(new BGABanner.Adapter<ImageView, String>() {
+//            @Override
+//            public void fillBannerItem(BGABanner banner, ImageView itemView, String model, int position) {
+//                Glide.with(banner.getContext()).load(model).apply(new RequestOptions().placeholder(R.drawable.holder_banner).error(R.drawable.holder_banner).dontAnimate()).thumbnail(0.1f).into(itemView);
+//            }
+//        });
+//        mBanner.setDelegate(new BGABanner.Delegate<ImageView, String>() {
+//            @Override
+//            public void onBannerItemClick(BGABanner banner, ImageView itemView, String model, int position) {
+//                ToastUtil.show("点击了第" + (position + 1) + "页");
+//            }
+//        });
+        postAdapter.addHeaderView(headerView);
     }
     /**
      * 图片预览，兼容6.0动态权限
@@ -161,74 +184,6 @@ public class DetailBarActivity extends AppCompatActivity implements EasyPermissi
 
     private class PostAdapter extends BGARecyclerViewAdapter<Post> {
 
-
-        //重写viewHolder方法，给recyclerView添加头部
-//        @NonNull
-//        @Override
-//        public BGARecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//            View view = null;
-//            if (viewType == 0) {  //根据不同的viewtype,加载不同的布局
-//                view = LayoutInflater.from(DetailBarActivity.this).inflate(R.layout.header_detail_bar, parent,false);
-//                return new MyViewHolderOne(view);
-//            } else {
-//                view = LayoutInflater.from(DetailBarActivity.this).inflate(R.layout.item_post,parent, false);
-//                return new MyViewHolderTwo(view);
-//            }
-//        }
-        //用position判断当前位置是否是头部
-        @Override
-        public int getItemViewType(int position) {
-            if (position == 0) {  //根据你的条件，返回不同的type
-                return 0;
-            } else {
-                return 1;
-            }
-
-        }
-        //重写onBindViewHolder方法，绑定两个不同的holder
-//        @Override
-//        public void onBindViewHolder(BGARecyclerViewHolder viewHolder, final int position) {
-//
-//            switch (getItemViewType(position)) {
-//                case 0:  //不同的布局，做不同的事
-//                    MyViewHolderOne holderOne = (MyViewHolderOne) holder;
-//
-//                    break;
-//                case 1:
-//                    final MyViewHolderTwo holderTwo = (MyViewHolderTwo) holder;
-//            }
-//
-//            public int getItemCount () {
-//                return list.size();
-//            }
-//        }
-//
-//
-//            class MyViewHolderOne extends BGARecyclerViewHolder {
-//
-//                TextView item_word_date;  //日期
-//
-//                public MyViewHolderOne(View view) {
-//                    super(view);
-//                    item_word_date = (TextView) view.findViewById(R.id.item_word_date);
-//                }
-//            }
-//
-//
-//            class MyViewHolderTwo extends BGARecyclerViewHolder {
-//
-//                TextView item_word;    //单词
-//                TextView item_word_mean;    //词义
-//
-//                public MyViewHolderTwo(View view) {
-//                    super(view);
-//                    item_word = (TextView) view.findViewById(R.id.item_word);
-//                    item_word_mean = (TextView) view.findViewById(R.id.item_word_mean);
-//                }
-//            }
-
-
-
         public PostAdapter(RecyclerView recyclerView) {
             super(recyclerView, R.layout.item_post);
         }
@@ -241,6 +196,7 @@ public class DetailBarActivity extends AppCompatActivity implements EasyPermissi
                 helper.setVisibility(R.id.tv_content, View.VISIBLE);
                 helper.setText(R.id.tv_content, moment.content);
             }
+
             BGANinePhotoLayout ninePhotoLayout = helper.getView(R.id.npl_item_moment_photos);
             ninePhotoLayout.setDelegate(DetailBarActivity.this);
             ninePhotoLayout.setData(moment.photos);

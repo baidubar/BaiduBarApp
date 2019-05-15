@@ -5,27 +5,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.example.baidupostbar.model.Moment;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bingoogolapple.photopicker.activity.BGAPPToolbarActivity;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerPreviewActivity;
 import cn.bingoogolapple.photopicker.widget.BGASortableNinePhotoLayout;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class CreatePostActivity extends BGAPPToolbarActivity implements EasyPermissions.PermissionCallbacks, BGASortableNinePhotoLayout.Delegate  {
+public class CreatePostActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, BGASortableNinePhotoLayout.Delegate  {
 
+    Toolbar toolbar;
     private static final int PRC_PHOTO_PICKER = 1;
 
     private static final int RC_CHOOSE_PHOTO = 1;
@@ -33,30 +33,6 @@ public class CreatePostActivity extends BGAPPToolbarActivity implements EasyPerm
 
     private static final String EXTRA_MOMENT = "EXTRA_MOMENT";
 
-    // ==================================== 测试图片选择器 START ====================================
-    /**
-     * 是否是单选「测试接口用的」
-     */
-    private CheckBox mSingleChoiceCb;
-    /**
-     * 是否具有拍照功能「测试接口用的」
-     */
-    private CheckBox mTakePhotoCb;
-    // ==================================== 测试图片选择器 END ====================================
-
-    // ==================================== 测试拖拽排序九宫格图片控件 START ====================================
-    /**
-     * 是否可编辑
-     */
-    private CheckBox mEditableCb;
-    /**
-     * 是否显示九图控件的加号按钮「测试接口用的」
-     */
-    private CheckBox mPlusCb;
-    /**
-     * 是否开启拖拽排序功能「测试接口用的」
-     */
-    private CheckBox mSortableCb;
     /**
      * 拖拽排序九宫格控件
      */
@@ -65,84 +41,60 @@ public class CreatePostActivity extends BGAPPToolbarActivity implements EasyPerm
 
     private EditText mContentEt;
 
-    public static Moment getMoment(Intent intent) {
-        return intent.getParcelableExtra(EXTRA_MOMENT);
-    }
-
+    //这里原demo中的用法：创建新帖并添加到recyclerview的顶部
+//    public static Moment getMoment(Intent intent) {
+//        return intent.getParcelableExtra(EXTRA_MOMENT);
+//    }
     @Override
-    protected void initView(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_post);
-        mSingleChoiceCb = findViewById(R.id.cb_moment_add_single_choice);
-        mTakePhotoCb = findViewById(R.id.cb_moment_add_take_photo);
-
-        mEditableCb = findViewById(R.id.cb_moment_add_editable);
-        mPlusCb = findViewById(R.id.cb_moment_add_plus);
-        mSortableCb = findViewById(R.id.cb_moment_add_sortable);
-
         mContentEt = findViewById(R.id.et_moment_add_content);
         mPhotosSnpl = findViewById(R.id.snpl_moment_add_photos);
-    }
-
-    @Override
-    protected void setListener() {
-        mSingleChoiceCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                if (checked) {
-                    mPhotosSnpl.setData(null);
-                    mPhotosSnpl.setMaxItemCount(1);
-                } else {
-                    mPhotosSnpl.setMaxItemCount(9);
-                }
-            }
-        });
-        mEditableCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                mPhotosSnpl.setEditable(checked);
-            }
-        });
-        mPlusCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                mPhotosSnpl.setPlusEnable(checked);
-            }
-        });
-        mSortableCb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                mPhotosSnpl.setSortable(checked);
-            }
-        });
-
+        mPhotosSnpl.setMaxItemCount(9);
+        mPhotosSnpl.setEditable(true);
+        mPhotosSnpl.setPlusEnable(true);
+        mPhotosSnpl.setSortable(true);
         // 设置拖拽排序控件的代理
         mPhotosSnpl.setDelegate(this);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
     }
-
     @Override
-    protected void processLogic(Bundle savedInstanceState) {
-        setTitle("添加朋友圈");
-
-        mEditableCb.setChecked(mPhotosSnpl.isEditable());
-        mPlusCb.setChecked(mPhotosSnpl.isPlusEnable());
-        mSortableCb.setChecked(mPhotosSnpl.isSortable());
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_create_post, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.btn_publish:
+                Intent intent = new Intent(CreatePostActivity.this, DetailBarActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+            default:
+        }
+        return true;
     }
 
     public void onClick(View v) {
-        if (v.getId() == R.id.tv_moment_add_choice_photo) {
-            choicePhotoWrapper();
-        } else if (v.getId() == R.id.tv_moment_add_publish) {
-            String content = mContentEt.getText().toString().trim();
-            if (content.length() == 0 && mPhotosSnpl.getItemCount() == 0) {
-                Toast.makeText(this, "必须填写这一刻的想法或选择照片！", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            Intent intent = new Intent();
-            intent.putExtra(EXTRA_MOMENT, new Moment(mContentEt.getText().toString().trim(), mPhotosSnpl.getData()));
-            setResult(RESULT_OK, intent);
-            finish();
-        }
+        //tv_moment_add_publish是原demo中的发表方法，我先不删掉，可以借鉴
+//        if (v.getId() == R.id.tv_moment_add_choice_photo) {
+//            choicePhotoWrapper();
+//        } else if (v.getId() == R.id.tv_moment_add_publish) {
+//            String content = mContentEt.getText().toString().trim();
+//            if (content.length() == 0 && mPhotosSnpl.getItemCount() == 0) {
+//                Toast.makeText(this, "必须填写这一刻的想法或选择照片！", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//
+//            Intent intent = new Intent();
+//            intent.putExtra(EXTRA_MOMENT, new Moment(mContentEt.getText().toString().trim(), mPhotosSnpl.getData()));
+//            setResult(RESULT_OK, intent);
+//            finish();
+//        }
     }
 
     @Override
@@ -180,7 +132,7 @@ public class CreatePostActivity extends BGAPPToolbarActivity implements EasyPerm
             File takePhotoDir = new File(Environment.getExternalStorageDirectory(), "BGAPhotoPickerTakePhoto");
 
             Intent photoPickerIntent = new BGAPhotoPickerActivity.IntentBuilder(this)
-                    .cameraFileDir(mTakePhotoCb.isChecked() ? takePhotoDir : null) // 拍照后照片的存放目录，改成你自己拍照后要存放照片的目录。如果不传递该参数的话则不开启图库里的拍照功能
+                    .cameraFileDir(takePhotoDir) // 拍照后照片的存放目录，改成你自己拍照后要存放照片的目录。如果不传递该参数的话则不开启图库里的拍照功能
                     .maxChooseCount(mPhotosSnpl.getMaxItemCount() - mPhotosSnpl.getItemCount()) // 图片选择张数的最大值
                     .selectedPhotos(null) // 当前已选中的图片路径集合
                     .pauseOnScroll(false) // 滚动列表时是否暂停加载图片
@@ -212,18 +164,12 @@ public class CreatePostActivity extends BGAPPToolbarActivity implements EasyPerm
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == RC_CHOOSE_PHOTO) {
-            if (mSingleChoiceCb.isChecked()) {
-                mPhotosSnpl.setData(BGAPhotoPickerActivity.getSelectedPhotos(data));
-            } else {
+
                 mPhotosSnpl.addMoreData(BGAPhotoPickerActivity.getSelectedPhotos(data));
-            }
+
         } else if (requestCode == RC_PHOTO_PREVIEW) {
             mPhotosSnpl.setData(BGAPhotoPickerPreviewActivity.getSelectedPhotos(data));
         }
     }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_post);
-    }
+
 }
