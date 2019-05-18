@@ -3,10 +3,9 @@ package com.example.baidupostbar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -158,8 +157,8 @@ Button btn_ignore;
                             .add("username",username)
                             .add("password",password)
                             .add("email_access",email_access)
-                            .add("description",description)
-                            .add("gender",gender)
+                           // .add("description",description)
+//                            .add("gender",gender)
                             .build();
                 }
                 HttpUtil httpUtil = new HttpUtil(RegisterInterest.this,getApplicationContext());

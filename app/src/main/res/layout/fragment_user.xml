@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
-                android:text="查看个人主页和编辑资料" />
+                android:text="点击查看个人主页" />
         </LinearLayout>
     </LinearLayout>
     <TextView

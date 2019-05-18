@@ -23,7 +23,7 @@
             <android.support.design.widget.AppBarLayout
                 android:id="@+id/appbar"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="280dp"
                 android:background="@android:color/transparent"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:elevation="0dp"
@@ -61,6 +61,7 @@
                             android:textSize="20sp" />
 
                         <TextView
+                            android:id="@+id/tv_attention"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/nickname"
@@ -69,6 +70,15 @@
                             android:text="关注 999  |  粉丝 60亿"
                             android:textColor="@color/white"
                             android:textSize="16sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_attention"
+                            android:layout_centerHorizontal="true"
+                            android:layout_margin="5dp"
+                            android:text="简介：哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
                     </RelativeLayout>
                     <!-- 设置标题-->
                     <android.support.v7.widget.Toolbar
@@ -100,9 +110,11 @@
                                 android:text="我的日记"
                                 android:textColor="@color/black"
                                 android:textSize="16sp" />
+
                         </android.support.v7.widget.ButtonBarLayout>
 
                     </android.support.v7.widget.Toolbar>
+
                 </android.support.design.widget.CollapsingToolbarLayout>
             </android.support.design.widget.AppBarLayout>
 
@@ -115,7 +127,7 @@
                 <android.support.design.widget.TabLayout
                     android:id="@+id/tabs"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="48dp"
                     android:background="#F8F9F9"
                     app:tabPaddingBottom="5dp" />
 

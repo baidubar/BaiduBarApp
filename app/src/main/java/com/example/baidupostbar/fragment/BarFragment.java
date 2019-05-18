@@ -111,13 +111,13 @@ public class BarFragment extends Fragment {
     }
     private void initData() {
         for (int i = 0; i < 5; i++) {
-            FragmentLabel fragmentLabel0 = new FragmentLabel(R.drawable.label_pets);
+            FragmentLabel fragmentLabel0 = new FragmentLabel(R.drawable.label_pets1);
             fragmentLabel0.setBarLabel("ACG");
             data.add(fragmentLabel0);
-            FragmentLabel fragmentLabel1 = new FragmentLabel(R.drawable.label_book);
+            FragmentLabel fragmentLabel1 = new FragmentLabel(R.drawable.label_books1);
             fragmentLabel1.setBarLabel("文学");
             data.add(fragmentLabel1);
-            FragmentLabel fragmentLabel2 = new FragmentLabel(R.drawable.label_sports);
+            FragmentLabel fragmentLabel2 = new FragmentLabel(R.drawable.label_sports1);
             fragmentLabel2.setBarLabel("体育");
             data.add(fragmentLabel2);
             FragmentLabel fragmentLabel3 = new FragmentLabel(R.drawable.label_zayn);

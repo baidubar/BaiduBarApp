@@ -1,7 +1,13 @@
 package com.example.baidupostbar;
 
-import android.content.res.Resources;
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
@@ -9,10 +15,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.ButtonBarLayout;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.request.RequestOptions;
 import com.example.baidupostbar.Adapter.ViewPagerAdapter;
@@ -22,11 +28,20 @@ import com.example.baidupostbar.fragment.UserPostFragment;
 import com.gyf.barlibrary.ImmersionBar;
 import com.scwang.smartrefresh.layout.util.DensityUtil;
 
-import java.lang.reflect.Field;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
-public class DetailUserActivity extends BaseActivity {
+import cn.bingoogolapple.baseadapter.BGABaseAdapterUtil;
+import cn.bingoogolapple.photopicker.imageloader.BGAImage;
+import cn.bingoogolapple.photopicker.util.BGAPhotoHelper;
+import cn.bingoogolapple.photopicker.util.BGAPhotoPickerUtil;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+
+public class DetailUserActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks{
     private ViewPager viewpager;
+    private TextView tv;
     private ImageView iv_parallax,iv_back,iv_head;
     private ButtonBarLayout buttonBarLayout;
     private CollapsingToolbarLayout collapsing_toolbar;
@@ -39,6 +54,16 @@ public class DetailUserActivity extends BaseActivity {
     private ArrayList<String> TitleList = new ArrayList<>();  //页卡标题集合
     private ArrayList<Fragment> ViewList = new ArrayList<>();   //页卡视图集合
     private Fragment userBarFragment,userPostFragment,userInforFragment;
+    //以下有关修改头像及头像裁剪
+    private static final int REQUEST_CODE_PERMISSION_CHOOSE_PHOTO = 1;
+    private static final int REQUEST_CODE_PERMISSION_TAKE_PHOTO = 2;
+
+    private static final int REQUEST_CODE_CHOOSE_PHOTO = 1;
+    private static final int REQUEST_CODE_TAKE_PHOTO = 2;
+    private static final int REQUEST_CODE_CROP = 3;
+
+    private BGAPhotoHelper mPhotoHelper;
+    private RelativeLayout rl_allinfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +72,11 @@ public class DetailUserActivity extends BaseActivity {
         initView();
         initViewPager();
         initListener();
+        processLogic(savedInstanceState);
     }
     private void initView() {
+        tv = findViewById(R.id.tv_title);
+        tv.setText("我的主页");
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         viewpager = (ViewPager) findViewById(R.id.view_pager);
         iv_parallax = (ImageView) findViewById(R.id.iv_parallax);
@@ -58,6 +86,7 @@ public class DetailUserActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         iv_back = (ImageView) findViewById(R.id.iv_back);
         iv_head = (ImageView) findViewById(R.id.iv_head);
+        rl_allinfo = findViewById(R.id.rl_allinfo);
         //初始化沉浸式
 
         mImmersionBar.titleBar(toolbar).init();
@@ -87,7 +116,7 @@ public class DetailUserActivity extends BaseActivity {
         //设置tablayout，viewpager上的标题
         tabLayout.setupWithViewPager(viewpager);
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.colorAccent));
-        viewpager.setCurrentItem(1);
+        //viewpager.setCurrentItem(1);
         tabLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -100,11 +129,12 @@ public class DetailUserActivity extends BaseActivity {
 
         appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
 
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 iv_parallax.setTranslationY(verticalOffset);
                 //200是appbar的高度
-                if (Math.abs(verticalOffset) == DensityUtil.dp2px(250) - toolbar.getHeight()) {//关闭
+                if (Math.abs(verticalOffset) == DensityUtil.dp2px(280) - toolbar.getHeight()) {//关闭
                     if (iswhite) {//变黑
                         if (ImmersionBar.isSupportStatusBarDarkFont()) {
                             mImmersionBar.statusBarDarkFont(true).init();
@@ -129,42 +159,151 @@ public class DetailUserActivity extends BaseActivity {
                 }
             }
         });
+        rl_allinfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //弹出一个选择框
+                final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(DetailUserActivity.this);
+                builder.setTitle("请选择背景图片来源");
+                builder.setNegativeButton("拍照", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                builder.setPositiveButton("系统相册", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.setCanceledOnTouchOutside(true);      //设置弹出框失去焦点是否隐藏,即点击屏蔽其它地方是否隐藏
+                dialog.show();
+            }
+        });
+        iv_head.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //弹出一个选择框
+                final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(DetailUserActivity.this);
+                builder.setTitle("请选择头像图片来源");
+                builder.setNegativeButton("拍照", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //dialog.cancel();该方法是隐藏dialog
+                        takePhoto();
+                    }
+                });
+                builder.setPositiveButton("系统相册", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        choosePhoto();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.setCanceledOnTouchOutside(true);      //设置弹出框失去焦点是否隐藏,即点击屏蔽其它地方是否隐藏
+                dialog.show();
+            }
+        });
     }
-    /**
-     * 通过反射修改踏遍layout的宽，其实相当于margin
-     * @param tabs
-     * @param leftDip
-     * @param rightDip
-     */
-    public void setIndicator (TabLayout tabs, int leftDip, int rightDip) {
-        Class<?> tabLayout = tabs.getClass();
-        Field tabStrip = null;
-        try {
-            tabStrip = tabLayout.getDeclaredField("mTabStrip");
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-        assert tabStrip != null;
-        tabStrip.setAccessible(true);
-        LinearLayout llTab = null;
-        try {
-            llTab = (LinearLayout) tabStrip.get(tabs);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
 
-        int left = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, leftDip, Resources.getSystem().getDisplayMetrics());
-        int right = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, rightDip, Resources.getSystem().getDisplayMetrics());
+    protected void processLogic(Bundle savedInstanceState) {
+        setTitle("系统相册选择图片、裁剪");
 
-        assert llTab != null;
-        for (int i = 0; i < llTab.getChildCount(); i++) {
-            View child = llTab.getChildAt(i);
-            child.setPadding(0, 0, 0, 0);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1);
-            params.leftMargin = left;
-            params.rightMargin = right;
-            child.setLayoutParams(params);
-            child.invalidate();
+        // 拍照后照片的存放目录，改成你自己拍照后要存放照片的目录。如果不传递该参数的话就没有拍照功能
+        File takePhotoDir = new File(Environment.getExternalStorageDirectory(), "BGAPhotoPickerTakePhoto");
+        mPhotoHelper = new BGAPhotoHelper(takePhotoDir);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        BGAPhotoHelper.onSaveInstanceState(mPhotoHelper, outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        BGAPhotoHelper.onRestoreInstanceState(mPhotoHelper, savedInstanceState);
+    }
+
+//    public void onClick(View v) {
+//        if (v.getId() == R.id.tv_system_gallery_crop_choose) {
+//            choosePhoto();
+//        } else if (v.getId() == R.id.tv_system_gallery_crop_take_photo) {
+//            takePhoto();
+//        }
+//    }
+
+    @AfterPermissionGranted(REQUEST_CODE_PERMISSION_CHOOSE_PHOTO)
+    public void choosePhoto() {
+        String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            startActivityForResult(mPhotoHelper.getChooseSystemGalleryIntent(), REQUEST_CODE_CHOOSE_PHOTO);
+        } else {
+            EasyPermissions.requestPermissions(this, "请开启存储空间权限，以正常使用该功能", REQUEST_CODE_PERMISSION_CHOOSE_PHOTO, perms);
         }
+    }
+
+    @AfterPermissionGranted(REQUEST_CODE_PERMISSION_TAKE_PHOTO)
+    public void takePhoto() {
+        String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            try {
+                startActivityForResult(mPhotoHelper.getTakePhotoIntent(), REQUEST_CODE_TAKE_PHOTO);
+            } catch (Exception e) {
+                BGAPhotoPickerUtil.show(R.string.bga_pp_not_support_take_photo);
+            }
+        } else {
+            EasyPermissions.requestPermissions(this, "请开启存储空间和相机权限，以正常使用该功能", REQUEST_CODE_PERMISSION_TAKE_PHOTO, perms);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE_CHOOSE_PHOTO) {
+                try {
+                    startActivityForResult(mPhotoHelper.getCropIntent(mPhotoHelper.getFilePathFromUri(data.getData()), 200, 200), REQUEST_CODE_CROP);
+                } catch (Exception e) {
+                    mPhotoHelper.deleteCropFile();
+                    BGAPhotoPickerUtil.show(R.string.bga_pp_not_support_crop);
+                    e.printStackTrace();
+                }
+            } else if (requestCode == REQUEST_CODE_TAKE_PHOTO) {
+                try {
+                    startActivityForResult(mPhotoHelper.getCropIntent(mPhotoHelper.getCameraFilePath(), 200, 200), REQUEST_CODE_CROP);
+                } catch (Exception e) {
+                    mPhotoHelper.deleteCameraFile();
+                    mPhotoHelper.deleteCropFile();
+                    BGAPhotoPickerUtil.show(R.string.bga_pp_not_support_crop);
+                    e.printStackTrace();
+                }
+            } else if (requestCode == REQUEST_CODE_CROP) {
+                //mPhotoHelper.getCropFilePath()获取当前图片的路径
+                BGAImage.display(iv_head, R.mipmap.bga_pp_ic_holder_light, mPhotoHelper.getCropFilePath(), BGABaseAdapterUtil.dp2px(200));
+            }
+        } else {
+            if (requestCode == REQUEST_CODE_CROP) {
+                mPhotoHelper.deleteCameraFile();
+                mPhotoHelper.deleteCropFile();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
     }
 }
