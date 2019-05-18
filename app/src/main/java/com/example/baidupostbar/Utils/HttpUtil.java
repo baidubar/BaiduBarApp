@@ -339,19 +339,4 @@ public class HttpUtil {
         NetworkInfo info = manager.getActiveNetworkInfo();
         return info != null && info.isConnected();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

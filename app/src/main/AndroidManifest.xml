@@ -10,7 +10,8 @@
 
 
     <application
-        android:name=".AppApplication"
+
+        android:name="org.litepal.LitePalApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"

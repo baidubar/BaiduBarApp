@@ -1,25 +1,35 @@
 package com.example.baidupostbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.baidupostbar.Adapter.ViewPagerAdapter;
+import com.example.baidupostbar.bean.Search;
 import com.example.baidupostbar.fragment.SearchBarFragment;
 import com.example.baidupostbar.fragment.SearchPostFragment;
 import com.example.baidupostbar.fragment.SearchUserFragment;
+
+import java.util.ArrayList;
 
 public class SearchResultActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;
     private TabLayout tabLayout;
+    private String searchText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        searchText = intent.getStringExtra("searchText");
+
         setContentView(R.layout.activity_search_result);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -33,18 +43,27 @@ public class SearchResultActivity extends AppCompatActivity {
         });
         viewPager = findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        adapter = new ViewPagerAdapter(getSupportFragmentManager());
         SearchUserFragment searchUserFragment = new SearchUserFragment();
         SearchPostFragment searchPostFragment = new SearchPostFragment();
         SearchBarFragment searchBarFragment = new SearchBarFragment();
-        adapter.addFragment(searchPostFragment, "贴");
-        adapter.addFragment(searchBarFragment, "吧");
-        adapter.addFragment(searchUserFragment, "人");
-        viewPager.setAdapter(adapter);
+
+
+        final ArrayList<Fragment> fragments = new ArrayList<>();
+        fragments.add(searchPostFragment);
+        fragments.add(searchBarFragment);
+        fragments.add(searchUserFragment);
         //设置tab模式
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
 
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(),fragments);
+        viewPager.setAdapter(adapter);
+
+
         tabLayout.setupWithViewPager(viewPager);
     }
+    public String getSearchText(){
+        return searchText;
+    }
+
 }
