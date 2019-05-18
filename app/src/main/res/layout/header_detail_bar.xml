@@ -20,6 +20,8 @@
                 android:layout_marginLeft="45dp"
                 android:layout_marginRight="45dp">
                 <ImageView
+                    android:scaleType="fitXY"
+                    android:id="@+id/iv_bar"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
@@ -31,6 +33,7 @@
                     android:layout_weight="1"
                     android:layout_marginLeft="17dp">
                     <TextView
+                        android:id="@+id/tv_bar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="蔡徐坤吧"
@@ -41,10 +44,12 @@
                         android:orientation="horizontal"
                         android:layout_marginTop="5dp">
                         <TextView
+                            android:id="@+id/tv_concern_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="关注 32"/>
                         <TextView
+                            android:id="@+id/tv_post_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"

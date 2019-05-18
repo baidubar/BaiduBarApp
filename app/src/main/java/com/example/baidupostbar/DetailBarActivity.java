@@ -1,6 +1,7 @@
 package com.example.baidupostbar;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,10 +16,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.baidupostbar.Utils.HttpUtil;
 import com.example.baidupostbar.bean.Post;
+import com.nostra13.universalimageloader.utils.L;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +45,7 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static com.example.baidupostbar.R.layout.header_detail_bar;
+import static com.example.baidupostbar.R.layout.tab_item;
 
 public class DetailBarActivity extends RootBaseActivity implements EasyPermissions.PermissionCallbacks, BGANinePhotoLayout.Delegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener {
     private ArrayList<Post> mDataList;
@@ -52,6 +58,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
     private RecyclerView mMomentRv;
     private PostAdapter postAdapter;
     private ArrayList<String>picture;
+    private String barLabel;
 
     private BGANinePhotoLayout mCurrentClickNpl;
 
@@ -62,10 +69,13 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
 
         Intent intent = getIntent();
         String barId = intent.getStringExtra("barId");
+        barLabel = intent.getStringExtra("barLabel");
         Log.e("DetailBarActivity", "barId" + barId);
 
         HttpUtil httpUtil = new HttpUtil(DetailBarActivity.this,getApplicationContext());
-        httpUtil.GetUtilWithCookie("http://139.199.84.147/mytieba.api/postbar?bar_id="+ barId,1);
+       // httpUtil.GetUtilWithCookie("http://139.199.84.147/mytieba.api/postbar?bar_id="+ barId,1);
+        httpUtil.GetUtilWithCookie("http://139.199.84.147/mytieba.api/postbar?bar_id=" + barId,1);
+        Log.e("DetailBArActivity","bae_Id" + barId );
         doHandler();
 
 //
@@ -83,7 +93,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
             }
         });
         mMomentRv = findViewById(R.id.recyclerView);
-        postAdapter = new PostAdapter(mMomentRv);
+        postAdapter = new PostAdapter(mMomentRv,getApplicationContext());
         postAdapter.setOnRVItemClickListener(this);
         postAdapter.setOnRVItemLongClickListener(this);
 
@@ -91,7 +101,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
         mMomentRv.setLayoutManager(new LinearLayoutManager(this));
         mMomentRv.setAdapter(postAdapter);
 
-        addBannerHeader();
+        //addBannerHeader();
         // 当有 Header 或者 Footer 时，需要传入 mAdapter.getHeaderAndFooterAdapter()
         mMomentRv.setAdapter(postAdapter.getHeaderAndFooterAdapter());
 //        initData();
@@ -102,29 +112,6 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
         Log.e("DetailBarActivity",JsonData);
         List<Post> moments = new ArrayList<>();
         mDataList = new ArrayList<>();
-//        {
-//            "status":true,
-//                "bar_id": 1,
-//                "name": "动漫吧",
-//                "icon": xxx, // 图标
-//                "post_number":5,
-//                "watcher_number":0,
-//                "description": "无",
-//                "watching_status": false,
-//                "post_info":[
-//            {
-//                "writer_id": 1,
-//                    "writer_avatar": xxx,
-//                    "writer_name": "cyx",
-//                    "post_content": "222222222", // 很长时app注意只显示部分
-//                    "post_pic": ["1.jpg", "2.jpg"],//可能为空
-//                "comment_number": 10,
-//                    "praise_number":0,
-//                    "time": "2019-3-1 17:45:22",// 具体以返回为准，我记得是这样
-//            },
-//            // 略4个
-//    ]
-//        }
         try {
             JSONObject jsonObject = new JSONObject(JsonData);
             boolean status = jsonObject.getBoolean("status");
@@ -135,9 +122,10 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
                 String post_number = jsonObject.getString("post_number");
                 String watcher_number = jsonObject.getString("watcher_number");
                 String description = jsonObject.getString("description");
+               // postAdapter.addHeaderView();
+                addBannerHeader("http://139.199.84.147/" + icon,name,watcher_number,post_number  );
                 boolean watching_status = jsonObject.getBoolean("watching_status");
                 Log.e("watching_status", String.valueOf(watching_status));
-                if(watching_status) {
                     JSONArray jsonArray = jsonObject.getJSONArray("post_info");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject1 = jsonArray.getJSONObject(i);
@@ -145,27 +133,19 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
                         String writer_avatar = jsonObject1.getString("writer_avatar");
                         String writer_name = jsonObject1.getString("writer_name");
                         String post_content = jsonObject1.getString("post_content");
-                        String pic = jsonObject1.getString("pic");
                         JSONArray jsonArray1 = jsonObject1.getJSONArray("post_pic");
                         picture = new ArrayList<>();
                         for (int j = 0; j < jsonArray1.length(); j++) {
-                            JSONObject jsonObject2 = jsonArray1.getJSONObject(i);
-                            String Picture = "http://139.199.84.147/" + jsonObject2.getString("");
+                            String Picture = "http://139.199.84.147/" + jsonArray1.get(j);
                             picture.add(Picture);
+                            Log.e("DeatailBarActivity","Picture + " + Picture);
                         }
                         String comment_number = jsonObject1.getString("comment_number");
                         String praise_number = jsonObject1.getString("praise_number");
-                        String barName = jsonObject1.getString("bar");
                         String time = jsonObject1.getString("time");
-                        moments.add(new Post(post_content, picture,comment_number,praise_number ));
+                        moments.add(new Post(post_content, picture,comment_number,praise_number,writer_avatar,writer_name,barLabel,name ));
                         postAdapter.setData(moments);
-                    }
 
-                }else {
-                    Toast.makeText(getApplicationContext(),"还未登陆，请先登录",Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent();
-                    intent.setClass(getApplicationContext(),LoginActivity.class);
-                    startActivity(intent);
                 }
 
 
@@ -176,28 +156,10 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
             e.printStackTrace();
         }
 
-//        moments.add(new Post("1张网络图片", new ArrayList<>(Arrays.asList("http://d.hiphotos.baidu.com/image/h%3D200/sign=201258cbcd80653864eaa313a7dca115/ca1349540923dd54e54f7aedd609b3de9c824873.jpg")), "1", "2"));
-//        moments.add(new Post("2张网络图片", new ArrayList<>(Arrays.asList("http://d.hiphotos.baidu.com/image/h%3D200/sign=201258cbcd80653864eaa313a7dca115/ca1349540923dd54e54f7aedd609b3de9c824873.jpg", "http://d.hiphotos.baidu.com/image/h%3D200/sign=201258cbcd80653864eaa313a7dca115/ca1349540923dd54e54f7aedd609b3de9c824873.jpg")), "1", "2"));
-//        moments.add(new Post("9张网络图片", new ArrayList<>(Arrays.asList("http://d.hiphotos.baidu.com/image/h%3D200/sign=201258cbcd80653864eaa313a7dca115/ca1349540923dd54e54f7aedd609b3de9c824873.jpg", "http://d.hiphotos.baidu.com/image/h%3D200/sign=201258cbcd80653864eaa313a7dca115/ca1349540923dd54e54f7aedd609b3de9c824873.jpg", "http://d.hiphotos.baidu.com/image/h%3D200/sign=201258cbcd80653864eaa313a7dca115/ca1349540923dd54e54f7aedd609b3de9c824873.jpg", "http://d.hiphotos.baidu.com/image/h%3D200/sign=201258cbcd80653864eaa313a7dca115/ca1349540923dd54e54f7aedd609b3de9c824873.jpg", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered15.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered16.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered17.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered18.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered19.png")), "1", "2"));
-//        moments.add(new Post("5张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered11.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered12.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered13.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered14.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered15.png")), "1", "2"));
-//        moments.add(new Post("3张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered4.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered5.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered6.png")), "1", "2"));
-//        moments.add(new Post("8张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered11.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered12.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered13.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered14.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered15.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered16.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered17.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered18.png")), "1", "2"));
-//        moments.add(new Post("4张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered7.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered8.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered9.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered10.png")), "2", "1"));
-//        moments.add(new Post("2张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered2.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered3.png")), "1", "2"));
-//        moments.add(new Post("3张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered4.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered5.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered6.png")), "1", "2"));
-//        moments.add(new Post("4张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered7.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered8.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered9.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered10.png")), "1", "2"));
-//        moments.add(new Post("9张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered11.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered12.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered13.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered14.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered15.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered16.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered17.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered18.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered19.png")), "1", "2"));
-//        moments.add(new Post("1张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered1.png")), "1", "2"));
-//        moments.add(new Post("5张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered11.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered12.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered13.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered14.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered15.png")), "1", "2"));
-//        moments.add(new Post("6张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered11.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered12.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered13.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered14.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered15.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered16.png")), "1", "2"));
-//        moments.add(new Post("7张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered11.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered12.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered13.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered14.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered15.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered16.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered17.png")), "1", "2"));
-//        moments.add(new Post("8张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered11.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered12.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered13.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered14.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered15.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered16.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered17.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered18.png")), "1", "2"));
-
-
 
     }
 
-    private void addBannerHeader() {
+    private void addBannerHeader(String barImage,String barName,String concernNum,String postNum) {
         // 初始化HeaderView
         View headerView = View.inflate(DetailBarActivity.this, header_detail_bar, null);
 //        mBanner = headerView.findViewById(R.id.banner);
@@ -213,6 +175,14 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
 //                ToastUtil.show("点击了第" + (position + 1) + "页");
 //            }
 //        });
+        ImageView BarImage = headerView.findViewById(R.id.iv_bar);
+        TextView BarName  = headerView.findViewById(R.id.tv_bar);
+        TextView ConcernNum = headerView.findViewById(R.id.tv_concern_num);
+        TextView PostNum = headerView.findViewById(R.id.tv_post_num);
+        Glide.with(getApplicationContext()).load(barImage).into(BarImage);
+        BarName.setText(barName);
+        ConcernNum.setText("关注 "+concernNum);
+        PostNum.setText("帖子" + postNum);
         postAdapter.addHeaderView(headerView);
     }
 
@@ -285,8 +255,10 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
 
     private class PostAdapter extends BGARecyclerViewAdapter<Post> {
 
-        public PostAdapter(RecyclerView recyclerView) {
+        private Context context;
+        public PostAdapter(RecyclerView recyclerView, Context context) {
             super(recyclerView, R.layout.item_post);
+            this.context  = context;
         }
 
         @Override
@@ -296,8 +268,14 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
             } else {
                 helper.setVisibility(R.id.tv_content, View.VISIBLE);
                 helper.setText(R.id.tv_content, moment.content);
+                helper.setText(R.id.tv_author,moment.writterName);
+                helper.setText(R.id.tv_commentNum,moment.comment_number);
+                helper.setText(R.id.tv_likeNum,moment.praise_number);
+                helper.setText(R.id.tv_label,moment.barLabel);
+                helper.setText(R.id.tv_bar,moment.barName);
             }
-
+            Glide.with(context).load("http://139.199.84.147"+moment.getHeadImage()).into(helper.getImageView(R.id.iv_author));
+            Log.e("DetailBArActivity",moment.getHeadImage());
             BGANinePhotoLayout ninePhotoLayout = helper.getView(R.id.npl_item_moment_photos);
             ninePhotoLayout.setDelegate(DetailBarActivity.this);
             ninePhotoLayout.setData(moment.photos);

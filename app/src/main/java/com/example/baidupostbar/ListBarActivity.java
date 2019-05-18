@@ -34,13 +34,14 @@ public class ListBarActivity extends RootBaseActivity {
     private ArrayList<BarList> mDataList;
     private RecyclerView mRecyclerView;
     private String url;
+    private String BarLabel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_bar);
 
         Intent intent = getIntent();
-        String BarLabel = intent.getStringExtra("BarLabel");
+        BarLabel = intent.getStringExtra("BarLabel");
 
         List<Map<String, String>> list_url = new ArrayList<>();
         Map<String, String> map = new HashMap<>();
@@ -81,6 +82,7 @@ public class ListBarActivity extends RootBaseActivity {
                 String id = barList.getBarId();
                 Intent intent = new Intent(ListBarActivity.this,DetailBarActivity.class);
                 intent.putExtra("barId",id);
+                intent.putExtra("barLabel",BarLabel);
                 startActivity(intent);
             }
         });

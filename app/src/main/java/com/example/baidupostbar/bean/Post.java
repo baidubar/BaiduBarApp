@@ -10,6 +10,40 @@ public class Post implements Parcelable {
     public String comment_number;
     public String praise_number;
     public ArrayList<String> photos;
+    public String headImage;
+    public String writterName;
+    public String barName;
+    public String barLabel;
+
+    public String getBarName(){
+        return barName;
+    }
+    public void setBarName(String barName){
+        this.barName = barName;
+    }
+
+    public String getBarLabel(){
+        return barLabel;
+    }
+    public void setBarLabel(String barLabel){
+        this.barLabel = barLabel;
+    }
+
+    public String getHeadImage() {
+        return headImage;
+    }
+
+    public void setHeadImage(String headImage) {
+        this.headImage = headImage;
+    }
+
+    public String getWritterName() {
+        return writterName;
+    }
+
+    public void setWritterName(String writterName) {
+        this.writterName = writterName;
+    }
 
     public String getContent() {
         return content;
@@ -54,16 +88,24 @@ public class Post implements Parcelable {
         dest.writeStringList(this.photos);
         dest.writeString(this.comment_number);
         dest.writeString(this.praise_number);
+        dest.writeString(this.headImage);
+        dest.writeString(this.writterName);
+        dest.writeString(this.barLabel);
+        dest.writeString(this.barName);
     }
 
     public Post() {
     }
 
-    public Post(String content, ArrayList<String> photos,String comment_number,String praise_number) {
+    public Post(String content, ArrayList<String> photos,String comment_number,String praise_number,String headImage,String writterName,String barLabel,String barName) {
         this.content = content;
         this.photos = photos;
         this.comment_number = comment_number;
-        this.praise_number = comment_number;
+        this.praise_number = praise_number;
+        this.writterName = writterName;
+        this.headImage = headImage;
+        this.barLabel = barLabel;
+        this.barName = barName;
     }
 
     protected Post(Parcel in) {
@@ -71,6 +113,10 @@ public class Post implements Parcelable {
         this.photos = in.createStringArrayList();
         this.praise_number = in.readString();
         this.comment_number = in.readString();
+        this.writterName = in.readString();
+        this.headImage = in.readString();
+        this.barName = in.readString();
+        this.barLabel = in.readString();
     }
 
     public static final Parcelable.Creator<Post> CREATOR = new Parcelable.Creator<Post>() {

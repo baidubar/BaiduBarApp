@@ -29,7 +29,9 @@ android {
             shrinkResources false
         }
     }
+
 }
+
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -77,4 +79,7 @@ dependencies {
     implementation 'cn.bingoogolapple:bga-baseadapter:1.2.7@aar'
     implementation 'com.github.bumptech.glide:glide:4.5.0'
     implementation 'pub.devrel:easypermissions:1.0.1'
+    implementation 'org.litepal.android:java:3.0.0'
+
 }
+
