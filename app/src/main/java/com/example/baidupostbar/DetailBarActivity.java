@@ -73,15 +73,10 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
         Log.e("DetailBarActivity", "barId" + barId);
 
         HttpUtil httpUtil = new HttpUtil(DetailBarActivity.this,getApplicationContext());
-       // httpUtil.GetUtilWithCookie("http://139.199.84.147/mytieba.api/postbar?bar_id="+ barId,1);
         httpUtil.GetUtilWithCookie("http://139.199.84.147/mytieba.api/postbar?bar_id=" + barId,1);
         Log.e("DetailBArActivity","bae_Id" + barId );
         doHandler();
 
-//
-//        if (responsedata != null) {
-//            addNetImageTestData(responsedata);
-//        }
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +138,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
                         String comment_number = jsonObject1.getString("comment_number");
                         String praise_number = jsonObject1.getString("praise_number");
                         String time = jsonObject1.getString("time");
-                        moments.add(new Post(post_content, picture,comment_number,praise_number,writer_avatar,writer_name,barLabel,name ));
+                        moments.add(new Post(post_content, picture,comment_number,praise_number,writer_avatar,writer_name,"#"+barLabel,name ));
                         postAdapter.setData(moments);
 
                 }
@@ -306,45 +301,6 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
 //            mDataList.add(item);
 //        }
 //    }
-    private void parseWithJsonData(String JsonData) {
-        try {
-            JSONObject jsonObject = new JSONObject(JsonData);
-            boolean status = jsonObject.getBoolean("status");
-            if(status){
-                String user_id = jsonObject.getString("user_id");
-                //关注状态
-                boolean collection_status = jsonObject.getBoolean("collection_status");
-                //点赞状态
-                boolean praise_status = jsonObject.getBoolean("praise_status");
-                JSONArray jsonArray = jsonObject.getJSONArray("post_msg");
-                for(int i = 0;i < jsonArray.length();i++){
-                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                    String person_id = jsonObject1.getString("String person_id");
-                    String person_avatar = jsonObject1.getString("person_avatar");
-                    String follow_status = jsonObject1.getString("follow_status");
-                    String time = jsonObject1.getString("time");
-                    String pic = jsonObject1.getString("pic");
-                    JSONArray jsonArray1 = jsonObject1.getJSONArray("pic");
-                    picture = new ArrayList<>();
-                    for (int j = 0;j < jsonArray1.length();j++){
-                        JSONObject jsonObject2 = jsonArray1.getJSONObject(i);
-                        String Picture = "http://139.199.84.147/" + jsonObject2.getString("");
-                        picture.add(Picture);
-                    }
-                    String content = jsonObject1.getString("content");
-                    String bar_id = jsonObject1.getString("bar_id");
-                    String barName = jsonObject1.getString("bar");
-
-                }
-
-
-            }else {
-
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
     private void doHandler() {
         viewHandler = new Handler() {
             @Override

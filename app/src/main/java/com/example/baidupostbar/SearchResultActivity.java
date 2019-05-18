@@ -1,5 +1,6 @@
 package com.example.baidupostbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.baidupostbar.Adapter.ViewPagerAdapter;
+import com.example.baidupostbar.bean.Search;
 import com.example.baidupostbar.fragment.SearchBarFragment;
 import com.example.baidupostbar.fragment.SearchPostFragment;
 import com.example.baidupostbar.fragment.SearchUserFragment;
@@ -19,10 +21,15 @@ public class SearchResultActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;
     private TabLayout tabLayout;
+    private String searchText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        searchText = intent.getStringExtra("searchText");
+
         setContentView(R.layout.activity_search_result);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -39,6 +46,8 @@ public class SearchResultActivity extends AppCompatActivity {
         SearchUserFragment searchUserFragment = new SearchUserFragment();
         SearchPostFragment searchPostFragment = new SearchPostFragment();
         SearchBarFragment searchBarFragment = new SearchBarFragment();
+
+
         final ArrayList<Fragment> fragments = new ArrayList<>();
         fragments.add(searchPostFragment);
         fragments.add(searchBarFragment);
@@ -53,4 +62,8 @@ public class SearchResultActivity extends AppCompatActivity {
 
         tabLayout.setupWithViewPager(viewPager);
     }
+    public String getSearchText(){
+        return searchText;
+    }
+
 }
