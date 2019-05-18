@@ -13,7 +13,7 @@
             android:id="@+id/iv_author"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:background="@drawable/background_login"
+            android:src="@drawable/background_login"
             android:layout_marginLeft="30dp"
             android:layout_gravity="center_vertical"/>
         <TextView

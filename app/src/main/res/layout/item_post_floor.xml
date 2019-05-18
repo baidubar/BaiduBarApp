@@ -12,10 +12,10 @@
         android:layout_marginRight="25dp"
         android:layout_marginTop="20dp">
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="27dp"
-            android:layout_height="27dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/background_login"
+            android:src="@drawable/background_login"
             android:id="@+id/iv_author"/>
         <LinearLayout
             android:layout_width="0dp"

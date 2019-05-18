@@ -1,16 +1,21 @@
 package com.example.baidupostbar;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -18,10 +23,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.baidupostbar.Utils.HttpUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegisterEmail extends AppCompatActivity {
+import okhttp3.FormBody;
+
+public class RegisterEmail extends RootBaseActivity {
 
     EditText et_email;
     EditText et_code;
@@ -49,7 +64,13 @@ public class RegisterEmail extends AppCompatActivity {
         btn_getCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timer.start();
+                email = et_email.getText().toString();
+                HttpUtil httpUtil = new HttpUtil(RegisterEmail.this,getApplicationContext());
+                FormBody formBody = new FormBody.Builder()
+                        .add("email",email)
+                        .build();
+                httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/email",formBody,1);
+                doHandler();
             }
         });
         //EditText监听
@@ -83,11 +104,15 @@ public class RegisterEmail extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 email = et_email.getText().toString();
+                code = et_code.getText().toString();
                 if(checkEmail(email)){
-                    //请求验证码
-                    Intent intent = new Intent();
-                    intent.setClass(RegisterEmail.this,Register_user.class);
-                    startActivity(intent);
+                    HttpUtil httpUtil = new HttpUtil(RegisterEmail.this,getApplicationContext());
+                    FormBody formBody = new FormBody.Builder()
+                            .add("code",code)
+                            .build();
+                    httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/email/vertify",formBody,2);
+                    doHandler();
+//                    }
                 }else {
                     Toast.makeText(RegisterEmail.this, "邮箱格式不正确", Toast.LENGTH_SHORT).show();
                 }
@@ -123,5 +148,77 @@ public class RegisterEmail extends AppCompatActivity {
         Matcher matcher=pattern.matcher(email);
         return matcher.matches();
     }
+    private void prasedWithCodeJsonData(String jsondata){
+        try {
+            JSONObject jsonObject = new JSONObject(jsondata);
+            boolean state = jsonObject.getBoolean("status");
+            String msg = jsonObject.getString("msg");
+            if (state) {
+                timer.start();
+            }
+            showResponse(msg);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private void prasedWithJsonData(String jsondata){
+        try {
+            Log.e("RegisterEmail","2");
+            JSONObject jsonObject = new JSONObject(jsondata);
+            boolean state = jsonObject.getBoolean("status");
+            Log.e("RegisterEmail","3");
+            Log.e("RegisterEmail","boolen" + state);
+            if (state) {
+                String email_access = jsonObject.getString("email_access");
+                SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("email",email);
+                editor.putString("email_access",email_access);
+                editor.apply();
+                Log.e("RegisterEmail","4");
 
+                Intent intent = new Intent();
+                intent.setClass(RegisterEmail.this,Register_user.class);
+                startActivity(intent);
+                finish();
+                }
+            else {
+                String msg = jsonObject.getString("msg");
+                Log.e("RegisterEmail","5");
+                showResponse(msg);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private void showResponse(String msg){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(RegisterEmail.this,msg,Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+    private void doHandler() {
+        viewHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case 0:
+                        Toast.makeText(getApplicationContext(),String.valueOf(msg.obj),Toast.LENGTH_LONG).show();
+                        break;
+                    case 1:
+                        prasedWithCodeJsonData(String.valueOf(msg.obj));
+                        break;
+                    case 2:
+                        prasedWithJsonData(String.valueOf(msg.obj));
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        };
+    }
 }

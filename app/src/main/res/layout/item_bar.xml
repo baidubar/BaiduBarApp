@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:id="@+id/item_bar"
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <LinearLayout
@@ -43,13 +44,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="简介："/>
+
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:ellipsize="end"
                     android:id="@+id/tv_information"
-                    android:text="IKUN之家~笔芯~"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="31dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="IKUN之家~笔芯~" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

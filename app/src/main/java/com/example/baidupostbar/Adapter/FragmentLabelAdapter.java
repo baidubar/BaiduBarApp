@@ -36,8 +36,10 @@ public class FragmentLabelAdapter extends RecyclerView.Adapter<FragmentLabelAdap
             public void onClick(View view) {
                 int position = viewHolder.getAdapterPosition();
                 FragmentLabel fragmentLabel = data.get(position);
+                String BarLabel = fragmentLabel.getBarLabel();
                 Intent intent = new Intent();
                 intent.setClass(view.getContext(), ListBarActivity.class);
+                intent.putExtra("BarLabel",BarLabel);
                 view.getContext().startActivity(intent);
             }
         });

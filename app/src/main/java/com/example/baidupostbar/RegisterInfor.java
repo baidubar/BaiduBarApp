@@ -3,6 +3,7 @@ package com.example.baidupostbar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,19 +25,27 @@ public class RegisterInfor extends AppCompatActivity {
     private DatePicker datapicker;
     private Calendar cal;//显示当前日期
     private TextView tv_birthDay;
+    private EditText et_signture;
     private int year;
     private int month;
     private int day;
-    private String temp = null;
+//    private String temp = null;
+    private String temp = "2";
     private Button btn_ignore;
     Button btn_next;
     EditText et_nickName;
+    private String username;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         /*set it to be no title*/
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        Intent intent = getIntent();
+        username = intent.getStringExtra("name");
+        password = intent.getStringExtra("password");
 
         /*set it to be full screen*/
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -49,16 +58,19 @@ public class RegisterInfor extends AppCompatActivity {
         rb_female = findViewById(R.id.rb_female);
         rb_male = findViewById(R.id.rb_male);
         tv_birthDay = findViewById(R.id.tv_birthDay);
+        et_signture = findViewById(R.id.et_signature);
 
         rg_sex.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             // TODO Auto-generated method stub
             if(RegisterInfor.this.rb_male.getId()==checkedId){
-                temp = "男";
+                //temp = "男";
+                temp = "0";
             }
             if(RegisterInfor.this.rb_female.getId()==checkedId){
-                temp = "女";
+                //temp = "女";
+                temp = "1";
             }
         }
         });
@@ -67,8 +79,31 @@ public class RegisterInfor extends AppCompatActivity {
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String birthday = tv_birthDay.getText().toString();
+                String signture = et_signture.getText().toString();
+                Log.e("RegisterInfor",signture);
+                Log.e("RegisterInfor",birthday);
                 Intent intent = new Intent(RegisterInfor.this,RegisterInterest.class);
+                intent.putExtra("type","1");
+                intent.putExtra("username",username);
+                intent.putExtra("password",password);
+                intent.putExtra("birthday",birthday);
+                intent.putExtra("signture",signture);
+                intent.putExtra("gender",temp);
                 startActivity(intent);
+                finish();
+            }
+        });
+        btn_ignore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterInfor.this,RegisterInterest.class);
+                intent.putExtra("type","2");
+                intent.putExtra("username",username);
+                Log.e("RegisterInforUsername",username);
+                intent.putExtra("password",password);
+                startActivity(intent);
+                finish();
             }
         });
     }

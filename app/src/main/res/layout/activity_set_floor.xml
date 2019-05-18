@@ -22,7 +22,6 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:orientation="horizontal"
-        android:background="@drawable/square_edittext"
         android:layout_margin="20dp">
         <EditText
             android:layout_width="match_parent"
@@ -31,6 +30,17 @@
             android:background="@null"
             android:layout_margin="6dp"
             android:id="@+id/ed_content"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="140/140"/>
     </LinearLayout>
     <Button
         android:text="发表"

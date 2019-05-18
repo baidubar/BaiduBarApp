@@ -34,9 +34,10 @@ public class TestBean {
 
     @Override
     public String toString() {
-        return "TestBean{" +
-                "name='" + name + '\'' +
-                ", id=" + id +
-                '}';
+//        return "TestBean{" +
+//                "name='" + name + '\'' +
+//                ", id=" + id +
+//                '}';
+        return name;
     }
 }

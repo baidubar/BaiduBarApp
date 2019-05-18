@@ -5,9 +5,11 @@ public class BarList {
     private String barImg;
     private String barName;
     private String barInfor;
-    private int attentionNum;
-    private int postNum;
+    private String barId;
+    private String attentionNum;
+    private String postNum;
 
+    public BarList(){}
     public String getBarImg() {
         return barImg;
     }
@@ -32,19 +34,27 @@ public class BarList {
         this.barInfor = barInfor;
     }
 
-    public int getAttentionNum() {
+    public String getAttentionNum() {
         return attentionNum;
     }
 
-    public void setAttentionNum(int attentionNum) {
+    public void setAttentionNum(String attentionNum) {
         this.attentionNum = attentionNum;
     }
 
-    public int getPostNum() {
+    public String getPostNum() {
         return postNum;
     }
 
-    public void setPostNum(int postNum) {
+    public void setPostNum(String postNum) {
         this.postNum = postNum;
+    }
+
+    public String getBarId() {
+        return barId;
+    }
+
+    public void setBarId(String barId) {
+        this.barId = barId;
     }
 }
