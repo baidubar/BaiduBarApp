@@ -1,7 +1,5 @@
 package com.example.baidupostbar;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,8 +21,8 @@ public class SplashActivity extends BaseActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
         textView = (HTextView) findViewById(R.id.textview3);
-        textView.setOnClickListener(new ClickListener());
-        textView.setAnimationListener(new SimpleAnimationListener(this));
+//        textView.setOnClickListener(new ClickListener());
+//        textView.setAnimationListener(new SimpleAnimationListener(this));
 
 
     }

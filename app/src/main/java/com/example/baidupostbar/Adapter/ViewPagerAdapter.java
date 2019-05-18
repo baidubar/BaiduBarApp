@@ -1,19 +1,27 @@
 package com.example.baidupostbar.Adapter;
 
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    private final ArrayList<Fragment> fragments;
+    private List<Fragment> fragments = new ArrayList<>();
+    private List<String> mFragmentTitles = new ArrayList<>();
 
     public ViewPagerAdapter(FragmentManager fragmentManager, ArrayList<Fragment> fragments){
         super(fragmentManager);
         this.fragments = fragments;
+    }
+    public ViewPagerAdapter(FragmentManager fragmentManager){
+        super(fragmentManager);
+    }
+    public void addFragment(Fragment fragment, String title) {
+        fragments.add(fragment);
+        mFragmentTitles.add(title);
     }
 
     @Override
@@ -26,13 +34,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         return fragments.size();
     }
 
-    @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        if(String.valueOf(position + 1).equals("1"))
-            return "贴";
-        else if(String.valueOf(position + 1).equals("2"))
-            return "吧";
-        else return "人";
+        return mFragmentTitles.get(position);
     }
 }

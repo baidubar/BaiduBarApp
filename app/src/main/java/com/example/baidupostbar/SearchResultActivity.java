@@ -2,7 +2,6 @@ package com.example.baidupostbar;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,8 +11,6 @@ import com.example.baidupostbar.Adapter.ViewPagerAdapter;
 import com.example.baidupostbar.fragment.SearchBarFragment;
 import com.example.baidupostbar.fragment.SearchPostFragment;
 import com.example.baidupostbar.fragment.SearchUserFragment;
-
-import java.util.ArrayList;
 
 public class SearchResultActivity extends AppCompatActivity {
     private ViewPager viewPager;
@@ -36,19 +33,16 @@ public class SearchResultActivity extends AppCompatActivity {
         });
         viewPager = findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
         SearchUserFragment searchUserFragment = new SearchUserFragment();
         SearchPostFragment searchPostFragment = new SearchPostFragment();
         SearchBarFragment searchBarFragment = new SearchBarFragment();
-        final ArrayList<Fragment> fragments = new ArrayList<>();
-        fragments.add(searchPostFragment);
-        fragments.add(searchBarFragment);
-        fragments.add(searchUserFragment);
+        adapter.addFragment(searchPostFragment, "贴");
+        adapter.addFragment(searchBarFragment, "吧");
+        adapter.addFragment(searchUserFragment, "人");
+        viewPager.setAdapter(adapter);
         //设置tab模式
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
-
-
-        adapter = new ViewPagerAdapter(getSupportFragmentManager(),fragments);
-        viewPager.setAdapter(adapter);
 
 
         tabLayout.setupWithViewPager(viewPager);
