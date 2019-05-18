@@ -12,7 +12,7 @@ import com.example.baidupostbar.fragment.MessageFragment;
 import com.example.baidupostbar.fragment.UserFragment;
 import com.hjm.bottomtabbar.BottomTabBar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends RootBaseActivity {
 
     private BottomTabBar mBottomTabBar;
     @Override

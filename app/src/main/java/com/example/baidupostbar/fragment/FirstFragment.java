@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,7 +19,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.baidupostbar.DetailPost;
+import com.example.baidupostbar.MainActivity;
 import com.example.baidupostbar.R;
+import com.example.baidupostbar.Utils.CheckNetUtil;
 import com.example.baidupostbar.Utils.HttpUtil;
 import com.example.baidupostbar.bean.Post;
 import com.nostra13.universalimageloader.utils.L;
@@ -27,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -42,6 +47,10 @@ import cn.bingoogolapple.baseadapter.BGAViewHolderHelper;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPreviewActivity;
 import cn.bingoogolapple.photopicker.imageloader.BGARVOnScrollListener;
 import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -56,6 +65,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     private String url;
     private ArrayList<String>picture;
     private List<String>tag;
+    private String responseData;
 
     private BGANinePhotoLayout mCurrentClickNpl;
 
@@ -87,14 +97,12 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
         map.put("page", "1");
 //                    map.put("number", "10");
         list_url.add(map);
-
         url = getUrl("http://139.199.84.147/mytieba.api/posts", list_url);
         Log.e("FirstFragment","url" + url);
-//        HttpUtil httpUtil = new HttpUtil(getContext());
-//        String responseData = httpUtil.GetUtil(url);
-//        if(responseData!= null) {
-//            addNetImageTestData(responseData);
-//        }
+
+        if (new CheckNetUtil(getContext()).initNet()) {
+            initData(url);
+        }
 
     }
 
@@ -143,10 +151,11 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                         //JSONArray jsonArray2 = jsonObject1.getJSONArray("bar_tags");
                         String bar_tags = jsonObject1.getString("bar_tags");
                         moments.add(new Post(post_content,picture,comment_number,praise_number));
+
                     }
         } catch (JSONException e){
         e.printStackTrace();
-    }
+        }
 
         //*************************
         //这里添加内容和图片
@@ -167,8 +176,8 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
         moments.add(new Post("6张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered11.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered12.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered13.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered14.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered15.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered16.png")),"1","2"));
         moments.add(new Post("7张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered11.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered12.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered13.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered14.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered15.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered16.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered17.png")),"1","2"));
         moments.add(new Post("8张网络图片", new ArrayList<>(Arrays.asList("http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered11.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered12.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered13.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered14.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered15.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered16.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered17.png", "http://7xk9dj.com1.z0.glb.clouddn.com/refreshlayout/images/staggered18.png")),"1","2"));
-
         postAdapter.setData(moments);
+
     }
 
 //    public void onClick(View v) {
@@ -300,5 +309,38 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
         }
         Log.d("getUrl", url);
         return url;
+    }
+    private void initData(String url){
+                try {
+                    OkHttpClient client = new OkHttpClient();
+                    Request request = new Request.Builder().url(url)
+                            .build();
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(okhttp3.Call call, IOException e) {
+                            Log.e("onFailure","获取数据失败");
+                            Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                            responseData = response.body().string();
+                            if (response.isSuccessful()){
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        addNetImageTestData(responseData);
+                                    }
+                                });
+                            }else {
+                                Toast.makeText(getContext(),"服务器请求失败",Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
+                }
+
     }
 }

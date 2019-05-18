@@ -211,7 +211,6 @@ public class LoginActivity extends RootBaseActivity {
                         break;
                     case 1:
                         prasedWithJsonData(String.valueOf(msg.obj));
-                        Log.e("LoginActivity", String.valueOf(msg.obj));
                         break;
                         default:
                             break;

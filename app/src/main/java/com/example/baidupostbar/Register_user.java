@@ -42,6 +42,8 @@ public class Register_user extends AppCompatActivity {
         et_password = findViewById(R.id.et_password);
         btn_next = findViewById(R.id.btn_next);
 
+        setTextWatcher();
+
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

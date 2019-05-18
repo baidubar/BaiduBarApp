@@ -2,12 +2,15 @@ package com.example.baidupostbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.baidupostbar.Adapter.BarListAdapter;
@@ -26,7 +29,7 @@ import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
 
-public class ListBarActivity extends AppCompatActivity {
+public class ListBarActivity extends RootBaseActivity {
 
     private ArrayList<BarList> mDataList;
     private RecyclerView mRecyclerView;
@@ -44,9 +47,11 @@ public class ListBarActivity extends AppCompatActivity {
         map.put("bar_tag",BarLabel);
         list_url.add(map);
 
-//                url = getUrl("http://139.199.84.147/mytieba.api/postbar", list_url);
-//                Log.e("ListBarActivity","url" + url);
-//                HttpUtil httpUtil = new HttpUtil(getApplicationContext());
+                url = getUrl("http://139.199.84.147/mytieba.api/postbar", list_url);
+                Log.e("ListBarActivity","url" + url);
+                HttpUtil httpUtil = new HttpUtil(ListBarActivity.this,getApplicationContext());
+                httpUtil.GetUtil(url,1);
+                doHandler();
 //                Log.e("ListBarActivity","1");
 //                String responseData = httpUtil.GetUtil(url);
 //                Log.e("ListBarActivity","2");
@@ -58,7 +63,7 @@ public class ListBarActivity extends AppCompatActivity {
 //                }
 
         initView();
-        initAdapter();
+
     }
     private void initView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -161,5 +166,26 @@ public class ListBarActivity extends AppCompatActivity {
         }catch(JSONException e) {
             e.printStackTrace();
         }
+        initAdapter();
+    }
+    private void doHandler() {
+        viewHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case 0:
+                        Toast.makeText(getApplicationContext(),String.valueOf(msg.obj),Toast.LENGTH_LONG).show();
+                        break;
+                    case 1:
+                        prasedWithJosnData(String.valueOf(msg.obj));
+                        Log.e("ListBArActivity", String.valueOf(msg.obj));
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        };
     }
 }

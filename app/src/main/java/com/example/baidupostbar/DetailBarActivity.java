@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -39,7 +41,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 import static com.example.baidupostbar.R.layout.header_detail_bar;
 
-public class DetailBarActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks, BGANinePhotoLayout.Delegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener {
+public class DetailBarActivity extends RootBaseActivity implements EasyPermissions.PermissionCallbacks, BGANinePhotoLayout.Delegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener {
     private ArrayList<Post> mDataList;
     private FloatingActionButton fab;
 
@@ -60,10 +62,12 @@ public class DetailBarActivity extends AppCompatActivity implements EasyPermissi
 
         Intent intent = getIntent();
         String barId = intent.getStringExtra("barId");
-        Log.e("DetailBarActivity", barId);
+        Log.e("DetailBarActivity", "barId" + barId);
 
-//        HttpUtil httpUtil = new HttpUtil(getApplicationContext());
-//        String responsedata = httpUtil.GetUtil("http://139.199.84.147/mytieba.api/postbar");
+        HttpUtil httpUtil = new HttpUtil(DetailBarActivity.this,getApplicationContext());
+        httpUtil.GetUtilWithCookie("http://139.199.84.147/mytieba.api/postbar?bar_id="+ barId,1);
+        doHandler();
+
 //
 //        if (responsedata != null) {
 //            addNetImageTestData(responsedata);
@@ -95,6 +99,7 @@ public class DetailBarActivity extends AppCompatActivity implements EasyPermissi
     }
 
     private void addNetImageTestData(String JsonData) {
+        Log.e("DetailBarActivity",JsonData);
         List<Post> moments = new ArrayList<>();
         mDataList = new ArrayList<>();
 //        {
@@ -361,5 +366,24 @@ public class DetailBarActivity extends AppCompatActivity implements EasyPermissi
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+    private void doHandler() {
+        viewHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case 0:
+                        Toast.makeText(getApplicationContext(),String.valueOf(msg.obj),Toast.LENGTH_LONG).show();
+                        break;
+                    case 1:
+                        addNetImageTestData(String.valueOf(msg.obj));
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        };
     }
 }
