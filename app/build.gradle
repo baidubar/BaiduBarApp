@@ -79,4 +79,5 @@ dependencies {
     implementation 'pub.devrel:easypermissions:1.0.1'
     implementation 'com.gyf.barlibrary:barlibrary:2.3.0'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
+    implementation 'org.litepal.android:java:3.0.0'
 }

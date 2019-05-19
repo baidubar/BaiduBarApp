@@ -63,12 +63,16 @@ public class LoginActivity extends RootBaseActivity {
             public void onClick(View v) {
                 String account = et_account.getText().toString();
                 String password = et_password.getText().toString();
-                //创表单
+                SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 if(remember) {
-                    SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
                     editor.putString("Re_name",account );
                     editor.putString("Re_password", password);
+                    editor.apply();
+                }else {
+                    editor.putString("Re_name","" );
+                    editor.putString("Re_password","");
                     editor.apply();
                 }
                 FormBody formBody = new FormBody.Builder()
@@ -103,6 +107,14 @@ public class LoginActivity extends RootBaseActivity {
                 }else{
                     remember = false;
                 }
+            }
+        });
+        btn_forgetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(LoginActivity.this,FindPasswordActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -196,8 +208,11 @@ public class LoginActivity extends RootBaseActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
         String account = sharedPreferences.getString("Re_name", "");
         String password = sharedPreferences.getString("Re_password","");
-        et_account.setText(account);
-        et_password.setText(password);
+        if(!account.equals("")) {
+            remember_code .setChecked(true);
+            et_account.setText(account);
+            et_password.setText(password);
+        }
 
     }
     private void doHandler() {

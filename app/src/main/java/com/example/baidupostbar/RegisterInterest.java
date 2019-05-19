@@ -67,7 +67,7 @@ Button btn_ignore;
         testList.add(new TestBean("美食",7));
         testList.add(new TestBean("购物",8));
         testList.add(new TestBean("文字",9));
-        testList.add(new TestBean("摄影",10));
+        testList.add(new TestBean("ACG",10));
         testList.add(new TestBean("音乐",11));
         testList.add(new TestBean("电影",12));
         labelsView.setLabels(testList, new LabelsView.LabelTextProvider<TestBean>() {
@@ -92,51 +92,39 @@ Button btn_ignore;
         btn_finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for(int i = 0; i<labelList.size();i++){
-                    //builder.add("list",labelList.get(i));
-                    if(i == labelList.size()-1) {
-                        interest = "list=" + labelList.get(i);
-                    }else {
-                        interest = "list=" + labelList.get(i) + "&";
-                    }
+                FormBody.Builder builder = new FormBody.Builder();
+                for (int i = 0; i < labelList.size(); i++) {
+                    builder.add("interest", labelList.get(i));
                 }
-//                FormBody formBody = builder
-//                        .add("email",email)
-//                        .add("username",username)
-//                        .add("password",password)
-//                        .add("email_access",email_access)
-//                        .add("interest",interest)
-//                        .add("birthday",birthday)
-//                        .add("description",description)
-//                        .add("gender",gender)
-//                        .build();
-                if(type.equals("1")){
-                    formBody = new FormBody.Builder()
-                        .add("email",email)
-                        .add("username",username)
-                        .add("password",password)
-                        .add("email_access",email_access)
-                        .add("interest",interest)
-                        .add("birthday",birthday)
-                        .add("description",description)
-                        .add("gender",gender)
-                        .build();
-                    Log.e("gender",gender);
-                }else {
-                    formBody = new FormBody.Builder()
-                            .add("email",email)
-                            .add("username",username)
-                            .add("password",password)
-                            .add("email_access",email_access)
-                            .add("birthday","2019-05-26")
-                            .add("interest",interest)
+                Log.e("labelList.size()", String.valueOf(labelList.size()));
+                if (type.equals("1")) {
+                    formBody = builder
+                            .add("email", email)
+                            .add("username", username)
+                            .add("password", password)
+                            .add("email_access", email_access)
+                            .add("birthday", birthday)
+                            .add("description", description)
+                            .add("gender", gender)
+                            .build();
+
+                } else {
+                    formBody = builder
+                            .add("email", email)
+                            .add("username", username)
+                            .add("password", password)
+                            .add("email_access", email_access)
+//                            .add("birthday", birthday)
+//                            .add("description", description)
+//                            .add("gender", gender)
                             .build();
                 }
-                HttpUtil httpUtil = new HttpUtil(RegisterInterest.this,getApplicationContext());
-                httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register",formBody,1);
+                HttpUtil httpUtil = new HttpUtil(RegisterInterest.this, getApplicationContext());
+                httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register", formBody, 1);
                 doHandler();
-//                prasedWithJsonData(responseData);
             }
+//                prasedWithJsonData(responseData);
+
         });
         btn_ignore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,7 +207,7 @@ Button btn_ignore;
             boolean state = jsonObject.getBoolean("status");
             String msg = jsonObject.getString("msg");
             if(state){
-                Intent intent = new Intent(RegisterInterest.this,MainActivity.class);
+                Intent intent = new Intent(RegisterInterest.this,LoginActivity.class);
                 startActivity(intent);
                 finish();
             }else {
