@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    android:padding="4dp"
+    android:layout_margin="1dp"
+    android:padding="2dp"
     app:cardBackgroundColor="#ffffffff"
-    app:cardCornerRadius="10dp">
+    app:cardCornerRadius="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"

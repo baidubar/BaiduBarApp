@@ -4,4 +4,5 @@
     <color name="gray">#E0E0E0</color>
     <color name="bg_tab">#F8F9F9</color>
     <color name="transparent">#00000000</color>
+    <color name="iconCover">#cc979797</color>
 </resources>

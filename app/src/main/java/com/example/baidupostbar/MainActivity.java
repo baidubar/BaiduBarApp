@@ -1,14 +1,11 @@
 package com.example.baidupostbar;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 import com.example.baidupostbar.fragment.BarFragment;
 import com.example.baidupostbar.fragment.FirstFragment;
-import com.example.baidupostbar.fragment.MessageFragment;
+import com.example.baidupostbar.fragment.ThirdFragment;
 import com.example.baidupostbar.fragment.UserFragment;
 import com.hjm.bottomtabbar.BottomTabBar;
 
@@ -28,7 +25,7 @@ public class MainActivity extends RootBaseActivity {
 //                .setChangeColor(Color.parseColor("#FF00F0"),Color.parseColor("#CCCCCC"))
                 .addTabItem("首页", R.drawable.discover_fill, R.drawable.discover, FirstFragment.class)
                 .addTabItem("进吧",R.drawable.bar_fill, R.drawable.bar, BarFragment.class)
-                .addTabItem("消息",R.drawable.notice_fill, R.drawable.notice, MessageFragment.class)
+                .addTabItem("消息",R.drawable.notice_fill, R.drawable.notice, ThirdFragment.class)
                 .addTabItem("我的",R.drawable.people_fill, R.drawable.people, UserFragment.class)
 //                .isShowDivider(true)
 //                .setDividerColor(Color.parseColor("#FF0000"))

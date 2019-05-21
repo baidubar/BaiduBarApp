@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-
         android:name="org.litepal.LitePalApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
@@ -20,7 +19,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomepageActivity"></activity>
+        <activity android:name=".ListUserCommentActivity"></activity>
+        <activity android:name=".ListUserAttention" />
+        <activity android:name=".ListUserLikeActivity" />
+        <activity android:name=".ListUserReplyActivity" />
+        <activity android:name=".HomepageActivity" />
         <activity android:name=".ChangeHeaderActivity" />
         <activity android:name=".ChangeInforActivity" />
         <activity android:name=".DetailUserActivity" />

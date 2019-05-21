@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,14 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.baidupostbar.DetailPost;
-import com.example.baidupostbar.MainActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.Utils.CheckNetUtil;
-import com.example.baidupostbar.Utils.HttpUtil;
 import com.example.baidupostbar.bean.Post;
-import com.nostra13.universalimageloader.utils.L;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,13 +30,11 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import cn.bingoogolapple.baseadapter.BGAOnItemChildCheckedChangeListener;
 import cn.bingoogolapple.baseadapter.BGAOnRVItemClickListener;
 import cn.bingoogolapple.baseadapter.BGAOnRVItemLongClickListener;
 import cn.bingoogolapple.baseadapter.BGARecyclerViewAdapter;
@@ -70,6 +62,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     private String responseData;
 
     private BGANinePhotoLayout mCurrentClickNpl;
+    List<Post> moments = new ArrayList<>();
 
     @Nullable
     @Override
@@ -112,7 +105,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
      */
     private void addNetImageTestData(String jsonData) {
 
-        List<Post> moments = new ArrayList<>();
+        //List<Post> moments = new ArrayList<>();
         try {
 
                 JSONObject jsonObject = new JSONObject(jsonData);
@@ -251,7 +244,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
             }
 
             BGANinePhotoLayout ninePhotoLayout = helper.getView(R.id.npl_item_moment_photos);
-            ninePhotoLayout.setDelegate(FirstFragment.this::onClickNinePhotoItem);
+            ninePhotoLayout.setDelegate(FirstFragment.this);
             ninePhotoLayout.setData(moment.photos);
         }
 

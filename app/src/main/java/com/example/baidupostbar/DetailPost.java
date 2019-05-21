@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.baidupostbar.Adapter.PostDetailAdapter;
 import com.example.baidupostbar.bean.PostDetail;
+import com.example.baidupostbar.fragment.CommentDialogFragment;
+import com.example.baidupostbar.fragment.DialogFragment;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class DetailPost extends AppCompatActivity {
         actionA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actionA.setTitle("按钮一被单击");
+                //actionA.setTitle("按钮一被单击");
             }
         });
         //在当前帖子下盖楼
@@ -61,9 +63,24 @@ public class DetailPost extends AppCompatActivity {
         postDetailAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                DialogFragment dialogFragment = new DialogFragment();
+                dialogFragment.show(getSupportFragmentManager(),"dialogFragment");
+            }
+        });
+        postDetailAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                switch (view.getId()){
+                    case R.id.btn_comment:
+                        CommentDialogFragment commentDialogFragment = new CommentDialogFragment();
+                        commentDialogFragment.show(getSupportFragmentManager(), "CommentDialogFragment");
+                        break;
+                    default:
+                }
 
             }
         });
+
 
         mRecyclerView.setAdapter(postDetailAdapter);
     }

@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.baidupostbar.Adapter.FragmentLabelAdapter;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.SearchActivity;
 import com.example.baidupostbar.bean.FragmentLabel;
@@ -44,7 +43,7 @@ public class BarFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        //recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         //searchView = view.findViewById(R.id.searchView);
         toolbar.setTitle("进吧");
@@ -103,31 +102,31 @@ public class BarFragment extends Fragment {
         StaggeredGridLayoutManager recyclerViewLayoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
 
-        recyclerView.setLayoutManager(recyclerViewLayoutManager);
-        initData();
-        FragmentLabelAdapter adapter = new FragmentLabelAdapter(data, getContext());
-        //设置adapter
-        recyclerView.setAdapter(adapter);
+        //recyclerView.setLayoutManager(recyclerViewLayoutManager);
+//        initData();
+//        FragmentLabelAdapter adapter = new FragmentLabelAdapter(data, getContext());
+//        //设置adapter
+//        recyclerView.setAdapter(adapter);
     }
-    private void initData() {
-        for (int i = 0; i < 5; i++) {
-            FragmentLabel fragmentLabel0 = new FragmentLabel(R.drawable.label_pets1);
-            fragmentLabel0.setBarLabel("ACG");
-            data.add(fragmentLabel0);
-            FragmentLabel fragmentLabel1 = new FragmentLabel(R.drawable.label_books1);
-            fragmentLabel1.setBarLabel("文学");
-            data.add(fragmentLabel1);
-            FragmentLabel fragmentLabel2 = new FragmentLabel(R.drawable.label_sports1);
-            fragmentLabel2.setBarLabel("体育");
-            data.add(fragmentLabel2);
-            FragmentLabel fragmentLabel3 = new FragmentLabel(R.drawable.label_zayn);
-            fragmentLabel3.setBarLabel("娱乐");
-            data.add(fragmentLabel3);
-            FragmentLabel fragmentLabel4 = new FragmentLabel(R.drawable.label_zayn);
-            fragmentLabel4.setBarLabel("IT");
-            data.add(fragmentLabel4);
-        }
-    }
+//    private void initData() {
+//        for (int i = 0; i < 5; i++) {
+//            FragmentLabel fragmentLabel0 = new FragmentLabel(R.drawable.label_pets1);
+//            fragmentLabel0.setBarLabel("ACG");
+//            data.add(fragmentLabel0);
+//            FragmentLabel fragmentLabel1 = new FragmentLabel(R.drawable.label_books1);
+//            fragmentLabel1.setBarLabel("文学");
+//            data.add(fragmentLabel1);
+//            FragmentLabel fragmentLabel2 = new FragmentLabel(R.drawable.label_sports1);
+//            fragmentLabel2.setBarLabel("体育");
+//            data.add(fragmentLabel2);
+//            FragmentLabel fragmentLabel3 = new FragmentLabel(R.drawable.label_zayn);
+//            fragmentLabel3.setBarLabel("娱乐");
+//            data.add(fragmentLabel3);
+//            FragmentLabel fragmentLabel4 = new FragmentLabel(R.drawable.label_zayn);
+//            fragmentLabel4.setBarLabel("IT");
+//            data.add(fragmentLabel4);
+//        }
+//    }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
