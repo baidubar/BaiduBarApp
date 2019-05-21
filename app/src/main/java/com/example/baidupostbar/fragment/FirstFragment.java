@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.baidupostbar.DetailPost;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.Utils.CheckNetUtil;
