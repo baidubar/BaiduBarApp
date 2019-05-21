@@ -76,7 +76,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mMomentRv = view.findViewById(R.id.first_recyclerView);
-        postAdapter = new PostAdapter(mMomentRv);
+        postAdapter = new PostAdapter(mMomentRv,getContext());
         postAdapter.setOnRVItemClickListener(this);
         postAdapter.setOnRVItemLongClickListener(this);
 
@@ -226,8 +226,10 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
 
     private class PostAdapter extends BGARecyclerViewAdapter<Post> {
 
-        public PostAdapter(RecyclerView recyclerView) {
+        private Context context;
+        public PostAdapter(RecyclerView recyclerView,Context context) {
             super(recyclerView, R.layout.item_post);
+            this.context = context;
         }
 
         @Override
@@ -241,8 +243,9 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                 helper.setText(R.id.tv_likeNum,moment.praise_number);
                 helper.setText(R.id.tv_label,moment.barLabel);
                 helper.setText(R.id.tv_bar,moment.barName);
+                helper.setText(R.id.tv_author,moment.writterName);
             }
-
+            Glide.with(context).load("http://139.199.84.147"+moment.getHeadImage()).into(helper.getImageView(R.id.iv_author));
             BGANinePhotoLayout ninePhotoLayout = helper.getView(R.id.npl_item_moment_photos);
             ninePhotoLayout.setDelegate(FirstFragment.this);
             ninePhotoLayout.setData(moment.photos);

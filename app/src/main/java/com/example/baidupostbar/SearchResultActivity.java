@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.baidupostbar.Adapter.ViewPagerAdapter;
+import com.example.baidupostbar.Adapter.ViewPagerAdpter;
 import com.example.baidupostbar.bean.Search;
 import com.example.baidupostbar.fragment.SearchBarFragment;
 import com.example.baidupostbar.fragment.SearchPostFragment;
@@ -22,6 +23,9 @@ public class SearchResultActivity extends AppCompatActivity {
     private ViewPagerAdapter adapter;
     private TabLayout tabLayout;
     private String searchText;
+    private SearchPostFragment searchPostFragment;
+    private SearchBarFragment searchBarFragment;
+    private SearchUserFragment searchUserFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,26 +45,42 @@ public class SearchResultActivity extends AppCompatActivity {
                 finish();
             }
         });
-        viewPager = findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        SearchUserFragment searchUserFragment = new SearchUserFragment();
-        SearchPostFragment searchPostFragment = new SearchPostFragment();
-        SearchBarFragment searchBarFragment = new SearchBarFragment();
+//        SearchUserFragment searchUserFragment = new SearchUserFragment();
+//        SearchPostFragment searchPostFragment = new SearchPostFragment();
+//        SearchBarFragment searchBarFragment = new SearchBarFragment();
 
 
-        final ArrayList<Fragment> fragments = new ArrayList<>();
-        fragments.add(searchPostFragment);
-        fragments.add(searchBarFragment);
-        fragments.add(searchUserFragment);
-        //设置tab模式
-        tabLayout.setTabMode(TabLayout.MODE_FIXED);
+//        ViewPagerAdpter adpter = new ViewPagerAdpter(getSupportFragmentManager());
+//        final ArrayList<Fragment> fragments = new ArrayList<>();
+//        fragments.add(searchPostFragment);
+//        fragments.add(searchBarFragment);
+//        fragments.add(searchUserFragment);
+//        //设置tab模式
+//        tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
 
-        adapter = new ViewPagerAdapter(getSupportFragmentManager(),fragments);
+//        adapter = new ViewPagerAdapter(getSupportFragmentManager(),fragments);
+//        viewPager.setAdapter(adapter);
+//
+//
+//        tabLayout.setupWithViewPager(viewPager);
+        initViewPager();
+    }
+    private void initViewPager(){
+        viewPager = findViewById(R.id.viewPager);
+        searchUserFragment = new SearchUserFragment();
+        searchPostFragment = new SearchPostFragment();
+        searchBarFragment = new SearchBarFragment();
+
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(searchPostFragment,"帖子");
+        adapter.addFragment(searchBarFragment,"吧");
+        adapter.addFragment(searchUserFragment,"用户");
         viewPager.setAdapter(adapter);
-
-
         tabLayout.setupWithViewPager(viewPager);
+//        tabLayout.setSelectedTabIndicator(getResources().getColor(R.color.colorAccent));
+//        tabLayout.
     }
     public String getSearchText(){
         return searchText;

@@ -50,7 +50,7 @@
                             android:src="@drawable/background_darkblue" />
 
                         <TextView
-                            android:id="@+id/nickname"
+                            android:id="@+id/tv_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/iv_head"
@@ -64,13 +64,15 @@
                             android:id="@+id/tv_attention"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/nickname"
+                            android:layout_below="@id/tv_name"
                             android:layout_centerHorizontal="true"
                             android:layout_margin="5dp"
                             android:text="关注 999  |  粉丝 60亿"
                             android:textColor="@color/white"
                             android:textSize="16sp" />
+
                         <TextView
+                            android:id="@+id/tv_info"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tv_attention"
@@ -84,6 +86,8 @@
                     <android.support.v7.widget.Toolbar
                         android:id="@+id/toolbar"
                         style="@style/AppTheme.Toolbar"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:background="@android:color/transparent"
                         app:layout_collapseMode="pin">
 

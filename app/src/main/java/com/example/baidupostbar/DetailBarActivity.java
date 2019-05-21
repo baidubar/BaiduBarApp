@@ -118,7 +118,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
                 String watcher_number = jsonObject.getString("watcher_number");
                 String description = jsonObject.getString("description");
                // postAdapter.addHeaderView();
-                addBannerHeader("http://139.199.84.147/" + icon,name,watcher_number,post_number  );
+                addBannerHeader("http://139.199.84.147" + icon,name,watcher_number,post_number  );
                 boolean watching_status = jsonObject.getBoolean("watching_status");
                 Log.e("watching_status", String.valueOf(watching_status));
                     JSONArray jsonArray = jsonObject.getJSONArray("post_info");
@@ -174,6 +174,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
         TextView BarName  = headerView.findViewById(R.id.tv_bar);
         TextView ConcernNum = headerView.findViewById(R.id.tv_concern_num);
         TextView PostNum = headerView.findViewById(R.id.tv_post_num);
+        Log.e("barImage","barImage = " + barImage);
         Glide.with(getApplicationContext()).load(barImage).into(BarImage);
         BarName.setText(barName);
         ConcernNum.setText("关注 "+concernNum);
