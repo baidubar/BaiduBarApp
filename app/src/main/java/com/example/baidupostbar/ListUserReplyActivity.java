@@ -54,7 +54,7 @@ public class ListUserReplyActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("theUser",MODE_PRIVATE);
         userId = preferences.getString("user_id","");
         cookie = preferences.getString("cookie", "");
-        mAdapter = new MsgReplyAdapter(msgReplyList);
+        mAdapter = new MsgReplyAdapter(msgReplyList,this);
         sendRequestWithOKHttp();
         OnItemDragListener listener = new OnItemDragListener() {
             @Override
@@ -230,7 +230,7 @@ public class ListUserReplyActivity extends AppCompatActivity {
                 mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
                 LinearLayoutManager manager=new LinearLayoutManager(ListUserReplyActivity.this);
                 mRecyclerView.setLayoutManager(manager);
-                mAdapter = new MsgReplyAdapter(msgReplyList);
+                mAdapter = new MsgReplyAdapter(msgReplyList,getBaseContext());
                 mRecyclerView.setAdapter(mAdapter);
             }
         });

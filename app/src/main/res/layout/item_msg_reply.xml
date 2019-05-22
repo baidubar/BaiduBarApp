@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<com.mcxtzhang.swipemenulib.SwipeMenuLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:paddingBottom="1dp">
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -88,17 +94,18 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"/>
     </LinearLayout>
-    <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:background="@drawable/comment"
-        android:layout_gravity="end"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="15dp"
-        android:id="@+id/btn_comment"/>
     <TextView
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="7dp"
         android:background="#0C000000"/>
 </LinearLayout>
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:text="删除"
+        android:textSize="17sp"
+        android:background="#03000000"
+        android:textColor="#95FF0000"/>
+</com.mcxtzhang.swipemenulib.SwipeMenuLayout>

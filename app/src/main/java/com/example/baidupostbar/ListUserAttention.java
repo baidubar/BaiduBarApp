@@ -55,7 +55,7 @@ public class ListUserAttention extends AppCompatActivity {
         cookie = preferences.getString("cookie", "");
         Log.d("cookie",cookie);
         Log.d("id",userId);
-        mAdapter = new MsgAttentionAdapter(msgAttentionList);
+        mAdapter = new MsgAttentionAdapter(msgAttentionList,this);
         sendRequestWithOKHttp();
         OnItemDragListener listener = new OnItemDragListener() {
             @Override
@@ -215,7 +215,6 @@ public class ListUserAttention extends AppCompatActivity {
         try {
             JSONObject jsonObject = new JSONObject(response);
             String list = jsonObject.getString("new_follower");
-            String num = jsonObject.getString("floor_comment_number");
             List<MsgAttention> t = new ArrayList<MsgAttention>();
             t = gson.fromJson(list, new TypeToken<List<MsgAttention>>(){}.getType());
 
@@ -234,7 +233,7 @@ public class ListUserAttention extends AppCompatActivity {
                 mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
                 LinearLayoutManager manager=new LinearLayoutManager(ListUserAttention.this);
                 mRecyclerView.setLayoutManager(manager);
-                mAdapter = new MsgAttentionAdapter(msgAttentionList);
+                mAdapter = new MsgAttentionAdapter(msgAttentionList,getBaseContext());
                 mRecyclerView.setAdapter(mAdapter);
             }
         });

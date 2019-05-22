@@ -9,14 +9,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemDragListener;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.example.baidupostbar.Adapter.UserCommentAdapter;
@@ -54,8 +52,13 @@ public class ListUserCommentActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("theUser",MODE_PRIVATE);
         userId = preferences.getString("user_id","");
         cookie = preferences.getString("cookie", "");
-        mAdapter = new UserCommentAdapter(userCommentList);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        LinearLayoutManager manager=new LinearLayoutManager(ListUserCommentActivity.this);
+        mRecyclerView.setLayoutManager(manager);
         sendRequestWithOKHttp();
+
+        mAdapter = new UserCommentAdapter(userCommentList,this);
+
         OnItemDragListener listener = new OnItemDragListener() {
             @Override
             public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
@@ -102,22 +105,22 @@ public class ListUserCommentActivity extends AppCompatActivity {
 
             @Override
             public void onItemSwipeMoving(Canvas canvas, RecyclerView.ViewHolder viewHolder, float dX, float dY, boolean isCurrentlyActive) {
-                canvas.drawColor(ContextCompat.getColor(ListUserCommentActivity.this, R.color.white));
+                canvas.drawColor(ContextCompat.getColor(ListUserCommentActivity.this, R.color.gray));
 //                canvas.drawText("Just some text", 0, 40, paint);
             }
         };
 
-
-        ItemDragAndSwipeCallback mItemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
-        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(mItemDragAndSwipeCallback);
-        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+        mAdapter = new UserCommentAdapter(userCommentList,this);
+//        ItemDragAndSwipeCallback mItemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
+//        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(mItemDragAndSwipeCallback);
+//        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         //mItemDragAndSwipeCallback.setDragMoveFlags(ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT | ItemTouchHelper.UP | ItemTouchHelper.DOWN);
-        mItemDragAndSwipeCallback.setSwipeMoveFlags(ItemTouchHelper.START | ItemTouchHelper.END);
-        mAdapter.enableSwipeItem();
-        mAdapter.setOnItemSwipeListener(onItemSwipeListener);
-        mAdapter.enableDragItem(mItemTouchHelper);
-        mAdapter.setOnItemDragListener(listener);
+//        mItemDragAndSwipeCallback.setSwipeMoveFlags(ItemTouchHelper.START | ItemTouchHelper.END);
+//        mAdapter.enableSwipeItem();
+//        mAdapter.setOnItemSwipeListener(onItemSwipeListener);
+//        mAdapter.enableDragItem(mItemTouchHelper);
+//        mAdapter.setOnItemDragListener(listener);
 //        mRecyclerView.addItemDecoration(new GridItemDecoration(this ,R.drawable.list_divider));
 
 //        mRecyclerView.addOnItemTouchListener(new OnItemClickListener() {
@@ -126,13 +129,14 @@ public class ListUserCommentActivity extends AppCompatActivity {
 //                ToastUtils.showShortToast("点击了" + position);
 //            }
 //        });
+
+        mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 //ToastUtils.showShortToast("点击了" + position);
             }
         });
-
     }
     private List<String> generateData(int size) {
         ArrayList<String> data = new ArrayList<>(size);
@@ -238,7 +242,7 @@ public class ListUserCommentActivity extends AppCompatActivity {
                 mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
                 LinearLayoutManager manager=new LinearLayoutManager(ListUserCommentActivity.this);
                 mRecyclerView.setLayoutManager(manager);
-                mAdapter = new UserCommentAdapter(userCommentList);
+                mAdapter = new UserCommentAdapter(userCommentList,getBaseContext());
                 mRecyclerView.setAdapter(mAdapter);
             }
         });

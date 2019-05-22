@@ -54,7 +54,7 @@ public class ListUserLikeActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("theUser",MODE_PRIVATE);
         userId = preferences.getString("user_id","");
         cookie = preferences.getString("cookie", "");
-        mAdapter = new MsgLikeAdapter(msgLikeList);
+        mAdapter = new MsgLikeAdapter(msgLikeList,this);
         sendRequestWithOKHttp();
         OnItemDragListener listener = new OnItemDragListener() {
             @Override
@@ -230,7 +230,7 @@ public class ListUserLikeActivity extends AppCompatActivity {
                 mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
                 LinearLayoutManager manager=new LinearLayoutManager(ListUserLikeActivity.this);
                 mRecyclerView.setLayoutManager(manager);
-                mAdapter = new MsgLikeAdapter(msgLikeList);
+                mAdapter = new MsgLikeAdapter(msgLikeList,getBaseContext());
                 mRecyclerView.setAdapter(mAdapter);
             }
         });

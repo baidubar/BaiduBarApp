@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<com.mcxtzhang.swipemenulib.SwipeMenuLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:paddingBottom="1dp">
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -12,8 +18,8 @@
         android:layout_marginRight="25dp"
         android:layout_marginTop="20dp">
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/background_login"
             android:id="@+id/iv_user"/>
@@ -30,6 +36,7 @@
                 android:id="@+id/tv_userName"
                 android:text="美渣重症患者"
                 android:maxLines="1"
+                android:textSize="16sp"
                 android:textColor="#000000"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -37,6 +44,7 @@
 
                 android:text="   关注了我"
                 android:maxLines="1"
+                android:textSize="16sp"
                 android:textColor="#000000"/>
 
         </LinearLayout>
@@ -47,3 +55,12 @@
         android:layout_height="1dp"
         android:background="#0C000000"/>
 </LinearLayout>
+    <Button
+        android:id="@+id/btnDelete"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:text="删除"
+        android:textSize="16sp"
+        android:background="#03000000"
+        android:textColor="#95FF0000" />
+</com.mcxtzhang.swipemenulib.SwipeMenuLayout>
