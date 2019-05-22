@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.example.baidupostbar.ChangeInforActivity;
 import com.example.baidupostbar.DetailUserActivity;
 import com.example.baidupostbar.R;
 
@@ -28,6 +29,9 @@ public class UserFragment extends Fragment {
     private ImageView headImage;
     private String username;
     private String avater;
+    private LinearLayout info;
+    private LinearLayout interest;
+    private LinearLayout collect;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -42,6 +46,22 @@ public class UserFragment extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("theUser", Context.MODE_PRIVATE);
         username = sharedPreferences.getString("username", "");
         avater = "http://139.199.84.147" + sharedPreferences.getString("avater","");
+
+
+        collect = view.findViewById(R.id.pc_collect);
+        info = view.findViewById(R.id.pc_info);
+        interest = view.findViewById(R.id.pc_interest);
+
+
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(getContext(), ChangeInforActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
         setfindId();
 

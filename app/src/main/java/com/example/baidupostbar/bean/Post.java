@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 public class Post implements Parcelable {
+    public String barId;
     public String content;
     public String comment_number;
     public String praise_number;
@@ -14,10 +15,21 @@ public class Post implements Parcelable {
     public String writterName;
     public String barName;
     public String barLabel;
+    public String postId;
+
+
+    public String getBarId(){
+        return barId;
+    }
+
+    public void setBarId(String barId){
+        this.barId = barId;
+    }
 
     public String getBarName(){
         return barName;
     }
+
     public void setBarName(String barName){
         this.barName = barName;
     }
@@ -25,6 +37,7 @@ public class Post implements Parcelable {
     public String getBarLabel(){
         return barLabel;
     }
+
     public void setBarLabel(String barLabel){
         this.barLabel = barLabel;
     }
@@ -92,12 +105,14 @@ public class Post implements Parcelable {
         dest.writeString(this.writterName);
         dest.writeString(this.barLabel);
         dest.writeString(this.barName);
+        dest.writeString(this.barId);
+        dest.writeString(this.postId);
     }
 
     public Post() {
     }
 
-    public Post(String content, ArrayList<String> photos,String comment_number,String praise_number,String headImage,String writterName,String barLabel,String barName) {
+    public Post(String content, ArrayList<String> photos,String comment_number,String praise_number,String headImage,String writterName,String barLabel,String barName,String barId,String postId) {
         this.content = content;
         this.photos = photos;
         this.comment_number = comment_number;
@@ -106,6 +121,8 @@ public class Post implements Parcelable {
         this.headImage = headImage;
         this.barLabel = barLabel;
         this.barName = barName;
+        this.barId = barId;
+        this.postId = postId;
     }
 
     protected Post(Parcel in) {
@@ -117,6 +134,8 @@ public class Post implements Parcelable {
         this.headImage = in.readString();
         this.barName = in.readString();
         this.barLabel = in.readString();
+        this.barId = in.readString();
+        this.postId = in.readString();
     }
 
     public static final Parcelable.Creator<Post> CREATOR = new Parcelable.Creator<Post>() {

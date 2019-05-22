@@ -183,6 +183,7 @@
         android:layout_height="4dp"
         android:background="#0C000000"/>
     <LinearLayout
+        android:id="@+id/pc_collect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -200,6 +201,7 @@
             android:textColor="#000000"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/pc_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -216,6 +218,7 @@
             android:textColor="#000000"/>
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/pc_interest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">

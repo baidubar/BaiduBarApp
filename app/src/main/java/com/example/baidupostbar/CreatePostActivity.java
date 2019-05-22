@@ -1,25 +1,47 @@
 package com.example.baidupostbar;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.baidupostbar.model.Moment;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerActivity;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPickerPreviewActivity;
 import cn.bingoogolapple.photopicker.widget.BGASortableNinePhotoLayout;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -31,6 +53,8 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
     private static final int RC_CHOOSE_PHOTO = 1;
     private static final int RC_PHOTO_PREVIEW = 2;
 
+    private static final String EXTRA_SELECTED_PHOTOS = "EXTRA_SELECTED_PHOTOS";
+
     private static final String EXTRA_MOMENT = "EXTRA_MOMENT";
 
     /**
@@ -40,6 +64,7 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
     // ==================================== 测试拖拽排序九宫格图片控件 END ====================================
 
     private EditText mContentEt;
+    private ArrayList<String>photo;
 
     //这里原demo中的用法：创建新帖并添加到recyclerview的顶部
 //    public static Moment getMoment(Intent intent) {
@@ -70,9 +95,21 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.btn_publish:
-                Intent intent = new Intent(CreatePostActivity.this, DetailBarActivity.class);
-                startActivity(intent);
-                finish();
+//                Intent intent = new Intent(CreatePostActivity.this, DetailBarActivity.class);
+//                startActivity(intent);
+//                finish();
+                String content = mContentEt.getText().toString();
+                Log.e("CreatPost","content:"+ content);
+                Log.e("CreatPost","photo:"+ photo);
+//                for(int i = 0;i<photo.size();i++){
+//                    String a = photo.get(i);
+//                    Log.e("CreatPost","a:"+ a);
+//                }
+                if(!content.equals("0")){
+
+                }else {
+                    Toast.makeText(getApplicationContext(),"请填入内容",Toast.LENGTH_LONG).show();
+                }
                 break;
             default:
         }
@@ -90,11 +127,21 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
 //                return;
 //            }
 //
-//            Intent intent = new Intent();
-//            intent.putExtra(EXTRA_MOMENT, new Moment(mContentEt.getText().toString().trim(), mPhotosSnpl.getData()));
-//            setResult(RESULT_OK, intent);
-//            finish();
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_MOMENT, new Moment(mContentEt.getText().toString().trim(), mPhotosSnpl.getData()));
+            setResult(RESULT_OK, intent);
+            finish();
 //        }
+        mContentEt = v.findViewById(R.id.et_moment_add_content);
+        String content = mContentEt.getText().toString();
+        Log.e("CreatPost","content:"+ content);
+        Log.e("CreatPost","photo:"+ photo);
+//       ,
+        if(!content.equals("0")){
+
+        }else {
+            Toast.makeText(getApplicationContext(),"请填入内容",Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -117,6 +164,7 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
                 .isFromTakePhoto(false) // 是否是拍完照后跳转过来
                 .build();
         startActivityForResult(photoPickerPreviewIntent, RC_PHOTO_PREVIEW);
+        Log.e("CreatePost","models"+ models);
     }
 
     @Override
@@ -138,6 +186,8 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
                     .pauseOnScroll(false) // 滚动列表时是否暂停加载图片
                     .build();
             startActivityForResult(photoPickerIntent, RC_CHOOSE_PHOTO);
+            Log.e("CreatePost","takePhotoDir"+ takePhotoDir.getName());
+            getSelectedPhotos(photoPickerIntent);
         } else {
             EasyPermissions.requestPermissions(this, "图片选择需要以下权限:\n\n1.访问设备上的照片\n\n2.拍照", PRC_PHOTO_PICKER, perms);
         }
@@ -165,11 +215,113 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == RC_CHOOSE_PHOTO) {
 
-                mPhotosSnpl.addMoreData(BGAPhotoPickerActivity.getSelectedPhotos(data));
-
+            mPhotosSnpl.addMoreData(BGAPhotoPickerActivity.getSelectedPhotos(data));
+            photo = BGAPhotoPickerActivity.getSelectedPhotos(data);
+            Log.e("TAGG1", String.valueOf(photo));
         } else if (requestCode == RC_PHOTO_PREVIEW) {
             mPhotosSnpl.setData(BGAPhotoPickerPreviewActivity.getSelectedPhotos(data));
+//            photo = BGAPhotoPickerPreviewActivity.getSelectedPhotos(data);
+//            Log.e("TAGG2", String.valueOf(photo));
         }
     }
+
+//    private void postImage(String filePath) {
+//        Log.e("DetailUserActivity",filePath);
+////        if (imagePath != null) {
+////            //这里可以上服务器;
+//        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+//        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+//                .retryOnConnectionFailure(true)
+//                .connectTimeout(20, TimeUnit.SECONDS)
+//                .writeTimeout(20, TimeUnit.SECONDS)
+//                .readTimeout(20, TimeUnit.SECONDS)
+//                .build();
+//        File file = new File(filePath);
+//        //File file = convertBitmapToFile(bitmap);
+//        Log.e("PCActivity", "ok1");
+//        //RequestBody image = RequestBody.create(MediaType.parse("image/png"), convertBitmapToFile(bitmap));
+//        RequestBody image = RequestBody.create(MediaType.parse("image/png"),file );
+//        Log.e("DetailFileName",file.getName());
+//        Log.e("DetailFilePath",file.getPath());
+//        RequestBody requestBody = new MultipartBody.Builder()
+//                .setType(MultipartBody.FORM)
+//                // .addFormDataPart("headImage", imagePath, image)
+//                .addFormDataPart("pic", file.getName() , image)
+//                .addFormDataPart("type",type)
+//                .addFormDataPart("user_id",userId)
+//                .build();
+//        Log.e("PCActivity", "为啥传不上去"+ image + "type:"+type + "userId:"+ userId);
+//        final Request request = new Request.Builder()
+//                .url("http://139.199.84.147/mytieba.api/upload/photo")
+//                .addHeader("Cookie",cookie)
+//                .post(requestBody)
+//                .build();
+//        Log.e("PCActivity", "ok2");
+//        okHttpClient.newCall(request).enqueue(new Callback() {
+//            //请求错误回调方法
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                Log.e("DetailUserActivity", "获取数据失败");
+//                Log.e("DetailUserActivity", String.valueOf(e));
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                String responseData = response.body().string();
+//                Log.e("DetailresponseData", responseData);
+//                if (response.isSuccessful()) {
+//                    try {
+//                        Log.e("DetailUserActivity", "ok3");
+//
+//                        Log.e("DetailUserActivity", "ResponseData" + responseData);
+//                        JSONObject jsonObject = new JSONObject(responseData);
+//                        statu = jsonObject.getBoolean("status");
+//                        if(statu) {
+//
+//                            String pic = "http://139.199.84.147" + jsonObject.getString("pic");
+//                            SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
+//                            SharedPreferences.Editor editor = sharedPreferences.edit();
+//                            if(type.equals("avatar")){
+//                                editor.putString("avater", pic);
+//                                editor.apply();
+//                            }else {
+//                                editor.putString("background", pic);
+//                                editor.apply();
+//                            }
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    Toast.makeText(getApplicationContext(),"成功",Toast.LENGTH_LONG).show();
+//                                }
+//                            });
+//                        }else {
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    Toast.makeText(getApplicationContext(),"发送失败",Toast.LENGTH_LONG).show();
+//                                }
+//                            });
+//                        }
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        Log.e("DetailUserActivity", response.body().string());
+//                        Log.e("DetailUserActivity", String.valueOf(e));
+//                    }
+//
+//                }
+//            }
+//        });
+//    }
+    public static ArrayList<String> getSelectedPhotos(Intent intent) {
+        return intent.getStringArrayListExtra(EXTRA_SELECTED_PHOTOS);
+    }
+
+//    public BGAPhotoPickerPreviewActivity.IntentBuilder previewPhotos(ArrayList<String> previewPhotos) {
+//        mIntent.putStringArrayListExtra("EXTRA_PREVIEW_PHOTOS", previewPhotos);
+//        return this;
+//    }
+
+
 
 }

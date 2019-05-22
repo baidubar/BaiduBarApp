@@ -24,6 +24,7 @@
         android:orientation="horizontal"
         android:layout_margin="20dp">
         <EditText
+            android:maxLength="140"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="  留下想说的..."
@@ -38,6 +39,7 @@
         android:gravity="right">
         <TextView
 
+            android:id="@+id/tv_words_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="140/140"/>
