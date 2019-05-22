@@ -1,6 +1,7 @@
 package com.example.baidupostbar.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,7 +22,6 @@ import com.example.baidupostbar.R;
 import com.example.baidupostbar.SearchActivity;
 import com.example.baidupostbar.bean.UserComment;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,12 +30,18 @@ import java.net.ConnectException;
 import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class ThirdFragment extends Fragment {
     View view;
@@ -48,7 +54,10 @@ public class ThirdFragment extends Fragment {
     LinearLayout reply;
     LinearLayout like;
     LinearLayout attention;
+    private String userId;
+    private String cookie;
     private List<UserComment> userCommentList = new ArrayList<>();
+    private int sfNum,likeNum,replyNum,attentionNum;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -60,6 +69,10 @@ public class ThirdFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        SharedPreferences preferences = getContext().getSharedPreferences("theUser",MODE_PRIVATE);
+        userId = preferences.getString("user_id","");
+        cookie = preferences.getString("cookie", "");
+        Log.d("艾迪",userId);
         initView();
         initListener();
         sendRequestWithOKHttp();
@@ -121,12 +134,28 @@ public class ThirdFragment extends Fragment {
             @Override
             public void run() {
                 try {
-                    OkHttpClient client = new OkHttpClient();
-                    Request request = new Request.Builder()
-                            .url("http://139.199.84.147/mytieba.api/user/i/floor_comment-info")
+                    OkHttpClient client = new OkHttpClient.Builder()
+                            .connectTimeout(10, TimeUnit.SECONDS)
+                            .readTimeout(10,TimeUnit.SECONDS)
                             .build();
+
+                    String url = "http://139.199.84.147/mytieba.api/user/" + userId + "/info";
+
+                    List<Map<String, String>> list_url = new ArrayList<>();
+                    Map<String, String> map = new HashMap<>();
+                    map.put("type", "message");
+                    list_url.add(map);
+
+                    url = getUrl(url, list_url);
+
+                    Request request = new Request.Builder()
+                            .url(url)   //网址有待改动
+                            .addHeader("Cookie",cookie)
+                            .build();
+
                     Response response = client.newCall(request).execute();
                     String responseData = response.body().string();
+                    Log.d("消息页显示红点",responseData);
                     showResponse(responseData);
                 }catch (Exception e){
                     getActivity().runOnUiThread(new Runnable() {
@@ -153,16 +182,10 @@ public class ThirdFragment extends Fragment {
         Gson gson = new Gson();
         try {
             JSONObject jsonObject = new JSONObject(response);
-            String list = jsonObject.getString("floor_comment_info");
-            String num = jsonObject.getString("floor_comment_number");
-            List<UserComment> t = new ArrayList<UserComment>();
-            t = gson.fromJson(list, new TypeToken<List<UserComment>>(){}.getType());
-
-            userCommentList.addAll(t);
-            if (userCommentList != null)
-            {
-                Log.d("listhhh",userCommentList.toString());
-            }
+            sfNum = jsonObject.getInt("floor_message");
+            replyNum = jsonObject.getInt("reply_message");
+            likeNum = jsonObject.getInt("praise_message");
+            attentionNum = jsonObject.getInt("follower_message");
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -172,8 +195,39 @@ public class ThirdFragment extends Fragment {
             @Override
             public void run(){
                 //设置ui
-
+                if (sfNum != 0)
+                    cv0.setVisibility(View.VISIBLE);
+                if (replyNum != 0)
+                    cv1.setVisibility(View.VISIBLE);
+                if (likeNum != 0)
+                    cv2.setVisibility(View.VISIBLE);
+                if (attentionNum != 0)
+                    cv3.setVisibility(View.VISIBLE);
             }
         });
+    }
+    private String getUrl(String url, List<Map<String, String>> list_url) {
+        for (int i = 0; i < list_url.size(); i++) {
+            Map<String, String> params = list_url.get(i);
+            if (params != null) {
+                Iterator<String> it = params.keySet().iterator();
+                StringBuffer sb = null;
+                while (it.hasNext()) {
+                    String key = it.next();
+                    String value = params.get(key);
+                    if (sb == null) {
+                        sb = new StringBuffer();
+                        sb.append("?");
+                    } else {
+                        sb.append("&");
+                    }
+                    sb.append(key);
+                    sb.append("=");
+                    sb.append(value);
+                }
+                url += sb.toString();
+            }
+        }
+        return url;
     }
 }

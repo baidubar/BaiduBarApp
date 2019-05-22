@@ -41,7 +41,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:background="@drawable/square_rl">
+                    android:background="@drawable/square_rl"
+                    android:id="@+id/label_sports">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -64,7 +65,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:background="@drawable/square_rl">
+                    android:background="@drawable/square_rl"
+                    android:id="@+id/label_movie">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -86,8 +88,9 @@
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:background="@drawable/square_rl">
+                    android:layout_height="220dp"
+                    android:background="@drawable/square_rl"
+                    android:id="@+id/label_food">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -110,7 +113,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:background="@drawable/square_rl">
+                    android:background="@drawable/square_rl"
+                    android:id="@+id/label_fun">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -132,20 +136,22 @@
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp">
+                    android:layout_height="220dp"
+                    android:background="@drawable/square_rl"
+                    android:id="@+id/label_acg">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_centerInParent="true">
                         <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/label_sports"/>
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/label_acg"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="体育"
+                            android:text="ACG"
                             android:textColor="#000000"
                             android:textSize="17sp"
                             android:layout_gravity="center_horizontal"
@@ -154,7 +160,9 @@
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp">
+                    android:layout_height="150dp"
+                    android:background="@drawable/square_rl"
+                    android:id="@+id/label_book">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -163,11 +171,35 @@
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:src="@drawable/label_sports"/>
+                            android:src="@drawable/label_book"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="体育"
+                            android:text="文字"
+                            android:textColor="#000000"
+                            android:textSize="17sp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"/>
+                    </LinearLayout>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@drawable/square_rl"
+                    android:id="@+id/label_photo">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_centerInParent="true">
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/label_photo"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="摄影"
                             android:textColor="#000000"
                             android:textSize="17sp"
                             android:layout_gravity="center_horizontal"
@@ -182,8 +214,57 @@
                 android:layout_weight="1">
                 <RelativeLayout
                     android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:background="@drawable/square_rl"
+                    android:id="@+id/label_teach">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_centerInParent="true">
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/label_teach"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="教育"
+                            android:textColor="#000000"
+                            android:textSize="17sp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"/>
+                    </LinearLayout>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="225dp"
+                    android:background="@drawable/square_rl"
+                    android:id="@+id/label_beauty">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_centerInParent="true">
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/label_beauty"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="美容"
+                            android:textColor="#000000"
+                            android:textSize="17sp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"/>
+                    </LinearLayout>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:background="@drawable/square_rl">
+                    android:background="@drawable/square_rl"
+                    android:id="@+id/label_pets">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -192,11 +273,11 @@
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:src="@drawable/label_sports"/>
+                            android:src="@drawable/label_pets"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="体育"
+                            android:text="宠物"
                             android:textColor="#000000"
                             android:textSize="17sp"
                             android:layout_gravity="center_horizontal"
@@ -205,8 +286,9 @@
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:background="@drawable/square_rl">
+                    android:layout_height="220dp"
+                    android:background="@drawable/square_rl"
+                    android:id="@+id/label_shopping">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -215,11 +297,11 @@
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:src="@drawable/label_sports"/>
+                            android:src="@drawable/label_shopping"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="体育"
+                            android:text="购物"
                             android:textColor="#000000"
                             android:textSize="17sp"
                             android:layout_gravity="center_horizontal"
@@ -229,7 +311,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:background="@drawable/square_rl">
+                    android:background="@drawable/square_rl"
+                    android:id="@+id/label_it">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -238,11 +321,11 @@
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:src="@drawable/label_sports"/>
+                            android:src="@drawable/label_it" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="体育"
+                            android:text="IT"
                             android:textColor="#000000"
                             android:textSize="17sp"
                             android:layout_gravity="center_horizontal"
@@ -251,7 +334,9 @@
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp">
+                    android:layout_height="230dp"
+                    android:background="@drawable/square_rl"
+                    android:id="@+id/label_music">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -260,77 +345,11 @@
                         <ImageView
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:src="@drawable/label_sports"/>
+                            android:src="@drawable/label_music"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="体育"
-                            android:textColor="#000000"
-                            android:textSize="17sp"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="5dp"/>
-                    </LinearLayout>
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_centerInParent="true">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/label_sports"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="体育"
-                            android:textColor="#000000"
-                            android:textSize="17sp"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="5dp"/>
-                    </LinearLayout>
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_centerInParent="true">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/label_sports"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="体育"
-                            android:textColor="#000000"
-                            android:textSize="17sp"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="5dp"/>
-                    </LinearLayout>
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_centerInParent="true">
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/label_sports"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="体育"
+                            android:text="音乐"
                             android:textColor="#000000"
                             android:textSize="17sp"
                             android:layout_gravity="center_horizontal"

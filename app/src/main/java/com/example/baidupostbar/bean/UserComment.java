@@ -9,6 +9,24 @@ public class UserComment {
     private String writer_name;
     private String writer_avatar;
     private boolean read_status;
+    private String time;
+    private String floor_content;
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getFloor_content() {
+        return floor_content;
+    }
+
+    public void setFloor_content(String floor_content) {
+        this.floor_content = floor_content;
+    }
 
     public int getId() {
         return id;

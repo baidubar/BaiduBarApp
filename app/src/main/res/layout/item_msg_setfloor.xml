@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="我：雨果男神！"
+            android:text="我：黄金的体积每年要磨去一千四百分之一，这就是所谓“损耗”。因此全世界流通的十四亿金子每年要损耗一百万。这一百万黄"
             android:id="@+id/tv_postContent"
             android:lines="1"
             android:ellipsize="end"

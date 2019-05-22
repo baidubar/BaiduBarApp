@@ -1,5 +1,6 @@
 package com.example.baidupostbar;
 
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -30,7 +31,11 @@ import java.net.ConnectException;
 import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -40,12 +45,17 @@ public class ListUserCommentActivity extends AppCompatActivity {
     private List<UserComment> userCommentList = new ArrayList<>();
     RecyclerView mRecyclerView;
     UserCommentAdapter mAdapter;
+    private String userId;
+    private String cookie;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_user_comment);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        SharedPreferences preferences = getSharedPreferences("theUser",MODE_PRIVATE);
+        userId = preferences.getString("user_id","");
+        cookie = preferences.getString("cookie", "");
+        mAdapter = new UserCommentAdapter(userCommentList);
+        sendRequestWithOKHttp();
         OnItemDragListener listener = new OnItemDragListener() {
             @Override
             public void onItemDragStart(RecyclerView.ViewHolder viewHolder, int pos) {
@@ -136,12 +146,28 @@ public class ListUserCommentActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    OkHttpClient client = new OkHttpClient();
-                    Request request = new Request.Builder()
-                            .url("http://139.199.84.147/mytieba.api/user/i/floor_comment-info")
+
+                    OkHttpClient client = new OkHttpClient.Builder()
+                            .connectTimeout(10, TimeUnit.SECONDS)
+                            .readTimeout(10,TimeUnit.SECONDS)
                             .build();
+
+                    String url = "http://139.199.84.147/mytieba.api/user/"+userId+"/floor_comment-info";
+
+                    List<Map<String, String>> list_url = new ArrayList<>();
+                    Map<String, String> map = new HashMap<>();
+                    list_url.add(map);
+
+                    //url = getUrl(url, list_url);
+
+                    Request request = new Request.Builder()
+                            .url(url)   //网址有待改动
+                            .addHeader("Cookie",cookie)
+                            .build();
+
                     Response response = client.newCall(request).execute();
                     String responseData = response.body().string();
+                    Log.d("建楼消息",responseData);
                     showResponse(responseData);
                 }catch (Exception e){
                     runOnUiThread(new Runnable() {
@@ -164,6 +190,30 @@ public class ListUserCommentActivity extends AppCompatActivity {
             }
         }).start();
     }
+    private String getUrl(String url, List<Map<String, String>> list_url) {
+        for (int i = 0; i < list_url.size(); i++) {
+            Map<String, String> params = list_url.get(i);
+            if (params != null) {
+                Iterator<String> it = params.keySet().iterator();
+                StringBuffer sb = null;
+                while (it.hasNext()) {
+                    String key = it.next();
+                    String value = params.get(key);
+                    if (sb == null) {
+                        sb = new StringBuffer();
+                        sb.append("?");
+                    } else {
+                        sb.append("&");
+                    }
+                    sb.append(key);
+                    sb.append("=");
+                    sb.append(value);
+                }
+                url += sb.toString();
+            }
+        }
+        return url;
+    }
     private void showResponse(final String response){
         Gson gson = new Gson();
         try {
@@ -174,19 +224,18 @@ public class ListUserCommentActivity extends AppCompatActivity {
             t = gson.fromJson(list, new TypeToken<List<UserComment>>(){}.getType());
 
             userCommentList.addAll(t);
-            if (userCommentList != null)
-            {
-                Log.d("listhhh",userCommentList.toString());
-            }
+            //if (userCommentList != null)
+            //{
+                Log.d("建楼消息列表",userCommentList.toString());
+            //}
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         runOnUiThread(new Runnable(){
             @Override
-            public void run(){
-                    //设置ui
+            public void run(){ //设置ui
+                mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
                 LinearLayoutManager manager=new LinearLayoutManager(ListUserCommentActivity.this);
                 mRecyclerView.setLayoutManager(manager);
                 mAdapter = new UserCommentAdapter(userCommentList);
