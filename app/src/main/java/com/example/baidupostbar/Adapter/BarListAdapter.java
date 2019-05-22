@@ -32,5 +32,6 @@ public class BarListAdapter extends BaseQuickAdapter<BarList, BaseViewHolder> {
         helper.setText(R.id.tv_attention,item.getAttentionNum());
         helper.setText(R.id.tv_postNum,item.getPostNum());
         Log.e("BarListAdapter","barName = "+ item.getBarName());
+
     }
 }

@@ -96,16 +96,23 @@
         android:scrollbarAlwaysDrawHorizontalTrack="true"
         >
         <android.support.design.widget.TextInputEditText
+            android:maxLength="20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="个人简介"
             android:theme="@style/MyEditText"
             android:id="@+id/et_signature"
-            android:maxLines="1"/>
+            android:maxLines="2"/>
     </android.support.design.widget.TextInputLayout>
+    <TextView
+        android:id="@+id/tv_words_number"
+        android:layout_marginRight="30dp"
+        android:layout_gravity="right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="20/20"/>
 
     <Button
-        android:enabled="false"
         android:id="@+id/btn_finish"
         android:text="完成"
         android:layout_marginTop="30dp"

@@ -31,11 +31,12 @@
                 android:maxLines="1"
                 android:textStyle="bold"
                 android:textColor="#000000"/>
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/tv_time"
-                android:text="2019-01-01"/>
+                android:layout_width="wrap_content"
+                android:layout_height="5dp"
+                android:text="2019-01-01" />
         </LinearLayout>
         <Button
             android:layout_width="54dp"
@@ -57,6 +58,19 @@
         android:id="@+id/tv_content"
         android:layout_marginTop="15dp"
         android:lineSpacingExtra = "6dp"/>
+    <cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:id="@+id/npl_item_moment_photos"
+        style="@style/MatchWrap"
+        android:layout_marginTop="8dp"
+        app:bga_npl_itemCornerRadius="0dp"
+        app:bga_npl_itemSpanCount="3"
+        app:bga_npl_itemWhiteSpacing="4dp"
+        app:bga_npl_itemWidth="0dp"
+        app:bga_npl_otherWhiteSpacing="64dp"
+        app:bga_npl_placeholderDrawable="@mipmap/bga_pp_ic_holder_light"
+        app:bga_npl_showAsLargeWhenOnlyOne="true"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

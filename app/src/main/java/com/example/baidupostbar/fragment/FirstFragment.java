@@ -16,13 +16,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.baidupostbar.ChangeInforActivity;
 import com.example.baidupostbar.DetailPost;
+import com.example.baidupostbar.MainActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.Utils.CheckNetUtil;
+import com.example.baidupostbar.Utils.HttpUtil;
 import com.example.baidupostbar.bean.Post;
+import com.nostra13.universalimageloader.utils.L;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,7 +37,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +49,7 @@ import cn.bingoogolapple.baseadapter.BGAViewHolderHelper;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPreviewActivity;
 import cn.bingoogolapple.photopicker.imageloader.BGARVOnScrollListener;
 import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout;
+
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -61,9 +68,9 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     private String url;
     private ArrayList<String>picture;
     private String responseData;
+    private List<Post> moments;
 
     private BGANinePhotoLayout mCurrentClickNpl;
-    List<Post> moments = new ArrayList<>();
 
     @Nullable
     @Override
@@ -77,6 +84,8 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mMomentRv = view.findViewById(R.id.first_recyclerView);
+
+
         postAdapter = new PostAdapter(mMomentRv,getContext());
         postAdapter.setOnRVItemClickListener(this);
         postAdapter.setOnRVItemLongClickListener(this);
@@ -85,15 +94,18 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
         mMomentRv.setLayoutManager(new LinearLayoutManager(getContext()));
         mMomentRv.setAdapter(postAdapter);
 
-        List<Map<String, String>> list_url = new ArrayList<>();
-        Map<String, String> map = new HashMap<>();
-//                    map.put("id",headnum.toString());
-//                    headnum = headnum + 10;
-        map.put("page", "1");
-//                    map.put("number", "10");
-        list_url.add(map);
-        url = getUrl("http://139.199.84.147/mytieba.api/posts", list_url);
-        Log.e("FirstFragment","url" + url);
+
+
+
+//        List<Map<String, String>> list_url = new ArrayList<>();
+//        Map<String, String> map = new HashMap<>();
+////                    map.put("id",headnum.toString());
+////                    headnum = headnum + 10;
+//        map.put("", "0");
+////                    map.put("number", "10");
+//        list_url.add(map);
+//        url = getUrl("http://139.199.84.147/mytieba.api/posts", list_url);
+        url = "http://139.199.84.147/mytieba.api/posts";
 
         if (new CheckNetUtil(getContext()).initNet()) {
             initData(url);
@@ -107,12 +119,14 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     private void addNetImageTestData(String jsonData) {
 
         //List<Post> moments = new ArrayList<>();
+        moments = new ArrayList<>();
         try {
 
                 JSONObject jsonObject = new JSONObject(jsonData);
                     JSONArray jsonArray = jsonObject.getJSONArray("post_msg");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                        String postId = jsonObject1.getString("post_id");
                         JSONArray jsonArray1 = jsonObject1.getJSONArray("post_pic");
                         String writer_id = jsonObject1.getString("writer_id");
                         String writer_name = jsonObject1.getString("writer_name");
@@ -128,7 +142,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                         String barId = jsonObject1.getString("bar_id");
                         String barName = jsonObject1.getString("bar_name");
                         String bar_tags = jsonObject1.getString("bar_tags");
-                        moments.add(new Post(post_content,picture,comment_number,praise_number,writer_avatar,writer_name,bar_tags,barName));
+                        moments.add(new Post(post_content,picture,comment_number,praise_number,writer_avatar,writer_name,bar_tags,barName,barId,postId));
 
                     }
         } catch (JSONException e){
@@ -214,7 +228,10 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     //帖子的点击事件
     @Override
     public void onRVItemClick(ViewGroup viewGroup, View view, int position) {
+
+        String postId = moments.get(position).postId;
         Intent intent = new Intent(getContext(), DetailPost.class);
+        intent.putExtra("post_id",postId);
         startActivity(intent);
     }
 
@@ -248,7 +265,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
             }
             Glide.with(context).load("http://139.199.84.147"+moment.getHeadImage()).into(helper.getImageView(R.id.iv_author));
             BGANinePhotoLayout ninePhotoLayout = helper.getView(R.id.npl_item_moment_photos);
-            ninePhotoLayout.setDelegate(FirstFragment.this);
+            ninePhotoLayout.setDelegate(FirstFragment.this::onClickNinePhotoItem);
             ninePhotoLayout.setData(moment.photos);
         }
 

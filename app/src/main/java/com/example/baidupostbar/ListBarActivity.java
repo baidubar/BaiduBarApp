@@ -146,7 +146,7 @@ public class ListBarActivity extends RootBaseActivity {
                         String name = jsonObject1.getString("name");
                         String icon = jsonObject1.getString("icon");
                         String post_number = jsonObject1.getString("post_number");
-//                        String watcher_number = jsonObject1.getString("watcher_number");
+  //                      String watcher_number = jsonObject1.getString("watcher_number");
                         String description = jsonObject1.getString("description");
                         boolean watching_status = jsonObject1.getBoolean("watching_status");
 
@@ -155,7 +155,7 @@ public class ListBarActivity extends RootBaseActivity {
                         Log.e("ListBarActivity", description);
                         BarList item = new BarList();
                         item.setBarImg("http://139.199.84.147/" + icon);
-                        item.setAttentionNum("12");
+//                        item.setAttentionNum(watcher_number);
                         item.setBarInfor(description);
                         item.setBarName(name);
                         item.setPostNum(post_number);

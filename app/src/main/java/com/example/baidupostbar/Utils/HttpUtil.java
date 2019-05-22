@@ -293,6 +293,7 @@ public class HttpUtil {
                     @Override
                     public void onFailure(okhttp3.Call call, IOException e) {
                         Log.e("onFailure","获取数据失败");
+                        Log.e("HttpUtil","GetWithCookie1:"+ e);
                         ctx.viewHandler.obtainMessage(0, "网络请求失败！").sendToTarget();
                     }
 
@@ -308,6 +309,7 @@ public class HttpUtil {
                 });
             } catch (Exception e) {
                 e.printStackTrace();
+                Log.e("HttpUtil","GetWithCookie2:"+ e);
                 ctx.viewHandler.obtainMessage(0, "网络请求失败！").sendToTarget();
             }
 

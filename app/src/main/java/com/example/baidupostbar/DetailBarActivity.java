@@ -59,6 +59,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
     private PostAdapter postAdapter;
     private ArrayList<String>picture;
     private String barLabel;
+    private String type;
 
     private BGANinePhotoLayout mCurrentClickNpl;
 
@@ -68,9 +69,12 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
         setContentView(R.layout.activity_detail_bar);
 
         Intent intent = getIntent();
+        String type = intent.getStringExtra("type");
         String barId = intent.getStringExtra("barId");
         barLabel = intent.getStringExtra("barLabel");
         Log.e("DetailBarActivity", "barId" + barId);
+
+
 
         HttpUtil httpUtil = new HttpUtil(DetailBarActivity.this,getApplicationContext());
         httpUtil.GetUtilWithCookie("http://139.199.84.147/mytieba.api/postbar?bar_id=" + barId,1);
@@ -125,6 +129,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                         String writer_id = jsonObject1.getString("writer_id");
+                        String post_id = jsonObject1.getString("post_id");
                         String writer_avatar = jsonObject1.getString("writer_avatar");
                         String writer_name = jsonObject1.getString("writer_name");
                         String post_content = jsonObject1.getString("post_content");
@@ -138,7 +143,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
                         String comment_number = jsonObject1.getString("comment_number");
                         String praise_number = jsonObject1.getString("praise_number");
                         String time = jsonObject1.getString("time");
-                        moments.add(new Post(post_content, picture,comment_number,praise_number,writer_avatar,writer_name,"#"+barLabel,name ));
+                        moments.add(new Post(post_content, picture,comment_number,praise_number,writer_avatar,writer_name,"#"+barLabel,name,bar_id,post_id ));
                         postAdapter.setData(moments);
 
                 }

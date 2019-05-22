@@ -563,6 +563,7 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
             String user_id = jsonObject.getString("user_id");
             username = jsonObject.getString("username");
             gender = jsonObject.getString("gender");
+            Log.e("DetailUser + gender1",gender);
             description = jsonObject.getString("description");
             birthday = jsonObject.getString("birthday");
             avatar = jsonObject.getString("avatar");
@@ -605,6 +606,7 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
     }
 
     public String getGender(){
+        Log.e("DetailUser + gender2",gender);
         return gender;
     }
     public String getBirthday(){
