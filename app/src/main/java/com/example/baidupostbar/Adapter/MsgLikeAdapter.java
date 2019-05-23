@@ -1,36 +1,126 @@
 package com.example.baidupostbar.Adapter;
 
-import com.chad.library.adapter.base.BaseItemDraggableAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.bean.MsgLike;
 
 import java.util.List;
 
-public class MsgLikeAdapter extends BaseItemDraggableAdapter<MsgLike, BaseViewHolder> {
-    public MsgLikeAdapter(List data) {
-        super(R.layout.item_msg_like, data);
+public class MsgLikeAdapter extends RecyclerView.Adapter<MsgLikeAdapter.ViewHolder>{
+
+    private List<MsgLike> list;
+    private Context context;
+    private boolean hasMore = true;
+
+
+    public MsgLikeAdapter(List<MsgLike> list,Context context){
+        this.list = list;
+        this.context = context;
     }
 
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView iv_author;
+        TextView tv_author;
+        View msgLike;
+        TextView tv_postContent;
+        Button btn_delete;
+
+
+        public ViewHolder(View view) {
+            super(view);
+            msgLike = view;
+            iv_author = (ImageView) view.findViewById(R.id.iv_author);
+            tv_author = (TextView) view.findViewById(R.id.tv_author);
+            tv_postContent = view.findViewById(R.id.tv_postContent);
+            btn_delete = view.findViewById(R.id.btnDelete);
+        }
+    }
+
+    public MsgLikeAdapter(List<MsgLike> list) {
+        this.list = list;
+    }
+
+    @NonNull
+    @Override
+    public MsgLikeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        if (context == null){
+            context = viewGroup.getContext();
+        }
+        View view = LayoutInflater.from(context)
+                .inflate(R.layout.item_msg_like, viewGroup, false);
+        final MsgLikeAdapter.ViewHolder holder = new MsgLikeAdapter.ViewHolder(view);
+        holder.msgLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = holder.getAdapterPosition();
+                MsgLike msgLike = list.get(position);
+            }
+        });
+        holder.btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if (null != mOnSwipeListener) {
+//                    //Toast.makeText(context, "删除", Toast.LENGTH_SHORT).show();
+//                    //如果删除时，不使用mAdapter.notifyItemRemoved(pos)，则删除没有动画效果，
+//                    //且如果想让侧滑菜单同时关闭，需要同时调用 ((CstSwipeDelMenu) holder.itemView).quickClose();
+//                    //((CstSwipeDelMenu) holder.itemView).quickClose();
+//                    mOnSwipeListener.onDel(holder.getAdapterPosition());
+                list.remove(i);
+                notifyItemRemoved(i);
+                notifyDataSetChanged();
+//                }
+            }
+        });
+        return holder;
+    }
 
     @Override
-    protected void convert(BaseViewHolder helper, MsgLike item) {
-        helper.setText(R.id.iv_author,item.getPerson_avatar())
-                .setText(R.id.tv_author,item.getPerson_name())
-                .setText(R.id.tv_postContent,item.getPost_content());
-//        switch (helper.getLayoutPosition() % 3) {
-////            case 0:
-////                helper.setImageResource(R.id.iv_head, R.mipmap.head_img0);
-////                break;
-////            case 1:
-////                helper.setImageResource(R.id.iv_head, R.mipmap.head_img1);
-////                break;
-////            case 2:
-////                helper.setImageResource(R.id.iv_head, R.mipmap.head_img2);
-////                break;
-////            default:
-////                break;
-////        }
-////        helper.setText(R.id.tv, item);
+    public void onBindViewHolder(@NonNull MsgLikeAdapter.ViewHolder viewHolder, int i) {
+        MsgLike msgLike = list.get(i);
+        viewHolder.tv_author.setText(msgLike.getPerson_name());
+        Glide.with(context).load("http://139.199.84.147"+msgLike.getPerson_avatar()).into(viewHolder.iv_author);
+        viewHolder.tv_postContent.setText("我:" + msgLike.getPost_content());
+    }
+
+    @Override
+    public int getItemCount() {
+        if(null==list) return 0;
+        else return list.size();
+    }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+    public interface onSwipeListener {
+        void onDel(int pos);
+
+    }
+    private MsgLikeAdapter.onSwipeListener mOnSwipeListener;
+
+    public MsgLikeAdapter.onSwipeListener getOnDelListener() {
+        return mOnSwipeListener;
+    }
+
+    public void setOnDelListener(MsgLikeAdapter.onSwipeListener mOnDelListener) {
+        this.mOnSwipeListener = mOnDelListener;
+    }
+    // 暴露接口，更新数据源，并修改hasMore的值，如果有增加数据，hasMore为true，否则为false
+    public void updateList(List<MsgLike> newDatas, boolean hasMore) {
+        // 在原有的数据之上增加新数据
+        if (newDatas != null) {
+            list.addAll(newDatas);
+        }
+        this.hasMore = hasMore;
+        notifyDataSetChanged();
     }
 }
