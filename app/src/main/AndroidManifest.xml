@@ -19,7 +19,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ListUserCommentActivity"></activity>
+        <activity android:name=".UserAttentionActivity"></activity>
+        <activity android:name=".ListUserCommentActivity" />
         <activity android:name=".ListUserAttention" />
         <activity android:name=".ListUserLikeActivity" />
         <activity android:name=".ListUserReplyActivity" />
@@ -30,8 +31,7 @@
         <activity android:name=".FindNewPasswordActivity" />
         <activity android:name=".FindPasswordActivity" />
         <activity android:name=".CreatePostActivity" />
-        <activity android:name=".SetFloorActivity" >
-        </activity>
+        <activity android:name=".SetFloorActivity"></activity>
         <activity android:name=".SearchResultActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".DetailBarActivity" />
@@ -51,13 +51,11 @@
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".LoginActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <provider
