@@ -42,14 +42,14 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class DetailPost extends RootBaseActivity implements EasyPermissions.PermissionCallbacks, BGANinePhotoLayout.Delegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener {
 
-    private ArrayList<PostDetail> mDataList;
+    private ArrayList<PostDetail> mDataList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private String postId;
     private BGANinePhotoLayout mCurrentClickNpl;
     private static final int PRC_PHOTO_PREVIEW = 1;
     private ArrayList<String>picture;
     private PostDetail postDetail;
-
+    private int totalPage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,14 +118,12 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
     }
 
     private void initData() {
+
         String postUrl = "http://139.199.84.147/mytieba.api/post/"+ postId +"/detail";
         HttpUtil httpUtil = new HttpUtil(DetailPost.this,getApplicationContext());
         httpUtil.GetUtilWithCookie(postUrl,1);
         doHandler();
-        String remarkUrl = "http://139.199.84.147/mytieba.api/post/"+ postId + "/comment";
-        HttpUtil httpUtil1 = new HttpUtil(DetailPost.this,getApplicationContext());
-        httpUtil1.GetUtilWithCookie(remarkUrl,2);
-        doHandler();
+
 //        mDataList = new ArrayList<>();
 //        for (int i = 0; i < 8; i++) {
 //            PostDetail item = new PostDetail();
@@ -162,8 +160,6 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         };
     }
     private void prasedWithFirstJosnData(String JsonData) {
-        mDataList = new ArrayList<>();
-        postDetail = new PostDetail();
         Log.e("DetailPost1",JsonData);
         try {
             JSONObject jsonObject = new JSONObject(JsonData);
@@ -189,6 +185,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
                 String content = jsonObject1.getString("content");
                 String bar_id = jsonObject1.getString("bar_id");
                 String bar = jsonObject1.getString("bar");
+                postDetail = new PostDetail();
                 postDetail.setContent(content);
                 postDetail.setBarName(bar);
                 postDetail.setTime(time);
@@ -203,12 +200,13 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        initAdapter();
+        initRemark();
     }
     private void prasedWithJsonData(String JsonData){
         Log.e("DetailPost","Pj:"+ JsonData);
         try {
             JSONObject jsonObject = new JSONObject(JsonData);
+            totalPage = jsonObject.getInt("total_page");
                 String number = jsonObject.getString("number");
                 if (!number.equals("0")) {
                     JSONArray jsonArray = jsonObject.getJSONArray("floor_info");
@@ -232,10 +230,10 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
                     }
 
                 }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        initAdapter();
     }
     @AfterPermissionGranted(PRC_PHOTO_PREVIEW)
     private void photoPreviewWrapper() {
@@ -294,5 +292,11 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
     @Override
     public boolean onRVItemLongClick(ViewGroup parent, View itemView, int position) {
         return false;
+    }
+    private void initRemark(){
+        String remarkUrl = "http://139.199.84.147/mytieba.api/post/"+ postId + "/comment";
+        HttpUtil httpUtil2 = new HttpUtil(DetailPost.this,getApplicationContext());
+        httpUtil2.GetUtilWithCookie(remarkUrl,2);
+        doHandler();
     }
 }

@@ -41,6 +41,7 @@ Button btn_ignore;
     private String email_access;
     private String gender;
     private String type;
+    private String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +95,7 @@ Button btn_ignore;
             public void onClick(View v) {
                 FormBody.Builder builder = new FormBody.Builder();
                 for (int i = 0; i < labelList.size(); i++) {
-                    builder.add("interest", labelList.get(i));
+                    builder.add("interests", labelList.get(i));
                 }
                 Log.e("labelList.size()", String.valueOf(labelList.size()));
                 if (type.equals("1")) {
@@ -107,8 +108,9 @@ Button btn_ignore;
                             .add("description", description)
                             .add("gender", gender)
                             .build();
-
-                } else {
+                    HttpUtil httpUtil = new HttpUtil(RegisterInterest.this, getApplicationContext());
+                    httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register", formBody, 1);
+                } else if(type.equals("2")){
                     formBody = builder
                             .add("email", email)
                             .add("username", username)
@@ -118,12 +120,20 @@ Button btn_ignore;
 //                            .add("description", description)
 //                            .add("gender", gender)
                             .build();
+                    HttpUtil httpUtil = new HttpUtil(RegisterInterest.this, getApplicationContext());
+                    httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register", formBody, 1);
+
+                }else if(type.equals("3")){
+                    formBody = builder
+                            .add("username",username)
+                            .build();
+                    String url = "http://139.199.84.147/mytieba.api/user/"+ userId +"/info";
+                    HttpUtil httpUtil = new HttpUtil(RegisterInterest.this, getApplicationContext());
+                    httpUtil.PostUtilsWithCookie(url, formBody,2 );
                 }
-                HttpUtil httpUtil = new HttpUtil(RegisterInterest.this, getApplicationContext());
-                httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register", formBody, 1);
                 doHandler();
+
             }
-//                prasedWithJsonData(responseData);
 
         });
         btn_ignore.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +149,10 @@ Button btn_ignore;
                             .add("description",description)
                             .add("gender",gender)
                             .build();
-                }else {
+                    HttpUtil httpUtil = new HttpUtil(RegisterInterest.this,getApplicationContext());
+                    httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register",formBody,1);
+                    doHandler();
+                }else if(type.equals("2")){
                     formBody = new FormBody.Builder()
                             .add("email",email)
                             .add("username",username)
@@ -148,10 +161,13 @@ Button btn_ignore;
                            // .add("description",description)
 //                            .add("gender",gender)
                             .build();
+                    HttpUtil httpUtil = new HttpUtil(RegisterInterest.this,getApplicationContext());
+                    httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register",formBody,1);
+                    doHandler();
+                }else if (type.equals("3")){
+                    finish();
                 }
-                HttpUtil httpUtil = new HttpUtil(RegisterInterest.this,getApplicationContext());
-                httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register",formBody,1);
-                doHandler();
+
 //                String responseData = httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register",formBody);
 //                prasedWithJsonData(responseData);
             }
@@ -184,6 +200,7 @@ Button btn_ignore;
 
         Intent intent = getIntent();
         type = intent.getStringExtra("type");
+        Log.e("Rein",type);
         if(type.equals("1")) {
             username = intent.getStringExtra("username");
             Log.e("RegisterInforUsername",username);
@@ -195,6 +212,11 @@ Button btn_ignore;
         if(type.equals("2")){
             username = intent.getStringExtra("username");
             password = intent.getStringExtra("password");
+        }
+        if(type.equals("3")){
+            SharedPreferences sharedPreferences =getSharedPreferences("theUser", Context.MODE_PRIVATE);
+            username = sharedPreferences.getString("username", "");
+            userId = sharedPreferences.getString("user_id","");
         }
 
         SharedPreferences sharedPreferences =getSharedPreferences("theUser", Context.MODE_PRIVATE);
@@ -248,11 +270,29 @@ Button btn_ignore;
                     case 1:
                         prasedWithJsonData(String.valueOf(msg.obj));
                         break;
-                    default:
+                    case 2:
+                        prasedWithChangeData(String.valueOf(msg.obj));
+                        break;
+                        default:
                         break;
                 }
             }
 
         };
+    }
+    private void prasedWithChangeData(String jsonData){
+        try {
+            JSONObject jsonObject = new JSONObject(jsonData);
+            boolean status = jsonObject.getBoolean("status");
+            if(status){
+                Toast.makeText(getApplicationContext(),"修改成功",Toast.LENGTH_LONG).show();
+                finish();
+            }else {
+                String msg = jsonObject.getString("msg");
+                Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

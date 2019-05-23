@@ -87,6 +87,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DetailBarActivity.this, CreatePostActivity.class);
+                intent.putExtra("bar_id",barId);
                 startActivity(intent);
                 //startActivityForResult(new Intent(DetailBarActivity.this, CreatePostActivity.class),1);
             }
@@ -282,31 +283,6 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
             ninePhotoLayout.setData(moment.photos);
         }
     }
-
-    //    @SuppressWarnings("unchecked")
-//    private void initAdapter() {
-//        BaseQuickAdapter postAdapter = new PostAdapter(R.layout.item_post, mDataList);
-//        postAdapter.openLoadAnimation();
-//        View top = getLayoutInflater().inflate(R.layout.header_detail_bar, (ViewGroup) mRecyclerView.getParent(), false);
-//        postAdapter.addHeaderView(top);
-//        postAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//                Intent intent = new Intent(DetailBarActivity.this,DetailPost.class);
-//                startActivity(intent);
-//            }
-//        });
-//
-//        mRecyclerView.setAdapter(postAdapter);
-//    }
-//
-//    private void initData() {
-//        mDataList = new ArrayList<>();
-//        for (int i = 0; i < 8; i++) {
-//            Post item = new Post();
-//            mDataList.add(item);
-//        }
-//    }
     private void doHandler() {
         viewHandler = new Handler() {
             @Override

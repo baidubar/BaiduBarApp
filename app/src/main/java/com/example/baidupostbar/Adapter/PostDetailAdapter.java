@@ -60,7 +60,9 @@ public class PostDetailAdapter extends BaseQuickAdapter<PostDetail, BaseViewHold
             Glide.with(mContext).load(postDetail.getUserImg()).into((ImageView) holder.getView(R.id.iv_author));
             BGANinePhotoLayout ninePhotoLayout = holder.getView(R.id.npl_item_moment_photos);
             ninePhotoLayout.setDelegate(delegate);
-            ninePhotoLayout.setData(postDetail.getPhoto());
+            if (postDetail.getPhoto()!=null) {
+                ninePhotoLayout.setData(postDetail.getPhoto());
+            }
         }else {
             holder.setText(R.id.tv_time,postDetail.getTime())
                     .setText(R.id.tv_author,postDetail.getUserName())

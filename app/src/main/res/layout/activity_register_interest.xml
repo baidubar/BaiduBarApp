@@ -70,7 +70,7 @@
                 android:id="@+id/btn_finish"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="完成注册"
+                android:text="完成"
                 android:textStyle="bold"
                 android:layout_marginRight="40dp"
                 android:layout_marginLeft="40dp"
