@@ -76,13 +76,15 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="60dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:id="@+id/follow">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/tv_followNum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#000000"
@@ -102,13 +104,15 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="60dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:id="@+id/fans">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/tv_fansNum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#000000"
@@ -128,13 +132,15 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="60dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:id="@+id/bar">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/tv_barNum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#000000"
@@ -154,13 +160,15 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="60dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:id="@+id/post">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/tv_postNum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#000000"
@@ -245,8 +253,8 @@
         android:orientation="horizontal">
         <ImageView
             android:layout_margin="13dp"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:background="@drawable/change_password"/>
         <TextView
             android:layout_width="wrap_content"

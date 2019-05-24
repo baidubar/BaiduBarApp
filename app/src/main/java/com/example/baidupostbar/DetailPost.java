@@ -7,7 +7,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,12 +17,10 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.baidupostbar.Adapter.PostDetailAdapter;
 import com.example.baidupostbar.Utils.HttpUtil;
-import com.example.baidupostbar.bean.Post;
 import com.example.baidupostbar.bean.PostDetail;
 import com.example.baidupostbar.fragment.CommentDialogFragment;
-import com.example.baidupostbar.fragment.DialogFragment;
+import com.example.baidupostbar.fragment.FloorDetailFragment;
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -95,7 +92,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         postDetailAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                DialogFragment dialogFragment = new DialogFragment();
+                FloorDetailFragment dialogFragment = new FloorDetailFragment();
                 dialogFragment.show(getSupportFragmentManager(),"dialogFragment");
             }
         });

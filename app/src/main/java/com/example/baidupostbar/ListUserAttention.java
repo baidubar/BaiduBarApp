@@ -6,10 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.baidupostbar.Adapter.MsgAttentionAdapter;
 import com.example.baidupostbar.bean.MsgAttention;
 import com.google.gson.Gson;
@@ -48,6 +46,8 @@ public class ListUserAttention extends AppCompatActivity {
         Log.d("id",userId);
 
         sendRequestWithOKHttp();
+        mAdapter = new MsgAttentionAdapter(msgAttentionList,this);
+
     }
     private void sendRequestWithOKHttp(){
         new Thread(new Runnable() {

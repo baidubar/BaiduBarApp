@@ -13,8 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -25,6 +26,10 @@ import com.example.baidupostbar.R;
 import com.example.baidupostbar.RegisterInterest;
 
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.ProtocolException;
+import java.net.SocketTimeoutException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -44,7 +49,13 @@ public class UserFragment extends Fragment {
     private LinearLayout info;
     private LinearLayout interest;
     private LinearLayout collect;
+
     private Button btn_exit;
+
+    private String userId;
+    private String cookie;
+    private RelativeLayout follow, fans, bar, post;
+    private TextView tv_followNum, tv_fansNum, tv_barNum, tv_postNum;
 
     @Nullable
     @Override
@@ -59,14 +70,51 @@ public class UserFragment extends Fragment {
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("theUser", Context.MODE_PRIVATE);
         username = sharedPreferences.getString("username", "");
+
         avater = "http://139.199.84.147" + sharedPreferences.getString("avater", "");
+
+        avater = "http://139.199.84.147" + sharedPreferences.getString("avater", "");
+        userId = sharedPreferences.getString("user_id", "");
+        cookie = sharedPreferences.getString("cookie", "");
 
 
         collect = view.findViewById(R.id.pc_collect);
         info = view.findViewById(R.id.pc_info);
         interest = view.findViewById(R.id.pc_interest);
         btn_exit = view.findViewById(R.id.btn_exit);
+        follow = view.findViewById(R.id.follow);
+        fans = view.findViewById(R.id.fans);
+        bar = view.findViewById(R.id.bar);
+        post = view.findViewById(R.id.post);
+        tv_barNum = view.findViewById(R.id.tv_barNum);
+        tv_fansNum = view.findViewById(R.id.tv_fansNum);
+        tv_followNum = view.findViewById(R.id.tv_followNum);
+        tv_postNum = view.findViewById(R.id.tv_postNum);
+        follow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+
+            }
+        });
+        fans.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        bar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         info.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,7 +163,57 @@ public class UserFragment extends Fragment {
                 exitHttp();
             }
         });
+        sendRequestWithOKHttp();
+    }
 
+    private void sendRequestWithOKHttp() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    OkHttpClient client = new OkHttpClient.Builder()
+                            .connectTimeout(10, TimeUnit.SECONDS)
+                            .readTimeout(10, TimeUnit.SECONDS)
+                            .build();
+
+                    String url = "http://139.199.84.147/mytieba.api/user/" + userId + "/msg";
+
+//                    List<Map<String, String>> list_url = new ArrayList<>();
+//                    Map<String, String> map = new HashMap<>();
+//                    list_url.add(map);
+
+                    //url = getUrl(url, list_url);
+
+                    Request request = new Request.Builder()
+                            .url(url)   //网址有待改动
+                            .addHeader("Cookie", cookie)
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    String responseData = response.body().string();
+                    Log.d("建楼消息", responseData);
+                    //showResponse(responseData);
+                } catch (Exception e) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            e.printStackTrace();
+                            if (e instanceof SocketTimeoutException) {
+                                Toast.makeText(getContext(), "连接超时", Toast.LENGTH_SHORT).show();
+                            }
+                            if (e instanceof ConnectException) {
+                                Toast.makeText(getContext(), "连接异常", Toast.LENGTH_SHORT).show();
+                            }
+
+                            if (e instanceof ProtocolException) {
+                                Toast.makeText(getContext(), "未知异常，请稍后再试", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -150,46 +248,47 @@ public class UserFragment extends Fragment {
             }
         });
     }
-    private void exitHttp(){
+
+    private void exitHttp() {
         try {
             SharedPreferences sharedPreferences = getActivity().getSharedPreferences("theUser", Context.MODE_PRIVATE);
             String cookie = sharedPreferences.getString("cookie", "");
-            String userId = sharedPreferences.getString("user_id","");
+            String userId = sharedPreferences.getString("user_id", "");
             OkHttpClient client = new OkHttpClient();
             FormBody formBody = new FormBody.Builder()
-                    .add("id",userId)
+                    .add("id", userId)
                     .build();
             Request request = new Request.Builder()
                     .url("http://139.199.84.147/mytieba.api/logout")
-                    .addHeader("Cookie",cookie)
+                    .addHeader("Cookie", cookie)
                     .post(formBody)
                     .build();
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(okhttp3.Call call, IOException e) {
-                    Log.e("onFailure","获取数据失败");
-                    Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
+                    Log.e("onFailure", "获取数据失败");
+                    Toast.makeText(getContext(), "网络请求失败", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
                 public void onResponse(okhttp3.Call call, Response response) throws IOException {
                     String responseData = response.body().string();
-                    Log.e("rsponseData",responseData);
-                    if (response.isSuccessful()){
+                    Log.e("rsponseData", responseData);
+                    if (response.isSuccessful()) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getContext(),"退出成功",Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), "退出成功", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent();
                                 intent.setClass(getContext(), LoginActivity.class);
                                 startActivity(intent);
                             }
                         });
-                    }else {
+                    } else {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getContext(),"服务器请求失败",Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), "服务器请求失败", Toast.LENGTH_LONG).show();
                             }
                         });
                     }
@@ -197,7 +296,7 @@ public class UserFragment extends Fragment {
             });
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "网络请求失败", Toast.LENGTH_LONG).show();
         }
     }
 }
