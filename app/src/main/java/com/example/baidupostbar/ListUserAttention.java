@@ -48,29 +48,6 @@ public class ListUserAttention extends AppCompatActivity {
         Log.d("id",userId);
 
         sendRequestWithOKHttp();
-        mAdapter = new MsgAttentionAdapter(msgAttentionList,this);
-        mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-
-                //判断id
-                if (view.getId() == R.id.btnDelete) {
-                    msgAttentionList.remove(position);
-                    mAdapter.notifyItemRemoved(position);
-                    mAdapter.notifyDataSetChanged();
-                    Log.i("tag", "点击了第" + position + "条条目的 图片");
-                }
-//                else if (view.getId() == R.id.tv_title) {
-//                    Log.i("tag", "点击了第" + position + "条条目的 标题");
-//                }
-            }
-        });
-        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                //ToastUtils.showShortToast("点击了" + position);
-            }
-        });
     }
     private void sendRequestWithOKHttp(){
         new Thread(new Runnable() {

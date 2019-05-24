@@ -123,17 +123,6 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         HttpUtil httpUtil = new HttpUtil(DetailPost.this,getApplicationContext());
         httpUtil.GetUtilWithCookie(postUrl,1);
         doHandler();
-
-//        mDataList = new ArrayList<>();
-//        for (int i = 0; i < 8; i++) {
-//            PostDetail item = new PostDetail();
-//            if(i==0) {
-//                item.setContent("偶凑"+ i);
-//            }else {
-//                item.setContent("科科" + i);
-//            }
-//            mDataList.add(item);
-//        }
     }
     private void doHandler() {
         viewHandler = new Handler() {
