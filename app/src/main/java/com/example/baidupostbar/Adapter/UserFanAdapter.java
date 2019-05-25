@@ -34,6 +34,7 @@ public class UserFanAdapter extends RecyclerView.Adapter<UserFanAdapter.ViewHold
     private boolean hasMore = true;
     private String cookie;
     private String userId;
+    private boolean status;
     private boolean statusDel,statusPost;
 
 
@@ -213,6 +214,7 @@ public class UserFanAdapter extends RecyclerView.Adapter<UserFanAdapter.ViewHold
 //                    }
 //
 //                    Looper.loop();
+                    status = jsonObject.getBoolean("status");
 
                 }catch (Exception e){
                     e.printStackTrace();

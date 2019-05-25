@@ -173,14 +173,45 @@ public class HttpUtil {
             try {
                 SharedPreferences sharedPreferences = context.getSharedPreferences("theUser", Context.MODE_PRIVATE);
                 cookie = sharedPreferences.getString("cookie", "");
-                responseData = null;
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .retryOnConnectionFailure(true)
+                        .connectTimeout(10, TimeUnit.SECONDS)
+                        .writeTimeout(10, TimeUnit.SECONDS)
+                        .readTimeout(10, TimeUnit.SECONDS)
+                        .cookieJar(new CookieJar() {
+                            @Override
+                            public void saveFromResponse(HttpUrl httpUrl, List<Cookie> cookies) {
+                                Log.e("PostWithCookie","保存cookie");
+                                Log.e("PostCookie", String.valueOf(cookies));
+                                for (int i = 0;i<cookies.size();i++){
+                                    Log.e("Cookie"+ i, String.valueOf(cookies.get(i)));
+                                    cookie = String.valueOf(cookies.get(i));
+                                }
+                                SharedPreferences sharedPreferences = context.getSharedPreferences("theUser", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("cookie",cookie);
+                                editor.apply();
+                                Log.e("post","2");
+
+                            }
+                            @Override
+                            public List<Cookie> loadForRequest(HttpUrl httpUrl) {
+                                List<Cookie> cookies = new ArrayList<>();
+//                            for (int i = 0;i<cookies.size();i++){
+//                                Log.e("Cookie"+ i, String.valueOf(cookies.get(i)));
+//                                cookie = String.valueOf(cookies.get(i));
+//                            }
+                                return cookies != null ? cookies : new ArrayList<Cookie>();
+                            }
+                        })
+                        .build();
                 Request request = new Request.Builder()
                         .url(url)
                         .delete(formBody)
                         .addHeader("Connection", "close")
                         .addHeader("Cookie",cookie)
                         .build();
-                mOkHttpClient.newCall(request).enqueue(new Callback() {
+                okHttpClient.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(okhttp3.Call call, IOException e) {
                         Log.e("onFailure", "获取数据失败");
@@ -190,6 +221,7 @@ public class HttpUtil {
                     @Override
                     public void onResponse(okhttp3.Call call, Response response) throws IOException {
                         responseData = response.body().string();
+                        Log.e("HttpUtilsDelete",responseData);
                         if (response.isSuccessful()) {
                             ctx.viewHandler.obtainMessage(type, responseData).sendToTarget();
                         } else {
@@ -301,7 +333,9 @@ public class HttpUtil {
 
                     @Override
                     public void onResponse(okhttp3.Call call, Response response) throws IOException {
+
                         responseData = response.body().string();
+                        Log.e("HttpUtilsGetWith",responseData);
                         if (response.isSuccessful()) {
                             ctx.viewHandler.obtainMessage(type, responseData).sendToTarget();
                         }else {

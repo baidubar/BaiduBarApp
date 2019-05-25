@@ -264,15 +264,4 @@ public class HomepageActivity extends BaseActivity {
         });
 
     }
-    public String getGender(){
-        Log.e("DetailUser + gender2",gender);
-        return gender;
-    }
-    public String getBirthday(){
-        return  birthday;
-    }
-    public String getLabel(){
-        return interests;
-    }
-    public String getUserId(){return userId;}
 }

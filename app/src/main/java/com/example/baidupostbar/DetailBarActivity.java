@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.baidupostbar.Utils.CheckNetUtil;
 import com.example.baidupostbar.Utils.HttpUtil;
 import com.example.baidupostbar.bean.Post;
 import com.nostra13.universalimageloader.utils.L;
@@ -77,11 +78,12 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
         Log.e("DetailBarActivity", "barId" + barId);
 
 
-
-        HttpUtil httpUtil = new HttpUtil(DetailBarActivity.this,getApplicationContext());
-        httpUtil.GetUtilWithCookie("http://139.199.84.147/mytieba.api/postbar?bar_id=" + barId,1);
-        Log.e("DetailBArActivity","bae_Id" + barId );
-        doHandler();
+        if(new CheckNetUtil(getApplicationContext()).initNet()) {
+            HttpUtil httpUtil = new HttpUtil(DetailBarActivity.this, getApplicationContext());
+            httpUtil.GetUtilWithCookie("http://139.199.84.147/mytieba.api/postbar?bar_id=" + barId, 1);
+            Log.e("DetailBArActivity", "bae_Id" + barId);
+            doHandler();
+        }
 
 
         fab = findViewById(R.id.fab);

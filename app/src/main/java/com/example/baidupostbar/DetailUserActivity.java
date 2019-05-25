@@ -287,6 +287,12 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
                 dialog.show();
             }
         });
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     protected void processLogic(Bundle savedInstanceState) {

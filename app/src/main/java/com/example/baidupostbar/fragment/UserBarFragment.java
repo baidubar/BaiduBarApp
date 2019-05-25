@@ -49,7 +49,6 @@ public class UserBarFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_user_bar,container,false);
-
         return view;
     }
 
@@ -86,11 +85,6 @@ public class UserBarFragment extends Fragment {
     }
 
     private void initData(String url) {
-//        mDataList = new ArrayList<>();
-//        for (int i = 0; i < 8; i++) {
-//            BarList item = new BarList();
-//            mDataList.add(item);
-//        }
         try {
             SharedPreferences sharedPreferences = getActivity().getSharedPreferences("theUser", Context.MODE_PRIVATE);
             String cookie = sharedPreferences.getString("cookie", "");
@@ -130,21 +124,6 @@ public class UserBarFragment extends Fragment {
     private void prasedWithJsonData(String jsonData){
         mDataList = new ArrayList<>();
         try {
-
-//            {
-//                "user_id": 1,
-//                    "total_number": 5,
-//                    "bar_msg":[
-//                {
-//                    "bar_id": 1,
-//                        "bar_name": "cxk吧",
-//                        "bar_tags": ["体育", "娱乐"],
-//                    "bar_icon": "/media/photo/123.jpg",
-//                },
-//                // 共5条以下略
-//    ]
-//            }
-
             JSONObject jsonObject = new JSONObject(jsonData);
             JSONArray jsonArray = jsonObject.getJSONArray("bar_msg");
             for (int i = 0; i < jsonArray.length(); i++) {

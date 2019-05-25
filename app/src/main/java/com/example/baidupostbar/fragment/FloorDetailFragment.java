@@ -209,16 +209,16 @@ public class FloorDetailFragment extends DialogFragment {
             boolean status = jsonObject.getBoolean("status");
             if(status) {
                 String floor_number = jsonObject.getString("floor_number");
-                 String floor_content = jsonObject.getString("floor_content");
-                 String floor_writer_name = jsonObject.getString("floor_writer_name");
-                 String floor_writer_avatar = jsonObject.getString("floor_writer_avatar");
-                 FloorDetail floorDetail1 = new FloorDetail();
-                 floorDetail1.setFloorNum(floor_number);
-                 floorDetail1.setAuthorName(floor_writer_name);
-                 floorDetail1.setHeadImag("http://139.199.84.147/" + floor_writer_avatar);
-                 floorDetail1.setContent(floor_content);
-                 floorDetail1.setTime("");
-                 mDataList.add(floorDetail1);
+                String floor_content = jsonObject.getString("floor_content");
+                String floor_writer_name = jsonObject.getString("floor_writer_name");
+                String floor_writer_avatar = jsonObject.getString("floor_writer_avatar");
+                FloorDetail floorDetail1 = new FloorDetail();
+                floorDetail1.setFloorNum(floor_number);
+                floorDetail1.setAuthorName(floor_writer_name);
+                floorDetail1.setHeadImag("http://139.199.84.147/" + floor_writer_avatar);
+                floorDetail1.setContent(floor_content);
+                floorDetail1.setTime("");
+                mDataList.add(floorDetail1);
                 JSONArray jsonArray = jsonObject.getJSONArray("comment_msg");
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject1 = jsonArray.getJSONObject(i);

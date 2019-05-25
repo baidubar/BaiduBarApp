@@ -17,20 +17,22 @@
             android:layout_gravity="center_vertical"
             android:src="@drawable/background_login"
             android:id="@+id/iv_author"/>
+
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="298dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="10dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="10dp">
+            android:orientation="vertical">
+
             <TextView
+                android:id="@+id/tv_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_author"
-                android:text="美渣重症患者"
                 android:maxLines="1"
-                android:textStyle="bold"
-                android:textColor="#000000"/>
+                android:text="美渣重症患者"
+                android:textColor="#000000"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_time"
@@ -38,11 +40,12 @@
                 android:layout_height="5dp"
                 android:text="2019-01-01" />
         </LinearLayout>
+
         <ImageView
             android:id="@+id/btn_concerd"
-            android:background="@drawable/follow"
-            android:layout_height="20dp"
-            android:layout_width="20dp"/>
+            android:layout_width="30dp"
+            android:layout_height="35dp"
+            />
     </LinearLayout>
     <TextView
         android:layout_width="match_parent"
@@ -127,7 +130,6 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/like"
                     android:id="@+id/btn_like"
                     android:layout_gravity="center_vertical"/>
                 <TextView

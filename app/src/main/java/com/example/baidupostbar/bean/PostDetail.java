@@ -16,11 +16,17 @@ public class PostDetail {
     private String floor;
     private boolean collection_status;
     private String personId;
+    private boolean praise_status;
 
 
 
 
 
+    public void setPraise_status(boolean praise_status){this.praise_status = praise_status;}
+
+    public boolean getPraise_status(){
+        return praise_status;
+    }
 
     public void setPersonId(String personId){this.personId = personId;}
 

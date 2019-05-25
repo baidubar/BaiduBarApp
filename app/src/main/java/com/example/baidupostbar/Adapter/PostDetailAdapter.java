@@ -3,6 +3,7 @@ package com.example.baidupostbar.Adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -49,13 +50,19 @@ public class PostDetailAdapter extends BaseQuickAdapter<PostDetail, BaseViewHold
                     .setText(R.id.tv_commentNum,postDetail.getCommentNum())
                     .setText(R.id.tv_bar,postDetail.getBarName());
             if(postDetail.getPersonId().equals(userId)){
- //               holder.getView(R.id.btn_concerd).setVisibility(View.GONE);
-            }
-            if(postDetail.getCollection_status()){
- //               holder.setText(R.id.btn_concerd,"已关注");
+                holder.setImageResource(R.id.btn_concerd,R.drawable.delete);
+            }else if(postDetail.getCollection_status()){
+                holder.setImageResource(R.id.btn_concerd,R.drawable.follow_fill);
             }else {
-//                holder.setText(R.id.btn_concerd,"+关注");
+                holder.setImageResource(R.id.btn_concerd,R.drawable.follow);
             }
+            if(postDetail.getPraise_status()){
+                holder.setImageResource(R.id.btn_like,R.drawable.like_fill);
+            }else {
+                holder.setImageResource(R.id.btn_like,R.drawable.like);
+            }
+            Log.e("PostDetailAdapter","postDetail.getPraise_status()"+ postDetail.getPraise_status());
+
             Glide.with(mContext).load(postDetail.getUserImg()).into((ImageView) holder.getView(R.id.iv_author));
             BGANinePhotoLayout ninePhotoLayout = holder.getView(R.id.npl_item_moment_photos);
             ninePhotoLayout.setDelegate(delegate);

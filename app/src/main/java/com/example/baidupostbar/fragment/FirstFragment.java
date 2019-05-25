@@ -289,31 +289,6 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
         }
 
     }
-    private String getUrl(String url, List<Map<String, String>> list_url) {
-        for (int i = 0; i < list_url.size(); i++) {
-            Map<String, String> params = list_url.get(i);
-            if (params != null) {
-                Iterator<String> it = params.keySet().iterator();
-                StringBuffer sb = null;
-                while (it.hasNext()) {
-                    String key = it.next();
-                    String value = params.get(key);
-                    if (sb == null) {
-                        sb = new StringBuffer();
-                        sb.append("?");
-                    } else {
-                        sb.append("&");
-                    }
-                    sb.append(key);
-                    sb.append("=");
-                    sb.append(value);
-                }
-                url += sb.toString();
-            }
-        }
-        Log.d("getUrl", url);
-        return url;
-    }
     private void initData(String url){
                 try {
                     SharedPreferences sharedPreferences = getActivity().getSharedPreferences("theUser", Context.MODE_PRIVATE);
