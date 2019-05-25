@@ -1,6 +1,7 @@
 package com.example.baidupostbar.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +21,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.baidupostbar.DetailPost;
+import com.example.baidupostbar.DetailUserActivity;
+import com.example.baidupostbar.HomepageActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.Utils.CheckNetUtil;
 import com.example.baidupostbar.bean.Post;
@@ -61,6 +64,11 @@ public class UserPostFragment extends Fragment implements EasyPermissions.Permis
     private List<Post> moments;
 
     private BGANinePhotoLayout mCurrentClickNpl;
+
+
+    private String userId;
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

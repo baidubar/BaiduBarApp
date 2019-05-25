@@ -602,7 +602,7 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
         nickname.setText(username);
         String atten = "关注 "+ concern_number + " | " + "粉丝 " + follower_number;
         attention.setText(atten);
-        info.setText(description);
+        info.setText("简介："+description);
     }
 
     public String getGender(){
@@ -615,5 +615,5 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
     public String getLabel(){
         return interests;
     }
-
+    public String getUserId(){return userId;}
     }

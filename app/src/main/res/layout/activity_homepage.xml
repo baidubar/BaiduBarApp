@@ -61,7 +61,7 @@
                         android:textSize="20sp" />
 
                     <TextView
-                        android:id="@+id/tv_attention"
+                        android:id="@+id/tv_attentionNum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/nickname"
@@ -71,9 +71,10 @@
                         android:textColor="@color/white"
                         android:textSize="16sp" />
                     <TextView
+                        android:id="@+id/info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_attention"
+                        android:layout_below="@id/tv_attentionNum"
                         android:layout_centerHorizontal="true"
                         android:layout_margin="5dp"
                         android:text="简介：哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
@@ -114,7 +115,7 @@
 
                     </android.support.v7.widget.ButtonBarLayout>
                     <TextView
-                        android:id="@+id/btn_attention"
+                        android:id="@+id/tv_attention"
                         android:layout_width="50dp"
                         android:layout_height="20dp"
                         android:layout_gravity="end"

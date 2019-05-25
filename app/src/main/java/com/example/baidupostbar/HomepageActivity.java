@@ -11,12 +11,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.ButtonBarLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.baidupostbar.Adapter.ViewPagerAdapter;
 import com.example.baidupostbar.Utils.HttpUtil;
@@ -25,6 +28,10 @@ import com.example.baidupostbar.fragment.UserInforFragment;
 import com.example.baidupostbar.fragment.UserPostFragment;
 import com.gyf.barlibrary.ImmersionBar;
 import com.scwang.smartrefresh.layout.util.DensityUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,7 +45,7 @@ import okhttp3.Response;
 
 public class HomepageActivity extends BaseActivity {
     private ViewPager viewpager;
-    private TextView btn_attention;
+    private TextView tv_attention,tv_nickname,tv_attentionNum,info;
     private ImageView iv_parallax,iv_back,iv_head;
     private ButtonBarLayout buttonBarLayout;
     private CollapsingToolbarLayout collapsing_toolbar;
@@ -48,10 +55,23 @@ public class HomepageActivity extends BaseActivity {
     boolean isblack = false;//状态栏字体是否是黑色
     boolean iswhite = true;//状态栏字体是否是亮色
     private TabLayout tabLayout;
+    private RelativeLayout allinfo;
     private ArrayList<String> TitleList = new ArrayList<>();  //页卡标题集合
     private ArrayList<Fragment> ViewList = new ArrayList<>();   //页卡视图集合
     private Fragment userBarFragment,userPostFragment,userInforFragment;
     private String userId;
+    private String username;
+    private String gender;
+    private String description;
+    private String birthday;
+    private String avatar;
+    private String follower_number;
+    private String collection_number;
+    private String concern_number;
+    private String background_pic;
+    private String interests;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +88,7 @@ public class HomepageActivity extends BaseActivity {
 
     }
     private void initView() {
-        btn_attention = findViewById(R.id.btn_attention);
+        tv_attention = findViewById(R.id.tv_attention);
         appbar = (AppBarLayout) findViewById(R.id.appbar);
         viewpager = (ViewPager) findViewById(R.id.view_pager);
         iv_parallax = (ImageView) findViewById(R.id.iv_parallax);
@@ -78,6 +98,12 @@ public class HomepageActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         iv_back = (ImageView) findViewById(R.id.iv_back);
         iv_head = (ImageView) findViewById(R.id.iv_head);
+        allinfo  = findViewById(R.id.rl_allinfo);
+        tv_attention = findViewById(R.id.tv_attention);
+        tv_attentionNum = findViewById(R.id.tv_attentionNum);
+        tv_nickname = findViewById(R.id.nickname);
+        info = findViewById(R.id.info);
+
         //初始化沉浸式
 
         mImmersionBar.titleBar(toolbar).init();
@@ -135,7 +161,7 @@ public class HomepageActivity extends BaseActivity {
                     buttonBarLayout.setVisibility(View.VISIBLE);
                     collapsing_toolbar.setContentScrimResource(R.color.white);
                     iv_back.setBackgroundResource(R.drawable.back_black);
-                    btn_attention.setTextColor(getResources().getColor(R.color.black));
+                    tv_attention.setTextColor(getResources().getColor(R.color.black));
                 } else {  //展开
                     if (isblack) { //变白
                         mImmersionBar.statusBarDarkFont(false).init();
@@ -145,8 +171,14 @@ public class HomepageActivity extends BaseActivity {
                     buttonBarLayout.setVisibility(View.INVISIBLE);
                     collapsing_toolbar.setContentScrimResource(R.color.transparent);
                     iv_back.setBackgroundResource(R.drawable.back_white);
-                    btn_attention.setTextColor(getResources().getColor(R.color.white));
+                    tv_attention.setTextColor(getResources().getColor(R.color.white));
                 }
+            }
+        });
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
@@ -199,5 +231,50 @@ public class HomepageActivity extends BaseActivity {
     }
     private void prasedWithjsonData(String JsonData){
         Log.e("Homepage",JsonData);
+        try {
+            JSONObject jsonObject = new JSONObject(JsonData);
+            userId = jsonObject.getString("user_id");
+            username = jsonObject.getString("username");
+            description = jsonObject.getString("description");
+            birthday = jsonObject.getString("birthday");
+            avatar = "http://139.199.84.147/" + jsonObject.getString("avatar");
+            follower_number = jsonObject.getString("follower_number");
+            concern_number = jsonObject.getString("concern_number");
+            background_pic = "http://139.199.84.147/" + jsonObject.getString("background_pic");
+            JSONArray jsonArray = jsonObject.getJSONArray("interests");
+            ArrayList<String>label = new ArrayList<>();
+            for (int j = 0; j < jsonArray.length(); j++) {
+                String Picture = String.valueOf(jsonArray.get(j));
+                label.add(Picture);
+                interests = interests + Picture + "  ";
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tv_nickname.setText(username);
+                String att = "关注 " +follower_number+"  |  "+"粉丝 "+ concern_number;
+                tv_attentionNum.setText(att);
+                Log.e("Homepage",description);
+                info.setText("简介："+description);
+                Glide.with(getApplicationContext()).load( avatar).into(iv_head);
+                Glide.with(getApplicationContext()).load( background_pic).into(iv_parallax);
+            }
+        });
+
     }
+    public String getGender(){
+        Log.e("DetailUser + gender2",gender);
+        return gender;
+    }
+    public String getBirthday(){
+        return  birthday;
+    }
+    public String getLabel(){
+        return interests;
+    }
+    public String getUserId(){return userId;}
 }
