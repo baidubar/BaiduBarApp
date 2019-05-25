@@ -95,22 +95,16 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
         mMomentRv.setAdapter(postAdapter);
 
 
+    }
 
-
-//        List<Map<String, String>> list_url = new ArrayList<>();
-//        Map<String, String> map = new HashMap<>();
-////                    map.put("id",headnum.toString());
-////                    headnum = headnum + 10;
-//        map.put("", "0");
-////                    map.put("number", "10");
-//        list_url.add(map);
-//        url = getUrl("http://139.199.84.147/mytieba.api/posts", list_url);
+    @Override
+    public void onResume() {
+        super.onResume();
         url = "http://139.199.84.147/mytieba.api/posts";
 
         if (new CheckNetUtil(getContext()).initNet()) {
             initData(url);
         }
-
     }
 
     /**
@@ -118,35 +112,34 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
      */
     private void addNetImageTestData(String jsonData) {
 
-        //List<Post> moments = new ArrayList<>();
-        moments = new ArrayList<>();
+               moments = new ArrayList<>();
         try {
 
-                JSONObject jsonObject = new JSONObject(jsonData);
-                    JSONArray jsonArray = jsonObject.getJSONArray("post_msg");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                        String postId = jsonObject1.getString("post_id");
-                        JSONArray jsonArray1 = jsonObject1.getJSONArray("post_pic");
-                        String writer_id = jsonObject1.getString("writer_id");
-                        String writer_name = jsonObject1.getString("writer_name");
-                        String writer_avatar = jsonObject1.getString("writer_avatar");
-                        picture = new ArrayList<>();
-                        for (int j = 0;j < jsonArray1.length();j++){
-                            String pic = "http://139.199.84.147/" + jsonArray1.get(j);
-                            picture.add(pic);
-                        }
-                        String post_content = jsonObject1.getString("post_content");
-                        String comment_number = jsonObject1.getString("comment_number");
-                        String praise_number = jsonObject1.getString("praise_number");
-                        String barId = jsonObject1.getString("bar_id");
-                        String barName = jsonObject1.getString("bar_name");
-                        String bar_tags = jsonObject1.getString("bar_tags");
-                        moments.add(new Post(post_content,picture,comment_number,praise_number,writer_avatar,writer_name,bar_tags,barName,barId,postId));
+            JSONObject jsonObject = new JSONObject(jsonData);
+            JSONArray jsonArray = jsonObject.getJSONArray("post_msg");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                String postId = jsonObject1.getString("post_id");
+                JSONArray jsonArray1 = jsonObject1.getJSONArray("post_pic");
+                String writer_id = jsonObject1.getString("writer_id");
+                String writer_name = jsonObject1.getString("writer_name");
+                String writer_avatar = jsonObject1.getString("writer_avatar");
+                picture = new ArrayList<>();
+                for (int j = 0;j < jsonArray1.length();j++){
+                    String pic = "http://139.199.84.147/" + jsonArray1.get(j);
+                    picture.add(pic);
+                }
+                String post_content = jsonObject1.getString("post_content");
+                String comment_number = jsonObject1.getString("comment_number");
+                String praise_number = jsonObject1.getString("praise_number");
+                String barId = jsonObject1.getString("bar_id");
+                String barName = jsonObject1.getString("bar_name");
+                String bar_tags = jsonObject1.getString("bar_tags");
+                moments.add(new Post(post_content,picture,comment_number,praise_number,writer_avatar,writer_name,bar_tags,barName,barId,postId));
 
-                    }
+            }
         } catch (JSONException e){
-        e.printStackTrace();
+            e.printStackTrace();
         }
 
         //*************************

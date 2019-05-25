@@ -60,6 +60,8 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
     private ArrayList<String>picture;
     private String barLabel;
     private String type;
+    private String postId;
+    private  List<Post> moments;
 
     private BGANinePhotoLayout mCurrentClickNpl;
 
@@ -110,7 +112,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
 
     private void addNetImageTestData(String JsonData) {
         Log.e("DetailBarActivity",JsonData);
-        List<Post> moments = new ArrayList<>();
+        moments = new ArrayList<>();
         mDataList = new ArrayList<>();
         try {
             JSONObject jsonObject = new JSONObject(JsonData);
@@ -130,7 +132,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                         String writer_id = jsonObject1.getString("writer_id");
-                        String post_id = jsonObject1.getString("post_id");
+                        postId = jsonObject1.getString("post_id");
                         String writer_avatar = jsonObject1.getString("writer_avatar");
                         String writer_name = jsonObject1.getString("writer_name");
                         String post_content = jsonObject1.getString("post_content");
@@ -144,7 +146,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
                         String comment_number = jsonObject1.getString("comment_number");
                         String praise_number = jsonObject1.getString("praise_number");
                         String time = jsonObject1.getString("time");
-                        moments.add(new Post(post_content, picture,comment_number,praise_number,writer_avatar,writer_name,"#"+barLabel,name,bar_id,post_id ));
+                        moments.add(new Post(post_content, picture,comment_number,praise_number,writer_avatar,writer_name,"#"+barLabel,name,bar_id,postId ));
                         postAdapter.setData(moments);
 
                 }
@@ -245,6 +247,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
     public void onRVItemClick(ViewGroup viewGroup, View view, int position) {
         Intent intent = new Intent();
         intent.setClass(getApplicationContext(), DetailPost.class);
+        intent.putExtra("post_id",moments.get(position).postId);
         startActivity(intent);
     }
 

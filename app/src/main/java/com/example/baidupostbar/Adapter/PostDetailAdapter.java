@@ -1,7 +1,11 @@
 package com.example.baidupostbar.Adapter;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -19,28 +23,18 @@ public class PostDetailAdapter extends BaseQuickAdapter<PostDetail, BaseViewHold
 
     private List<PostDetail>mList;
     private BGANinePhotoLayout.Delegate delegate;
-    public PostDetailAdapter(int layoutResId, List data, BGANinePhotoLayout.Delegate delegate) {
+    private String userId;
+    public PostDetailAdapter(int layoutResId, List data, BGANinePhotoLayout.Delegate delegate,Context context) {
         super(layoutResId, data);
         this.mList = data;
         this.delegate = delegate;
+        SharedPreferences sharedPreferences = context.getSharedPreferences("theUser", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getString("user_id", "");
     }
     @Override
     protected void convert(BaseViewHolder helper, PostDetail item) {
-//            helper.setText(R.id.tv_time,item.getTime())
-//                    .setText(R.id.tv_author,item.getUserName())
-//                    .setText(R.id.tv_content,item.getContent())
-//                    .setText(R.id.tv_likeNum,item.getLikeNum());
-//            Glide.with(mContext).load(item.getUserImg()).into((ImageView) helper.getView(R.id.iv_author));
-
-//            helper.setText(R.id.tv_time,item.getTime())
-//                    .setText(R.id.tv_author,item.getUserName())
-//                    .setText(R.id.tv_content,item.getContent())
-//                    .setText(R.id.tv_likeNum,item.getLikeNum())
-//                    .setText(R.id.tv_label,item.getLabel())
-//                    .setText(R.id.tv_commentNum,item.getCommentNum())
-//                    .setText(R.id.tv_bar,item.getBarName());
-//            Glide.with(mContext).load(item.getUserImg()).into((ImageView) helper.getView(R.id.iv_author));
-
+        helper.addOnClickListener(R.id.btn_concerd);
+        helper.addOnClickListener(R.id.btn_comment);
     }
 
     @Override
@@ -57,6 +51,14 @@ public class PostDetailAdapter extends BaseQuickAdapter<PostDetail, BaseViewHold
                     .setText(R.id.tv_label,postDetail.getLabel())
                     .setText(R.id.tv_commentNum,postDetail.getCommentNum())
                     .setText(R.id.tv_bar,postDetail.getBarName());
+            if(postDetail.getPersonId().equals(userId)){
+                holder.getView(R.id.btn_concerd).setVisibility(View.GONE);
+            }
+            if(postDetail.getCollection_status()){
+                holder.setText(R.id.btn_concerd,"已关注");
+            }else {
+                holder.setText(R.id.btn_concerd,"+关注");
+            }
             Glide.with(mContext).load(postDetail.getUserImg()).into((ImageView) holder.getView(R.id.iv_author));
             BGANinePhotoLayout ninePhotoLayout = holder.getView(R.id.npl_item_moment_photos);
             ninePhotoLayout.setDelegate(delegate);

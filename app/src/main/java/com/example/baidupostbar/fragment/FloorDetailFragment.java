@@ -1,12 +1,15 @@
 package com.example.baidupostbar.fragment;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +17,30 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.baidupostbar.Adapter.FloorDetailAdapter;
+import com.example.baidupostbar.DetailPost;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.bean.FloorDetail;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class FloorDetailFragment extends DialogFragment {
     private ImageView btn_close;
@@ -28,14 +48,23 @@ public class FloorDetailFragment extends DialogFragment {
     private RecyclerView recyclerView;
     private ArrayList<FloorDetail> mDataList;
     private Dialog dialog;
+    private String postId;
+    private String floor;
+
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        floor = ((DetailPost) context).getThisFloor();
+        postId = ((DetailPost) context).getPostId();
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_dialog,container,false);
                initView(view);
-        initData();
-        initAdapter();
         return view;
     }
 
@@ -99,16 +128,25 @@ public class FloorDetailFragment extends DialogFragment {
             dismiss();
         }
     };
-    private void initData() {
-        mDataList = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            FloorDetail item = new FloorDetail();
 
-            mDataList.add(item);
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        postHttp(floor);
+    }
+
+    private void initData() {
+//        mDataList = new ArrayList<>();
+//        for (int i = 0; i < 5; i++) {
+//            FloorDetail item = new FloorDetail();
+//
+//            mDataList.add(item);
+//        }
+
+
     }
     private void initAdapter(){
-        BaseQuickAdapter floorDetailAdapter = new FloorDetailAdapter(R.layout.item_dialog_comment, mDataList);
+        BaseQuickAdapter floorDetailAdapter = new FloorDetailAdapter(R.layout.item_dialog_comment, mDataList,getContext());
         floorDetailAdapter.openLoadAnimation();
         View top = getLayoutInflater().inflate(R.layout.item_dialog_floor, (ViewGroup) recyclerView.getParent(), false);
         floorDetailAdapter.addHeaderView(top);
@@ -122,4 +160,107 @@ public class FloorDetailFragment extends DialogFragment {
 
         recyclerView.setAdapter(floorDetailAdapter);
     }
+    private void postHttp(String floor){
+        try {
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("theUser", Context.MODE_PRIVATE);
+            String cookie = sharedPreferences.getString("cookie", "");
+            OkHttpClient client = new OkHttpClient();
+
+            String url = "http://139.199.84.147/mytieba.api/post/"+postId+"/comment"+ "?floor=" + floor;
+
+            Log.e("FloorDetailFragment",url);
+            Request request = new Request.Builder().url(url)
+                    .addHeader("Cookie",cookie)
+                    .build();
+            Log.e("FloorDrtail",url);
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(okhttp3.Call call, IOException e) {
+                    Log.e("onFailure","获取数据失败");
+                    Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                    String responseData = response.body().string();
+                    Log.e("rsponseData",responseData);
+                    if (response.isSuccessful()){
+                        prasedWithJsonData(responseData);
+                    }else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(),"服务器请求失败",Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
+        }
+
+    }
+    private void prasedWithJsonData(String JsonData){
+        Log.e("FloorDetail",JsonData);
+        mDataList = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(JsonData);
+            boolean status = jsonObject.getBoolean("status");
+            if(status) {
+                String floor_number = jsonObject.getString("floor_number");
+                 String floor_content = jsonObject.getString("floor_content");
+                 String floor_writer_name = jsonObject.getString("floor_writer_name");
+                 String floor_writer_avatar = jsonObject.getString("floor_writer_avatar");
+                 FloorDetail floorDetail1 = new FloorDetail();
+                 floorDetail1.setFloorNum(floor_number);
+                 floorDetail1.setAuthorName(floor_writer_name);
+                 floorDetail1.setHeadImag("http://139.199.84.147/" + floor_writer_avatar);
+                 floorDetail1.setContent(floor_content);
+                 floorDetail1.setTime("");
+                 mDataList.add(floorDetail1);
+                JSONArray jsonArray = jsonObject.getJSONArray("comment_msg");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                    String comment_id = jsonObject1.getString("comment_id");
+                    boolean reply_status = jsonObject1.getBoolean("reply_status");
+                    String reply_person_id = jsonObject1.getString("reply_person_id");
+                    String reply_person_name = jsonObject1.getString("reply_person_name");
+                    String person_id = jsonObject1.getString("person_id");
+                    String person_avatar = jsonObject1.getString("person_avatar");
+                    String person_name = jsonObject1.getString("person_name");
+                    String datetime = jsonObject1.getString("datetime");
+                    String content = jsonObject1.getString("content");
+                    int num = i+1;
+                    FloorDetail floorDetail = new FloorDetail();
+                    floorDetail.setAuthorName(person_name);
+                    floorDetail.setHeadImag("http://139.199.84.147/" + person_avatar);
+                    floorDetail.setContent(content);
+                    floorDetail.setFloorNum("第"+ num + "楼");
+                    floorDetail.setTime(datetime);
+                    mDataList.add(floorDetail);
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        initAdapter();
+                    }
+                });
+            }else {
+                String msg = jsonObject.getString("msg");
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

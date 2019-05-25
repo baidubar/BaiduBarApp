@@ -39,6 +39,7 @@
                 android:text="2019-01-01" />
         </LinearLayout>
         <Button
+            android:id="@+id/btn_concerd"
             android:layout_width="54dp"
             android:layout_height="27dp"
             android:textColor="@color/colorAccent"

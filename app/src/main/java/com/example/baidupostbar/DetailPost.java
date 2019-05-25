@@ -1,7 +1,9 @@
 package com.example.baidupostbar;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -12,9 +14,11 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemChildClickListener;
 import com.example.baidupostbar.Adapter.PostDetailAdapter;
 import com.example.baidupostbar.Utils.HttpUtil;
 import com.example.baidupostbar.bean.PostDetail;
@@ -34,6 +38,7 @@ import cn.bingoogolapple.baseadapter.BGAOnRVItemClickListener;
 import cn.bingoogolapple.baseadapter.BGAOnRVItemLongClickListener;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPreviewActivity;
 import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout;
+import okhttp3.FormBody;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -47,6 +52,11 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
     private ArrayList<String>picture;
     private PostDetail postDetail;
     private int totalPage;
+    private String thisFloor;
+    private boolean RealConcernPeople;
+    private String userId;
+    private String thisPcId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +64,9 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         Intent intent = getIntent();
         postId = intent.getStringExtra("post_id");
         Log.e("DetailPost","postId:"+ postId);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getString("user_id", "");
 
         //悬浮按钮的点击事件
         //收藏当前帖子
@@ -75,9 +88,15 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             }
         });
         initView();
-        initData();
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
+    }
+
     private void initView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -85,13 +104,15 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
 
     @SuppressWarnings("unchecked")
     private void initAdapter() {
-        BaseQuickAdapter postDetailAdapter = new PostDetailAdapter(R.layout.item_post_floor, mDataList,DetailPost.this);
+        BaseQuickAdapter postDetailAdapter = new PostDetailAdapter(R.layout.item_post_floor, mDataList,DetailPost.this,getApplicationContext());
         postDetailAdapter.openLoadAnimation();
         View top = getLayoutInflater().inflate(R.layout.header_detail_post, (ViewGroup) mRecyclerView.getParent(), false);
         postDetailAdapter.addHeaderView(top);
         postDetailAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                PostDetail postDetail1 = mDataList.get(position+1);
+                thisFloor = postDetail1.getFloor();
                 FloorDetailFragment dialogFragment = new FloorDetailFragment();
                 dialogFragment.show(getSupportFragmentManager(),"dialogFragment");
             }
@@ -100,9 +121,36 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (view.getId()){
+
                     case R.id.btn_comment:
                         CommentDialogFragment commentDialogFragment = new CommentDialogFragment();
                         commentDialogFragment.show(getSupportFragmentManager(), "CommentDialogFragment");
+                        Log.e("DetailPost","postdetailAdapter点击"+ postId);
+                        break;
+                    case R.id.btn_concerd:
+                        Log.e("DetailPost","关注:"+ RealConcernPeople);
+                        if(RealConcernPeople){
+                            HttpUtil httpUtil = new HttpUtil(DetailPost.this,getApplicationContext());
+                            String url = "http://139.199.84.147/mytieba.api/user/"+ userId +"/follow";
+                            PostDetail postDetail = mDataList.get(position);
+                            String personId = postDetail.getPersonId();
+                            FormBody formBody = new FormBody.Builder()
+                                    .add("user_id",personId)
+                                    .build();
+                            httpUtil.DeleteUtil(url,formBody,3);
+                            doHandler();
+                        }
+                        else {
+                            HttpUtil httpUtil = new HttpUtil(DetailPost.this,getApplicationContext());
+                            String url = "http://139.199.84.147/mytieba.api/user/"+ userId +"/follow";
+                            PostDetail postDetail = mDataList.get(position);
+                            String personId = postDetail.getPersonId();
+                            FormBody formBody = new FormBody.Builder()
+                                    .add("user_id",personId)
+                                    .build();
+                            httpUtil.PostUtilsWithCookie(url,formBody,4);
+                            doHandler();
+                        }
                         break;
                     default:
                 }
@@ -138,6 +186,12 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
                         prasedWithJsonData(String.valueOf(msg.obj));
                         Log.e("ListBArActivity", String.valueOf(msg.obj));
                         break;
+                    case 3:
+                        prasedWithType3(String.valueOf(msg.obj));
+                        break;
+                    case 4:
+                        prasedWithType4(String.valueOf(msg.obj));
+                        break;
                     default:
                         break;
                 }
@@ -146,6 +200,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         };
     }
     private void prasedWithFirstJosnData(String JsonData) {
+        mDataList = new ArrayList<>();
         Log.e("DetailPost1",JsonData);
         try {
             JSONObject jsonObject = new JSONObject(JsonData);
@@ -154,13 +209,14 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
                 boolean collection_status = jsonObject.getBoolean("collection_status");
                 boolean praise_status = jsonObject.getBoolean("praise_status");
                 String use_id = jsonObject.getString("user_id");
-                //String post_id = jsonObject.getString("post_id");
+//                String floor = jsonObject.getString("floor");
                 JSONObject jsonObject1 = jsonObject.getJSONObject("post_msg");
                 String person_id = jsonObject1.getString("person_id");
                 String person_name = jsonObject1.getString("person_name");
                 Log.e("DetailPost","personName:"+ person_name);
                 String person_avatar = jsonObject1.getString("person_avatar");
-                String follow_status = jsonObject1.getString("follow_status");
+                boolean follow_status = jsonObject1.getBoolean("follow_status");
+                RealConcernPeople = follow_status;
                 String time = jsonObject1.getString("time");
                 JSONArray jsonArray1 = jsonObject1.getJSONArray("pic");
                 picture = new ArrayList<>();
@@ -175,8 +231,10 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
                 postDetail.setContent(content);
                 postDetail.setBarName(bar);
                 postDetail.setTime(time);
+                postDetail.setPersonId(person_id);
                 postDetail.setPhoto(picture);
                 postDetail.setUserName(person_name);
+                postDetail.setCollection_status(follow_status);
                 postDetail.setUserImg("http://139.199.84.147" + person_avatar);
                 mDataList.add(postDetail);
             }else {
@@ -211,7 +269,11 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
                         postDetail.setContent(content);
                         postDetail.setTime(datetime);
                         postDetail.setUserName(person_name);
+                        postDetail.setPersonId(person_id);
+                        postDetail.setFloor(floor);
+                        Log.e("DetailPost","floor1"+floor);
                         postDetail.setUserImg("http://139.199.84.147" + person_avatar);
+                        postDetail.setFloor(floor);
                         mDataList.add(postDetail);
                     }
 
@@ -284,5 +346,48 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         HttpUtil httpUtil2 = new HttpUtil(DetailPost.this,getApplicationContext());
         httpUtil2.GetUtilWithCookie(remarkUrl,2);
         doHandler();
+    }
+
+    private void prasedWithType3(String JosnData){
+        Log.e("DetailPost","3:"+JosnData);
+        try {
+            JSONObject jsonObject = new JSONObject(JosnData);
+            boolean status = jsonObject.getBoolean("status");
+            if(status){
+                RealConcernPeople = false;
+                Toast.makeText(getApplicationContext(),"成功",Toast.LENGTH_LONG).show();
+            }else {
+                String msg = jsonObject.getString("msg");
+                Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private void prasedWithType4(String JosnData){
+        try {
+            Log.e("DetailPost","4:"+JosnData);
+            JSONObject jsonObject = new JSONObject(JosnData);
+            boolean status = jsonObject.getBoolean("status");
+            if(status){
+                RealConcernPeople = true;
+                Toast.makeText(getApplicationContext(),"成功",Toast.LENGTH_LONG).show();
+            }else {
+                String msg = jsonObject.getString("msg");
+                Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getPostId() {
+        return postId;
+    }
+    private String getThisPcId(){
+        return thisPcId;
+    }
+    public String getThisFloor(){
+        return thisFloor;
     }
 }

@@ -1,10 +1,12 @@
 package com.example.baidupostbar.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +31,11 @@ public class UserInforFragment extends Fragment {
     private String interests;
     @Override public void onAttach(Activity activity) {
         super.onAttach(activity);
-        gender = ((DetailUserActivity) activity).getGender();//通过强转成宿主activity，就可以获取到传递过来的数据
-        birthday = ((DetailUserActivity) activity).getBirthday();
-        interests = ((DetailUserActivity) activity).getLabel();
+        if(activity.getClass().equals(DetailUserActivity.class)) {
+            gender = ((DetailUserActivity) activity).getGender();
+            birthday = ((DetailUserActivity) activity).getBirthday();
+            interests = ((DetailUserActivity) activity).getLabel();
+        }
     }
 
 

@@ -22,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.example.baidupostbar.ChangeInforActivity;
 import com.example.baidupostbar.DetailUserActivity;
 import com.example.baidupostbar.LoginActivity;
+import com.example.baidupostbar.PostCollectActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.RegisterInterest;
 
@@ -131,6 +132,14 @@ public class UserFragment extends Fragment {
                 Intent intent = new Intent();
                 intent.setClass(getContext(), RegisterInterest.class);
                 intent.putExtra("type", "3");
+                startActivity(intent);
+            }
+        });
+        collect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(getContext(), PostCollectActivity.class);
                 startActivity(intent);
             }
         });

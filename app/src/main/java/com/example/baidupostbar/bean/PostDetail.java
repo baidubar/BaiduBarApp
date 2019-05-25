@@ -13,9 +13,23 @@ public class PostDetail {
     private String commentNum;
     private String label;
     private ArrayList<String>photo;
+    private String floor;
+    private boolean collection_status;
+    private String personId;
 
 
 
+
+
+
+    public void setPersonId(String personId){this.personId = personId;}
+
+    public String getPersonId(){return personId;}
+
+
+    public void setFloor(String floor){this.floor = floor;}
+
+    public String getFloor(){return floor;}
 
     public ArrayList<String> getPhoto() {return photo; }
 
@@ -85,5 +99,12 @@ public class PostDetail {
 
     public void setActivity(Class<?> activity) {
         this.activity = activity;
+    }
+
+    public void setCollection_status(boolean collection_status) {
+        this.collection_status = collection_status;
+    }
+    public boolean getCollection_status(){
+        return collection_status;
     }
 }

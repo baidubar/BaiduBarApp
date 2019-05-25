@@ -179,23 +179,6 @@ public class SearchBarFragment extends Fragment {
     private void prasedWithJosnData(String jsonData){
         mDataList = new ArrayList<>();
         try {
-
-
-//            {
-//                "bar_number": 10,
-//                    "bar_msg":[
-//                {
-//                    "bar_id":1,
-//                        "bar_title": "爱我苏联",
-//                        "bar_description": "无",
-//                        "bar_icon": "/media/1.jpg",
-//                        "post_number": 10,
-//                        "watching_number":0,
-//                        "watching_status": false,
-//                },
-//                //略
-//    ]
-//            }
             JSONObject jsonObject = new JSONObject(jsonData);
                 String number = jsonObject.getString("bar_number");
                 if (!number.equals("0")) {

@@ -108,7 +108,7 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
                 content = mContentEt.getText().toString();
                 Log.e("CreatPost","content:"+ content);
                 Log.e("CreatPost","photo:"+ photo);
-
+                content = trim(content);
                 if(!content.equals("")){
                     MultipartBody.Builder builder = new MultipartBody.Builder();
 
@@ -290,6 +290,12 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
         });
     }
 
-
+    public static String trim(String s){
+        String result = "";
+        if(null!=s && !"".equals(s)){
+            result = s.replaceAll("[\\s]", "").replaceAll("[\\s]", "");
+        }
+        return result;
+    }
 
 }

@@ -1,7 +1,9 @@
 package com.example.baidupostbar.fragment;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -10,16 +12,24 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.baidupostbar.DetailPost;
 import com.example.baidupostbar.R;
+import com.example.baidupostbar.Utils.CheckNetUtil;
 import com.example.baidupostbar.bean.Post;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +40,10 @@ import cn.bingoogolapple.baseadapter.BGAViewHolderHelper;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPreviewActivity;
 import cn.bingoogolapple.photopicker.imageloader.BGARVOnScrollListener;
 import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -41,6 +55,10 @@ public class UserPostFragment extends Fragment implements EasyPermissions.Permis
 
     private RecyclerView mMomentRv;
     private PostAdapter postAdapter;
+    private String url;
+    private ArrayList<String>picture;
+    private String responseData;
+    private List<Post> moments;
 
     private BGANinePhotoLayout mCurrentClickNpl;
     @Nullable
@@ -54,7 +72,7 @@ public class UserPostFragment extends Fragment implements EasyPermissions.Permis
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mMomentRv = view.findViewById(R.id.recyclerView);
-        postAdapter = new PostAdapter(mMomentRv);
+        postAdapter = new PostAdapter(mMomentRv,getContext());
         postAdapter.setOnRVItemClickListener(this);
         postAdapter.setOnRVItemLongClickListener(this);
 
@@ -62,14 +80,53 @@ public class UserPostFragment extends Fragment implements EasyPermissions.Permis
         mMomentRv.setLayoutManager(new LinearLayoutManager(getContext()));
         mMomentRv.setAdapter(postAdapter);
 
-        addNetImageTestData();
+
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        url = "http://139.199.84.147/mytieba.api/posts";
+
+        if (new CheckNetUtil(getContext()).initNet()) {
+            initData(url);
+        }
+    }
+
     /**
      * 添加网络图片测试数据
      */
-    private void addNetImageTestData() {
-        List<Post> moments = new ArrayList<>();
+    private void addNetImageTestData(String jsonData) {
+        moments = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(jsonData);
+            JSONArray jsonArray = jsonObject.getJSONArray("post_msg");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                String postId = jsonObject1.getString("post_id");
+                JSONArray jsonArray1 = jsonObject1.getJSONArray("post_pic");
+                String writer_id = jsonObject1.getString("writer_id");
+                String writer_name = jsonObject1.getString("writer_name");
+                String writer_avatar = jsonObject1.getString("writer_avatar");
+                picture = new ArrayList<>();
+                for (int j = 0;j < jsonArray1.length();j++){
+                    String pic = "http://139.199.84.147/" + jsonArray1.get(j);
+                    picture.add(pic);
+                }
+                String post_content = jsonObject1.getString("post_content");
+                String comment_number = jsonObject1.getString("comment_number");
+                String praise_number = jsonObject1.getString("praise_number");
+                String barId = jsonObject1.getString("bar_id");
+                String barName = jsonObject1.getString("bar_name");
+                String bar_tags = jsonObject1.getString("bar_tags");
+                moments.add(new Post(post_content,picture,comment_number,praise_number,writer_avatar,writer_name,bar_tags,barName,barId,postId));
+
+            }
+        } catch (JSONException e){
+            e.printStackTrace();
+        }
+
 
 //        moments.add(new Post("1张网络图片", new ArrayList<>(Arrays.asList("http://d.hiphotos.baidu.com/image/h%3D200/sign=201258cbcd80653864eaa313a7dca115/ca1349540923dd54e54f7aedd609b3de9c824873.jpg"))));
 //        moments.add(new Post("2张网络图片", new ArrayList<>(Arrays.asList("http://d.hiphotos.baidu.com/image/h%3D200/sign=201258cbcd80653864eaa313a7dca115/ca1349540923dd54e54f7aedd609b3de9c824873.jpg", "http://d.hiphotos.baidu.com/image/h%3D200/sign=201258cbcd80653864eaa313a7dca115/ca1349540923dd54e54f7aedd609b3de9c824873.jpg"))));
@@ -163,7 +220,9 @@ public class UserPostFragment extends Fragment implements EasyPermissions.Permis
     //帖子的点击事件
     @Override
     public void onRVItemClick(ViewGroup viewGroup, View view, int position) {
+        String postId = moments.get(position).postId;
         Intent intent = new Intent(getContext(), DetailPost.class);
+        intent.putExtra("post_id",postId);
         startActivity(intent);
     }
 
@@ -176,8 +235,10 @@ public class UserPostFragment extends Fragment implements EasyPermissions.Permis
 
     private class PostAdapter extends BGARecyclerViewAdapter<Post> {
 
-        public PostAdapter(RecyclerView recyclerView) {
+        private Context context;
+        public PostAdapter(RecyclerView recyclerView,Context context) {
             super(recyclerView, R.layout.item_post);
+            this.context = context;
         }
 
         @Override
@@ -187,11 +248,60 @@ public class UserPostFragment extends Fragment implements EasyPermissions.Permis
             } else {
                 helper.setVisibility(R.id.tv_content, View.VISIBLE);
                 helper.setText(R.id.tv_content, moment.content);
+                helper.setText(R.id.tv_commentNum,moment.comment_number);
+                helper.setText(R.id.tv_likeNum,moment.praise_number);
+                helper.setText(R.id.tv_label,moment.barLabel);
+                helper.setText(R.id.tv_bar,moment.barName);
+                helper.setText(R.id.tv_author,moment.writterName);
             }
-
+            Glide.with(context).load("http://139.199.84.147"+moment.getHeadImage()).into(helper.getImageView(R.id.iv_author));
             BGANinePhotoLayout ninePhotoLayout = helper.getView(R.id.npl_item_moment_photos);
             ninePhotoLayout.setDelegate(UserPostFragment.this::onClickNinePhotoItem);
             ninePhotoLayout.setData(moment.photos);
         }
+    }
+    private void initData(String url){
+        try {
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("theUser", Context.MODE_PRIVATE);
+            String cookie = sharedPreferences.getString("cookie", "");
+            String userId = sharedPreferences.getString("user_id", "");
+            url = url + "?user="+ userId;
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder().url(url)
+                    .addHeader("Cookie",cookie)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(okhttp3.Call call, IOException e) {
+                    Log.e("onFailure","获取数据失败");
+                    Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                    responseData = response.body().string();
+                    Log.e("rsponseData",responseData);
+                    if (response.isSuccessful()){
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                addNetImageTestData(responseData);
+                            }
+                        });
+                    }else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(),"服务器请求失败",Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
+        }
+
     }
 }

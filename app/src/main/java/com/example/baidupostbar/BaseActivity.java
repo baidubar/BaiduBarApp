@@ -1,6 +1,7 @@
 package com.example.baidupostbar;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
@@ -12,8 +13,9 @@ import com.gyf.barlibrary.OnKeyboardListener;
  * Created by WZJSB-01 on 2017/12/5.
  */
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends RootBaseActivity {
     protected ImmersionBar mImmersionBar;
+    public Handler viewHandler = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -171,6 +171,8 @@ public class HttpUtil {
     public void DeleteUtil(String url, FormBody formBody,int type){
         if (initNet()) {
             try {
+                SharedPreferences sharedPreferences = context.getSharedPreferences("theUser", Context.MODE_PRIVATE);
+                cookie = sharedPreferences.getString("cookie", "");
                 responseData = null;
                 Request request = new Request.Builder()
                         .url(url)
