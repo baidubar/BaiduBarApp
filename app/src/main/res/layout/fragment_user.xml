@@ -243,7 +243,7 @@
             android:textColor="#000000"/>
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/layout_change_password"
+        android:id="@+id/changePassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">

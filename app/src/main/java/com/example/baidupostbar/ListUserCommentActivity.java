@@ -4,11 +4,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.baidupostbar.Adapter.UserCommentAdapter;
+import com.example.baidupostbar.bean.EmptyRecyclerView;
 import com.example.baidupostbar.bean.UserComment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -32,10 +33,11 @@ import okhttp3.Response;
 
 public class ListUserCommentActivity extends AppCompatActivity {
     private List<UserComment> userCommentList = new ArrayList<>();
-    RecyclerView mRecyclerView;
+    EmptyRecyclerView mRecyclerView;
     UserCommentAdapter mAdapter;
     private String userId;
     private String cookie;
+    private View mEmptyView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +45,8 @@ public class ListUserCommentActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("theUser",MODE_PRIVATE);
         userId = preferences.getString("user_id","");
         cookie = preferences.getString("cookie", "");
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView = (EmptyRecyclerView) findViewById(R.id.recyclerView);
+        mEmptyView = findViewById(R.id.empty_iv);
 //        LinearLayoutManager manager=new LinearLayoutManager(ListUserCommentActivity.this);
 //        mRecyclerView.setLayoutManager(manager);
         sendRequestWithOKHttp();
@@ -149,10 +152,10 @@ public class ListUserCommentActivity extends AppCompatActivity {
         runOnUiThread(new Runnable(){
             @Override
             public void run(){ //设置ui
-                mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+                mRecyclerView = (EmptyRecyclerView) findViewById(R.id.recyclerView);
                 LinearLayoutManager manager=new LinearLayoutManager(ListUserCommentActivity.this);
                 mRecyclerView.setLayoutManager(manager);
-                //mAdapter = new UserCommentAdapter(userCommentList,getBaseContext());
+                mRecyclerView.setEmptyView(mEmptyView);
             }
         });
     }

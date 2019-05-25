@@ -4,18 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.baidupostbar.Adapter.BarListAdapter;
 import com.example.baidupostbar.Utils.HttpUtil;
 import com.example.baidupostbar.bean.BarList;
+import com.example.baidupostbar.bean.EmptyRecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,14 +25,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.parsers.SAXParser;
-
 public class ListBarActivity extends RootBaseActivity {
 
     private ArrayList<BarList> mDataList;
-    private RecyclerView mRecyclerView;
+    private EmptyRecyclerView mRecyclerView;
     private String url;
     private String BarLabel;
+    private View mEmptyView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +64,8 @@ public class ListBarActivity extends RootBaseActivity {
 
     }
     private void initView() {
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView = (EmptyRecyclerView) findViewById(R.id.recyclerView);
+        mEmptyView = findViewById(R.id.empty_iv);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
@@ -88,6 +86,7 @@ public class ListBarActivity extends RootBaseActivity {
         });
 
         mRecyclerView.setAdapter(barListAdapter);
+        mRecyclerView.setEmptyView(mEmptyView);
     }
     private String getUrl(String url, List<Map<String, String>> list_url) {
         for (int i = 0; i < list_url.size(); i++) {

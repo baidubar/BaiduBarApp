@@ -6,7 +6,7 @@ public class FloorDetail {
     private String content;
     private String time;
     private boolean collection_status;
-    private String reply_person_id;
+    private int reply_person_id;
 
     private String floorNum;
     public FloorDetail(){}
@@ -14,11 +14,11 @@ public class FloorDetail {
         return collection_status;
     }
 
-    public String getReply_person_id() {
+    public int getReply_person_id() {
         return reply_person_id;
     }
 
-    public void setReply_person_id(String reply_person_id) {
+    public void setReply_person_id(int reply_person_id) {
         this.reply_person_id = reply_person_id;
     }
 

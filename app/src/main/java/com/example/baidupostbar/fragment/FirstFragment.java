@@ -354,6 +354,5 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                     e.printStackTrace();
                     Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
                 }
-
     }
 }

@@ -7,6 +7,7 @@ public class MsgAttention {
     private String username;
     private boolean read_status;
 
+
     public int getId() {
         return id;
     }

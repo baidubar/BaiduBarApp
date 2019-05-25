@@ -4,11 +4,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.baidupostbar.Adapter.UserBarAdapter;
+import com.example.baidupostbar.bean.EmptyRecyclerView;
 import com.example.baidupostbar.bean.UserBar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -30,11 +31,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class UsersBarActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
+    private EmptyRecyclerView recyclerView;
     private String userId;
     private String cookie;
     private List<UserBar> userBarList = new ArrayList<>();
     UserBarAdapter mAdapter;
+    private View mEmptyView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,7 @@ public class UsersBarActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("theUser",MODE_PRIVATE);
         userId = preferences.getString("user_id","");
         cookie = preferences.getString("cookie", "");
+
         Log.d("cookie",cookie);
         Log.d("id",userId);
         initView();
@@ -49,7 +52,8 @@ public class UsersBarActivity extends AppCompatActivity {
         sendRequestWithOKHttp();
     }
     private void initView(){
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = (EmptyRecyclerView)findViewById(R.id.recyclerView);
+        mEmptyView = findViewById(R.id.empty_iv);
     }
     private void sendRequestWithOKHttp(){
         new Thread(new Runnable() {
@@ -147,11 +151,12 @@ public class UsersBarActivity extends AppCompatActivity {
         runOnUiThread(new Runnable(){
             @Override
             public void run(){ //设置ui
-                recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+                recyclerView = (EmptyRecyclerView)findViewById(R.id.recyclerView);
                 LinearLayoutManager manager=new LinearLayoutManager(UsersBarActivity.this);
                 recyclerView.setLayoutManager(manager);
                 mAdapter = new UserBarAdapter(userBarList,getBaseContext(),cookie,userId);
                 recyclerView.setAdapter(mAdapter);
+                recyclerView.setEmptyView(mEmptyView);
             }
         });
     }

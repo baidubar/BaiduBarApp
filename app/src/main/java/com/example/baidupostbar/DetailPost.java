@@ -56,6 +56,8 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
     private String userId;
     private String thisPcId;
     private ImageView btn_concerd;
+    boolean praise_status;
+    private ImageView btn_like;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +90,11 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             }
         });
         initView();
-
+        initAdapter();
+        if (praise_status){
+            btn_like.setImageResource(R.drawable.like_fill);
+        }
+        else btn_like.setImageResource(R.drawable.like);
     }
 
     @Override
@@ -109,6 +115,8 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         View top = getLayoutInflater().inflate(R.layout.header_detail_post, (ViewGroup) mRecyclerView.getParent(), false);
         postDetailAdapter.addHeaderView(top);
         btn_concerd = top.findViewById(R.id.btn_concerd);
+        btn_like = top.findViewById(R.id.btn_like);
+
         btn_concerd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -238,7 +246,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             Boolean status = jsonObject.getBoolean("status");
             if(status) {
                 boolean collection_status = jsonObject.getBoolean("collection_status");
-                boolean praise_status = jsonObject.getBoolean("praise_status");
+                praise_status = jsonObject.getBoolean("praise_status");
                 String use_id = jsonObject.getString("user_id");
 //                String floor = jsonObject.getString("floor");
                 JSONObject jsonObject1 = jsonObject.getJSONObject("post_msg");

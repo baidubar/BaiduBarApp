@@ -4,11 +4,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.baidupostbar.Adapter.UserFollowAdapter;
+import com.example.baidupostbar.bean.EmptyRecyclerView;
 import com.example.baidupostbar.bean.UserFollow;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -30,11 +31,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class UsersFollowActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
+    private EmptyRecyclerView recyclerView;
     private String userId;
     private String cookie;
     private List<UserFollow> userFollowList = new ArrayList<>();
     UserFollowAdapter mAdapter;
+    private View mEmptyView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +56,7 @@ public class UsersFollowActivity extends AppCompatActivity {
 
     private void initView(){
         recyclerView = findViewById(R.id.recyclerView);
+        mEmptyView = findViewById(R.id.empty_iv);
     }
     private void sendRequestWithOKHttp(){
         new Thread(new Runnable() {
@@ -156,6 +159,7 @@ public class UsersFollowActivity extends AppCompatActivity {
                 recyclerView.setLayoutManager(manager);
                 mAdapter = new UserFollowAdapter(userFollowList,getBaseContext(),cookie,userId);
                 recyclerView.setAdapter(mAdapter);
+                recyclerView.setEmptyView(mEmptyView);
             }
         });
     }

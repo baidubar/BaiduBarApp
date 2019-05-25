@@ -224,7 +224,7 @@ public class FloorDetailFragment extends DialogFragment {
                     JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                     String comment_id = jsonObject1.getString("comment_id");
                     boolean reply_status = jsonObject1.getBoolean("reply_status");
-                    String person_id = jsonObject1.getString("person_id");
+                   int person_id = jsonObject1.getInt("person_id");
                     String person_avatar = jsonObject1.getString("person_avatar");
                     String person_name = jsonObject1.getString("person_name");
                     String datetime = jsonObject1.getString("datetime");
@@ -242,7 +242,7 @@ public class FloorDetailFragment extends DialogFragment {
                     floorDetail.setFloorNum("第"+ num + "楼");
                     floorDetail.setTime(datetime);
                     floorDetail.setReply_person_id(person_id);
-                    Log.d("评论者id",person_id);
+                    Log.d("评论者id",String.valueOf(person_id));
                     mDataList.add(floorDetail);
                 }
                 getActivity().runOnUiThread(new Runnable() {

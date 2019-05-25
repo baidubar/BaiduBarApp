@@ -4,11 +4,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.baidupostbar.Adapter.MsgLikeAdapter;
+import com.example.baidupostbar.bean.EmptyRecyclerView;
 import com.example.baidupostbar.bean.MsgLike;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -32,10 +33,11 @@ import okhttp3.Response;
 
 public class ListUserLikeActivity extends AppCompatActivity {
     private List<MsgLike> msgLikeList = new ArrayList<>();
-    RecyclerView mRecyclerView;
+    EmptyRecyclerView mRecyclerView;
     MsgLikeAdapter mAdapter;
     private String userId;
     private String cookie;
+    private View mEmptyView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +45,7 @@ public class ListUserLikeActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("theUser",MODE_PRIVATE);
         userId = preferences.getString("user_id","");
         cookie = preferences.getString("cookie", "");
+        mEmptyView = findViewById(R.id.empty_iv);
         sendRequestWithOKHttp();
         mAdapter = new MsgLikeAdapter(msgLikeList,this,cookie,userId);
     }
@@ -140,11 +143,12 @@ public class ListUserLikeActivity extends AppCompatActivity {
         runOnUiThread(new Runnable(){
             @Override
             public void run(){ //设置ui
-                mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+                mRecyclerView = (EmptyRecyclerView) findViewById(R.id.recyclerView);
                 LinearLayoutManager manager=new LinearLayoutManager(ListUserLikeActivity.this);
                 mRecyclerView.setLayoutManager(manager);
                 mAdapter = new MsgLikeAdapter(msgLikeList,getBaseContext(),cookie,userId);
                 mRecyclerView.setAdapter(mAdapter);
+                mRecyclerView.setEmptyView(mEmptyView);
             }
         });
     }
