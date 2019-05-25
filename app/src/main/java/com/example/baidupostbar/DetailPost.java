@@ -14,11 +14,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.listener.OnItemChildClickListener;
 import com.example.baidupostbar.Adapter.PostDetailAdapter;
 import com.example.baidupostbar.Utils.HttpUtil;
 import com.example.baidupostbar.bean.PostDetail;
@@ -56,6 +55,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
     private boolean RealConcernPeople;
     private String userId;
     private String thisPcId;
+    private ImageView btn_concerd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +108,37 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         postDetailAdapter.openLoadAnimation();
         View top = getLayoutInflater().inflate(R.layout.header_detail_post, (ViewGroup) mRecyclerView.getParent(), false);
         postDetailAdapter.addHeaderView(top);
+        btn_concerd = top.findViewById(R.id.btn_concerd);
+        btn_concerd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //未关注时是follow，已关注时是follow_fill，自己的帖子时是delete
+                //以上是图片的名字，放进btn_concerd就可以
+                Log.e("DetailPost","关注:"+ RealConcernPeople);
+                if(RealConcernPeople){
+                    HttpUtil httpUtil = new HttpUtil(DetailPost.this,getApplicationContext());
+                    String url = "http://139.199.84.147/mytieba.api/user/"+ userId +"/follow";
+                    PostDetail postDetail = mDataList.get(0);
+                    String personId = postDetail.getPersonId();
+                    FormBody formBody = new FormBody.Builder()
+                            .add("user_id",personId)
+                            .build();
+                    httpUtil.DeleteUtil(url,formBody,3);
+                    doHandler();
+                }
+                else {
+                    HttpUtil httpUtil = new HttpUtil(DetailPost.this,getApplicationContext());
+                    String url = "http://139.199.84.147/mytieba.api/user/"+ userId +"/follow";
+                    PostDetail postDetail = mDataList.get(0);
+                    String personId = postDetail.getPersonId();
+                    FormBody formBody = new FormBody.Builder()
+                            .add("user_id",personId)
+                            .build();
+                    httpUtil.PostUtilsWithCookie(url,formBody,4);
+                    doHandler();
+                }
+            }
+        });
         postDetailAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {

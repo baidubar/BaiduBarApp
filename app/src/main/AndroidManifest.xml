@@ -19,12 +19,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".UserPostActivity"></activity>
         <activity
             android:name=".PostCollectActivity"
             android:label="@string/title_activity_post_collect"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".UserAttentionActivity" />
-        <activity android:name=".ChangePasswordActivity"></activity>
+        <activity android:name=".ChangePasswordActivity" />
         <activity android:name=".UsersBarActivity" />
         <activity android:name=".UsersFansActivity" />
         <activity android:name=".UsersFollowActivity" />

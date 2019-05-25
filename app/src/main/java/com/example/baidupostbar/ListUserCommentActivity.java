@@ -48,7 +48,7 @@ public class ListUserCommentActivity extends AppCompatActivity {
 //        mRecyclerView.setLayoutManager(manager);
         sendRequestWithOKHttp();
 
-        mAdapter = new UserCommentAdapter(userCommentList,this);
+        mAdapter = new UserCommentAdapter(userCommentList,this,cookie,userId);
 //        LinearLayoutManager manager=new LinearLayoutManager(ListUserCommentActivity.this);
 //
 //        mRecyclerView.setLayoutManager(manager);

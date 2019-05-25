@@ -6,10 +6,21 @@ public class FloorDetail {
     private String content;
     private String time;
     private boolean collection_status;
+    private String reply_person_id;
 
     private String floorNum;
-
     public FloorDetail(){}
+    public boolean isCollection_status() {
+        return collection_status;
+    }
+
+    public String getReply_person_id() {
+        return reply_person_id;
+    }
+
+    public void setReply_person_id(String reply_person_id) {
+        this.reply_person_id = reply_person_id;
+    }
 
     public void setFloorNum(String floorNum) {
         this.floorNum = floorNum;

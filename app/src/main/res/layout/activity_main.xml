@@ -15,7 +15,7 @@
         hjm:tab_bar_background="#FFFFFF"
     hjm:tab_divider_background="#D3D3D3"
     hjm:tab_font_size="6sp"
-    hjm:tab_img_height="47px"
+    hjm:tab_img_height="50px"
     hjm:tab_img_width="47px"
     hjm:tab_isshow_divider="true"
     hjm:tab_padding_bottom="4px"

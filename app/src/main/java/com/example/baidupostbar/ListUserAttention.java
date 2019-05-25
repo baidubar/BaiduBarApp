@@ -46,7 +46,7 @@ public class ListUserAttention extends AppCompatActivity {
         Log.d("id",userId);
 
         sendRequestWithOKHttp();
-        mAdapter = new MsgAttentionAdapter(msgAttentionList,this);
+        mAdapter = new MsgAttentionAdapter(msgAttentionList,this,cookie,userId);
 
     }
     private void sendRequestWithOKHttp(){
@@ -148,7 +148,7 @@ public class ListUserAttention extends AppCompatActivity {
                 mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
                 LinearLayoutManager manager=new LinearLayoutManager(ListUserAttention.this);
                 mRecyclerView.setLayoutManager(manager);
-                mAdapter = new MsgAttentionAdapter(msgAttentionList,getBaseContext());
+                mAdapter = new MsgAttentionAdapter(msgAttentionList,getBaseContext(),cookie,userId);
                 mRecyclerView.setAdapter(mAdapter);
             }
         });

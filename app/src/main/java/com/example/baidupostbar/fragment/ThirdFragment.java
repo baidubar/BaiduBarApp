@@ -75,8 +75,14 @@ public class ThirdFragment extends Fragment {
         Log.d("艾迪",userId);
         initView();
         initListener();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         sendRequestWithOKHttp();
     }
+
     public void initView(){
         cv0 = view.findViewById(R.id.iv_redCircle0);
         cv1 = view.findViewById(R.id.iv_redCircle1);

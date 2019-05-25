@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.ButtonBarLayout;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.baidupostbar.Adapter.ViewPagerAdapter;
-import com.example.baidupostbar.Utils.HttpUtil;
 import com.example.baidupostbar.fragment.UserBarFragment;
 import com.example.baidupostbar.fragment.UserInforFragment;
 import com.example.baidupostbar.fragment.UserPostFragment;
@@ -120,7 +118,7 @@ public class HomepageActivity extends BaseActivity {
      * @param
      */
     private void initViewPager() {
-        viewpager = (ViewPager) findViewById(R.id.view_pager);
+        //viewpager = (ViewPager) findViewById(R.id.view_pager);
         userBarFragment = new UserBarFragment();
         userInforFragment = new UserInforFragment();
         userPostFragment = new UserPostFragment();
@@ -129,17 +127,17 @@ public class HomepageActivity extends BaseActivity {
         adapter.addFragment(userPostFragment, "动态");
         adapter.addFragment(userBarFragment, "关注的吧");
         adapter.addFragment(userInforFragment, "个人资料");
-        viewpager.setAdapter(adapter);
-        //设置tablayout，viewpager上的标题
-        tabLayout.setupWithViewPager(viewpager);
-        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.colorAccent));
-        //viewpager.setCurrentItem(1);
-        tabLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                //setIndicator(tabLayout,30,30);
-            }
-        });
+//        viewpager.setAdapter(adapter);
+//        //设置tablayout，viewpager上的标题
+//        tabLayout.setupWithViewPager(viewpager);
+//        tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.colorAccent));
+//        //viewpager.setCurrentItem(1);
+//        tabLayout.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                //setIndicator(tabLayout,30,30);
+//            }
+//        });
     }
 
     private void initListener() {
@@ -150,7 +148,7 @@ public class HomepageActivity extends BaseActivity {
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 iv_parallax.setTranslationY(verticalOffset);
                 //200是appbar的高度
-                if (Math.abs(verticalOffset) == DensityUtil.dp2px(280) - toolbar.getHeight()) {//关闭
+                if (Math.abs(verticalOffset) == DensityUtil.dp2px(300) - toolbar.getHeight()) {//关闭
                     if (iswhite) {//变黑
                         if (ImmersionBar.isSupportStatusBarDarkFont()) {
                             mImmersionBar.statusBarDarkFont(true).init();

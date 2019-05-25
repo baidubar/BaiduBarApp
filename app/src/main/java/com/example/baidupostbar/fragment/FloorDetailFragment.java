@@ -31,13 +31,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -50,6 +45,8 @@ public class FloorDetailFragment extends DialogFragment {
     private Dialog dialog;
     private String postId;
     private String floor;
+    String cookie;
+    String userId;
 
 
 
@@ -74,6 +71,9 @@ public class FloorDetailFragment extends DialogFragment {
 //        initView(dialog);
 //        initData();
 //        initAdapter();
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("theUser", Context.MODE_PRIVATE);
+        cookie = sharedPreferences.getString("cookie", "");
+        userId = sharedPreferences.getString("user_id", "");
 
     }
     @NonNull
@@ -103,7 +103,6 @@ public class FloorDetailFragment extends DialogFragment {
 //                    if(keyCode==KeyEvent.KEYCODE_ENTER&&event.getAction()==KeyEvent.ACTION_DOWN){
 ////                        if(!TextUtils.isEmpty(gridPasswordView.getText().toString().trim())){
 ////                            if("123456".equals(gridPasswordView.getText().toString().trim())){
-////                                //TODO 跳转支付宝支付
 ////                            }
 ////                        }
 //                    }else{
@@ -146,7 +145,7 @@ public class FloorDetailFragment extends DialogFragment {
 
     }
     private void initAdapter(){
-        BaseQuickAdapter floorDetailAdapter = new FloorDetailAdapter(R.layout.item_dialog_comment, mDataList,getContext());
+        BaseQuickAdapter floorDetailAdapter = new FloorDetailAdapter(R.layout.item_dialog_comment, mDataList,getContext(),cookie,userId);
         floorDetailAdapter.openLoadAnimation();
         View top = getLayoutInflater().inflate(R.layout.item_dialog_floor, (ViewGroup) recyclerView.getParent(), false);
         floorDetailAdapter.addHeaderView(top);
@@ -155,6 +154,8 @@ public class FloorDetailFragment extends DialogFragment {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 //设置点击事件
                 //应该是做成点击此条评论，弹出评论框
+                CommentDialogFragment commentDialogFragment = new CommentDialogFragment();
+                commentDialogFragment.show(getFragmentManager(), "CommentDialogFragment");
             }
         });
 
@@ -162,8 +163,6 @@ public class FloorDetailFragment extends DialogFragment {
     }
     private void postHttp(String floor){
         try {
-            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("theUser", Context.MODE_PRIVATE);
-            String cookie = sharedPreferences.getString("cookie", "");
             OkHttpClient client = new OkHttpClient();
 
             String url = "http://139.199.84.147/mytieba.api/post/"+postId+"/comment"+ "?floor=" + floor;
@@ -225,13 +224,16 @@ public class FloorDetailFragment extends DialogFragment {
                     JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                     String comment_id = jsonObject1.getString("comment_id");
                     boolean reply_status = jsonObject1.getBoolean("reply_status");
-                    String reply_person_id = jsonObject1.getString("reply_person_id");
-                    String reply_person_name = jsonObject1.getString("reply_person_name");
                     String person_id = jsonObject1.getString("person_id");
                     String person_avatar = jsonObject1.getString("person_avatar");
                     String person_name = jsonObject1.getString("person_name");
                     String datetime = jsonObject1.getString("datetime");
                     String content = jsonObject1.getString("content");
+                    if (reply_status)
+                    {
+                        String reply_person_id = jsonObject1.getString("reply_person_id");
+                        String reply_person_name = jsonObject1.getString("reply_person_name");
+                    }
                     int num = i+1;
                     FloorDetail floorDetail = new FloorDetail();
                     floorDetail.setAuthorName(person_name);
@@ -239,6 +241,8 @@ public class FloorDetailFragment extends DialogFragment {
                     floorDetail.setContent(content);
                     floorDetail.setFloorNum("第"+ num + "楼");
                     floorDetail.setTime(datetime);
+                    floorDetail.setReply_person_id(person_id);
+                    Log.d("评论者id",person_id);
                     mDataList.add(floorDetail);
                 }
                 getActivity().runOnUiThread(new Runnable() {

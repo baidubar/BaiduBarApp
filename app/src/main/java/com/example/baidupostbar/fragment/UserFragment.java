@@ -25,6 +25,7 @@ import com.example.baidupostbar.LoginActivity;
 import com.example.baidupostbar.PostCollectActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.RegisterInterest;
+import com.example.baidupostbar.UserPostActivity;
 import com.example.baidupostbar.UsersBarActivity;
 import com.example.baidupostbar.UsersFansActivity;
 import com.example.baidupostbar.UsersFollowActivity;
@@ -127,7 +128,8 @@ public class UserFragment extends Fragment {
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getContext(), UserPostActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -186,7 +188,7 @@ public class UserFragment extends Fragment {
                 exitHttp();
             }
         });
-        sendRequestWithOKHttp();
+
     }
 
     private void sendRequestWithOKHttp() {
@@ -273,7 +275,7 @@ public class UserFragment extends Fragment {
 
         userName.setText(username);
         Glide.with(getContext()).load(avater).into(headImage);
-
+        sendRequestWithOKHttp();
     }
 
     private void setfindId() {

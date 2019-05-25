@@ -26,7 +26,7 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
+        Search search = new Search();
         SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
         userName = sharedPreferences.getString("username", "");
 
@@ -72,7 +72,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onSearchAction(String searchText) {
 
-                Search search = new Search();
+
                 search.setUserName(userName);
                 search.setSearchData(searchText);
 

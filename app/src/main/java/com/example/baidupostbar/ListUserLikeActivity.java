@@ -44,7 +44,7 @@ public class ListUserLikeActivity extends AppCompatActivity {
         userId = preferences.getString("user_id","");
         cookie = preferences.getString("cookie", "");
         sendRequestWithOKHttp();
-        mAdapter = new MsgLikeAdapter(msgLikeList,this);
+        mAdapter = new MsgLikeAdapter(msgLikeList,this,cookie,userId);
     }
     private void sendRequestWithOKHttp(){
         new Thread(new Runnable() {
@@ -143,7 +143,7 @@ public class ListUserLikeActivity extends AppCompatActivity {
                 mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
                 LinearLayoutManager manager=new LinearLayoutManager(ListUserLikeActivity.this);
                 mRecyclerView.setLayoutManager(manager);
-                mAdapter = new MsgLikeAdapter(msgLikeList,getBaseContext());
+                mAdapter = new MsgLikeAdapter(msgLikeList,getBaseContext(),cookie,userId);
                 mRecyclerView.setAdapter(mAdapter);
             }
         });

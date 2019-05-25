@@ -44,6 +44,11 @@
             </LinearLayout>
 
         </LinearLayout>
+        <ImageView
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:background="@drawable/closea"
+            android:id="@+id/btn_delete"/>
     </LinearLayout>
     <TextView
         android:layout_width="match_parent"

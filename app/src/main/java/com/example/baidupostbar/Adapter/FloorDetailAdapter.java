@@ -15,9 +15,13 @@ public class FloorDetailAdapter extends BaseQuickAdapter<FloorDetail, BaseViewHo
 
 
     private List<FloorDetail>mList;
-    public FloorDetailAdapter(int layoutResId, List data, Context context) {
+    private String userId;
+    private String cookie;
+    public FloorDetailAdapter(int layoutResId, List data, Context context,String cookie,String userId) {
         super(layoutResId, data);
         this.mList = data;
+        this.cookie = cookie;
+        this.userId = userId;
     }
 
     @Override
@@ -26,9 +30,11 @@ public class FloorDetailAdapter extends BaseQuickAdapter<FloorDetail, BaseViewHo
 //        helper.setImageResource(R.id.icon,item.getUserImg());
 
 //        helper.setImageResource(R.id.iv_bar,item.getBarId());
-
-
-
+        if (item.getReply_person_id().equals(userId))
+        {
+            helper.setVisible(R.id.btn_delete,true);
+        }
+        else helper.setVisible(R.id.btn_delete,false);
     }
 
     @Override
@@ -44,8 +50,10 @@ public class FloorDetailAdapter extends BaseQuickAdapter<FloorDetail, BaseViewHo
         }else {
             holder.setText(R.id.tv_author,floorDetail.getAuthorName())
                     .setText(R.id.tv_time,floorDetail.getTime())
-                    .setText(R.id.tv_content,floorDetail.getContent());
+                    .setText(R.id.tv_content,floorDetail.getContent())
+            .addOnClickListener(R.id.btn_delete);
             Glide.with(mContext).load(floorDetail.getHeadImag()).into((ImageView) holder.getView(R.id.iv_author));
+
         }
     }
     @Override

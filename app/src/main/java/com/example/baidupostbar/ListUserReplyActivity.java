@@ -44,7 +44,7 @@ public class ListUserReplyActivity extends AppCompatActivity {
         userId = preferences.getString("user_id","");
         cookie = preferences.getString("cookie", "");
         sendRequestWithOKHttp();
-        mAdapter = new MsgReplyAdapter(msgReplyList,this);
+        mAdapter = new MsgReplyAdapter(msgReplyList,this,cookie,userId);
     }
     private void sendRequestWithOKHttp(){
         new Thread(new Runnable() {
@@ -143,7 +143,7 @@ public class ListUserReplyActivity extends AppCompatActivity {
                 mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
                 LinearLayoutManager manager=new LinearLayoutManager(ListUserReplyActivity.this);
                 mRecyclerView.setLayoutManager(manager);
-                mAdapter = new MsgReplyAdapter(msgReplyList,getBaseContext());
+                mAdapter = new MsgReplyAdapter(msgReplyList,getBaseContext(),cookie,userId);
                 mRecyclerView.setAdapter(mAdapter);
             }
         });

@@ -38,16 +38,11 @@
                 android:layout_height="5dp"
                 android:text="2019-01-01" />
         </LinearLayout>
-        <Button
+        <ImageView
             android:id="@+id/btn_concerd"
-            android:layout_width="54dp"
-            android:layout_height="27dp"
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold"
-            android:layout_gravity="center_vertical"
-            android:text="+关注"
-            android:textSize="12sp"
-            android:background="@drawable/btn_rectangle"/>
+            android:background="@drawable/follow"
+            android:layout_height="20dp"
+            android:layout_width="20dp"/>
     </LinearLayout>
     <TextView
         android:layout_width="match_parent"

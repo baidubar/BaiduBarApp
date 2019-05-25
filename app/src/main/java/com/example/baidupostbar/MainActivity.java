@@ -33,12 +33,12 @@ public class MainActivity extends RootBaseActivity {
                 .setOnTabChangeListener(new BottomTabBar.OnTabChangeListener() {
                     @Override
                     public void onTabChange(int position, String name, View view) {
-                        if (position == 1)
-                            mBottomTabBar.setSpot(1, false);
+//                        if (position == 1)
+//                            mBottomTabBar.setSpot(1, false);
                     }
-                })
-                .setSpot(1, true)
-                .setSpot(2, true);
+                });
+//                .setSpot(1, true)
+//                .setSpot(2, true);
         
     }
 }

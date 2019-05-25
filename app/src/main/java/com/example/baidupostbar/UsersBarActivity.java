@@ -150,7 +150,7 @@ public class UsersBarActivity extends AppCompatActivity {
                 recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
                 LinearLayoutManager manager=new LinearLayoutManager(UsersBarActivity.this);
                 recyclerView.setLayoutManager(manager);
-                mAdapter = new UserBarAdapter(userBarList,getBaseContext());
+                mAdapter = new UserBarAdapter(userBarList,getBaseContext(),cookie,userId);
                 recyclerView.setAdapter(mAdapter);
             }
         });

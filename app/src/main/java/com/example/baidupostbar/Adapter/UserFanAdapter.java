@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.baidupostbar.R;
@@ -33,7 +34,7 @@ public class UserFanAdapter extends RecyclerView.Adapter<UserFanAdapter.ViewHold
     private boolean hasMore = true;
     private String cookie;
     private String userId;
-    private boolean status;
+    private boolean statusDel,statusPost;
 
 
     public UserFanAdapter(List<UserFan> list,Context context,String cookie,String userId){
@@ -84,7 +85,7 @@ public class UserFanAdapter extends RecyclerView.Adapter<UserFanAdapter.ViewHold
                 int position = holder.getAdapterPosition();
                 UserFan userFan = list.get(position);
                 //弹出一个选择框
-                if (userFan.isConcern_status())
+                if (holder.btn.getText().equals("互相关注"))
                 {
                     Snackbar.make(view,"确定要取消关注吗？",Snackbar.LENGTH_LONG)
                             .setAction("确定", new View.OnClickListener() {
@@ -92,18 +93,30 @@ public class UserFanAdapter extends RecyclerView.Adapter<UserFanAdapter.ViewHold
                                 public void onClick(View v) {
                                     holder.btn.setEnabled(false);
                                     sendRequestWithOkHttp(position,userFan,view,holder,0);
-                                    if (status)
+                                    if (statusDel)
                                     {
                                         holder.btn.setText("+ 关注");
+                                        Toast.makeText(view.getContext(), "已取消", Toast.LENGTH_LONG).show();
+                                        userFan.setConcern_status(false);
                                     }
+                                    else Toast.makeText(view.getContext(), "操作失败，请勿频繁操作", Toast.LENGTH_LONG).show();
                                     holder.btn.setEnabled(true);
                                 }
                             })
                             .show();
                 }
                 else{
+                    holder.btn.setEnabled(false);
                     sendRequestWithOkHttp(position,userFan,view,holder,1);
-                    holder.btn.setText("互相关注");
+                    if (statusDel)
+                    {
+                        holder.btn.setText("互相关注");
+                        Toast.makeText(view.getContext(), "已关注", Toast.LENGTH_LONG).show();
+                        userFan.setConcern_status(true);
+                    }
+                    else Toast.makeText(view.getContext(), "操作失败，请勿频繁操作", Toast.LENGTH_LONG).show();
+                    holder.btn.setEnabled(true);
+
                 }
             }
         });
@@ -147,10 +160,7 @@ public class UserFanAdapter extends RecyclerView.Adapter<UserFanAdapter.ViewHold
             public void run(){
                 try{
                     String url;
-                    if(flag == 0)
-                    {
-                        url = "http://139.199.84.147/mytieba.api/user/"+userId+"/follow";
-                    }
+                    url = "http://139.199.84.147/mytieba.api/user/"+userId+"/follow";
                     OkHttpClient client = new OkHttpClient.Builder()
                             .retryOnConnectionFailure(true)  //网查解决end of the stream问题
                             .connectTimeout(10, TimeUnit.SECONDS)
@@ -159,12 +169,21 @@ public class UserFanAdapter extends RecyclerView.Adapter<UserFanAdapter.ViewHold
                     RequestBody requestBody = new FormBody.Builder()
                             .add("user_id",String.valueOf(userFan.getFollower_id()))
                             .build();
-
-                    Request request = new Request.Builder()
-                            .url("http://139.199.84.147/mytieba.api/user/"+userId+"/follow")
-                            .delete(requestBody)
-                            .addHeader("Cookie",cookie)
-                            .build();
+                    Request request;
+                    if (flag == 0){
+                        request = new Request.Builder()
+                                .url("http://139.199.84.147/mytieba.api/user/"+userId+"/follow")
+                                .delete(requestBody)
+                                .addHeader("Cookie",cookie)
+                                .build();
+                    }
+                    else {
+                        request = new Request.Builder()
+                                .url("http://139.199.84.147/mytieba.api/user/"+userId+"/follow")
+                                .post(requestBody)
+                                .addHeader("Cookie",cookie)
+                                .build();
+                    }
 
                     Response response = client.newCall(request).execute();
                     String responseDate = response.body().string();
@@ -172,7 +191,10 @@ public class UserFanAdapter extends RecyclerView.Adapter<UserFanAdapter.ViewHold
                     Log.d("要删的id",String.valueOf(userFan.getFollower_id()));
                     JSONTokener(responseDate);
                     JSONObject jsonObject = new JSONObject(responseDate);
-                    status = jsonObject.getBoolean("status");
+                    if (flag == 0){
+                        statusDel = jsonObject.getBoolean("status");
+                    }
+                    else statusPost = jsonObject.getBoolean("status");
 //                    Looper.prepare();
 //                    if (status){
 //                        Toast.makeText(view.getContext(),"已取消",Toast.LENGTH_LONG).show();
