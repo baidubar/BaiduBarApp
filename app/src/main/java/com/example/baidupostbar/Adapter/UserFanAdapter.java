@@ -87,37 +87,36 @@ public class UserFanAdapter extends RecyclerView.Adapter<UserFanAdapter.ViewHold
                 int position = holder.getAdapterPosition();
                 UserFan userFan = list.get(position);
                 //弹出一个选择框
-                if (holder.btn.getText().equals("互相关注"))
+                if (userFan.isConcern_status())
                 {
                     Snackbar.make(view,"确定要取消关注吗？",Snackbar.LENGTH_LONG)
                             .setAction("确定", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    holder.btn.setEnabled(false);
                                     sendRequestWithOkHttp(position,userFan,view,holder,0);
-                                    if (statusDel)
-                                    {
+//                                    if (statusDel)
+//                                    {
                                         holder.btn.setText("+ 关注");
                                         Toast.makeText(view.getContext(), "已取消", Toast.LENGTH_LONG).show();
                                         userFan.setConcern_status(false);
-                                    }
-                                    else Toast.makeText(view.getContext(), "操作失败，请勿频繁操作", Toast.LENGTH_LONG).show();
-                                    holder.btn.setEnabled(true);
+//                                    }
+//                                    else Toast.makeText(view.getContext(), "操作失败，请勿频繁操作", Toast.LENGTH_LONG).show();
+//                                    holder.btn.setEnabled(true);
                                 }
                             })
                             .show();
                 }
                 else{
-                    holder.btn.setEnabled(false);
+//                    holder.btn.setEnabled(false);
                     sendRequestWithOkHttp(position,userFan,view,holder,1);
-                    if (statusDel)
-                    {
+//                    if (statusDel)
+//                    {
                         holder.btn.setText("互相关注");
                         Toast.makeText(view.getContext(), "已关注", Toast.LENGTH_LONG).show();
                         userFan.setConcern_status(true);
-                    }
-                    else Toast.makeText(view.getContext(), "操作失败，请勿频繁操作", Toast.LENGTH_LONG).show();
-                    holder.btn.setEnabled(true);
+//                    }
+//                    else Toast.makeText(view.getContext(), "操作失败，请勿频繁操作", Toast.LENGTH_LONG).show();
+//                    holder.btn.setEnabled(true);
 
                 }
             }

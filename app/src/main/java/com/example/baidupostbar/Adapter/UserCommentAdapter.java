@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.baidupostbar.R;
@@ -93,7 +92,7 @@ public class UserCommentAdapter extends RecyclerView.Adapter<UserCommentAdapter.
                 UserComment userComment = list.get(position);
                 holder.btn_delete.setEnabled(false);
                 sendRequestWithOkHttp(position,userComment,view,holder);
-                if (status){
+//                if (status){
 //                        Intent intent = new Intent(view.getContext(), NewsDetail.class);
 //                        intent.putExtra("user_id",userName);
 //                        intent.putExtra("session",session);
@@ -104,11 +103,11 @@ public class UserCommentAdapter extends RecyclerView.Adapter<UserCommentAdapter.
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position,getItemCount() - position);
 
-                }else
-                {
-                    Toast.makeText(view.getContext(), "操作失败", Toast.LENGTH_LONG).show();
-                    holder.btn_delete.setEnabled(true);
-                }
+//                }else
+//                {
+//                    Toast.makeText(view.getContext(), "操作失败", Toast.LENGTH_LONG).show();
+//                    holder.btn_delete.setEnabled(true);
+//                }
             }
         });
         return holder;

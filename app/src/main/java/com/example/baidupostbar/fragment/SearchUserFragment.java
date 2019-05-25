@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +22,7 @@ import com.example.baidupostbar.HomepageActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.SearchResultActivity;
 import com.example.baidupostbar.Utils.CheckNetUtil;
-import com.example.baidupostbar.bean.BarList;
-import com.example.baidupostbar.bean.Search;
+import com.example.baidupostbar.bean.EmptyRecyclerView;
 import com.example.baidupostbar.bean.SearchUser;
 
 import org.json.JSONArray;
@@ -49,9 +47,10 @@ public class SearchUserFragment extends Fragment {
     private ViewPager viewPager;
     private String searchText;
     private String url;
-    private RecyclerView mRecyclerView;
+    private EmptyRecyclerView mRecyclerView;
     private String responseData;
     private ArrayList<SearchUser>mDataList;
+    private View mEmptyView;
     @Override public void onAttach(Activity activity) {
         super.onAttach(activity);
         searchText = ((SearchResultActivity) activity).getSearchText();//通过强转成宿主activity，就可以获取到传递过来的数据
@@ -63,6 +62,7 @@ public class SearchUserFragment extends Fragment {
 //        return inflater.inflate(R.layout.fragment_search_user, container, false);
         view = inflater.inflate(R.layout.fragment_search_user,container,false);
         viewPager = view.findViewById(R.id.viewPager);
+        mEmptyView = view.findViewById(R.id.empty_iv);
         return view;
     }
 
@@ -81,6 +81,7 @@ public class SearchUserFragment extends Fragment {
     private void initView() {
         mRecyclerView = view.findViewById(R.id.search_user_recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setEmptyView(mEmptyView);
     }
     private void initData(String url){
         try {

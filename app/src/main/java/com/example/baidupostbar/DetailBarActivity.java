@@ -13,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -25,16 +26,20 @@ import com.bumptech.glide.Glide;
 import com.example.baidupostbar.Utils.CheckNetUtil;
 import com.example.baidupostbar.Utils.HttpUtil;
 import com.example.baidupostbar.bean.Post;
-import com.nostra13.universalimageloader.utils.L;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.net.ConnectException;
+import java.net.ProtocolException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import cn.bingoogolapple.baseadapter.BGAOnRVItemClickListener;
 import cn.bingoogolapple.baseadapter.BGAOnRVItemLongClickListener;
@@ -43,11 +48,15 @@ import cn.bingoogolapple.baseadapter.BGAViewHolderHelper;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPreviewActivity;
 import cn.bingoogolapple.photopicker.imageloader.BGARVOnScrollListener;
 import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static com.example.baidupostbar.R.layout.header_detail_bar;
-import static com.example.baidupostbar.R.layout.tab_item;
 
 public class DetailBarActivity extends RootBaseActivity implements EasyPermissions.PermissionCallbacks, BGANinePhotoLayout.Delegate, BGAOnRVItemClickListener, BGAOnRVItemLongClickListener {
     private ArrayList<Post> mDataList;
@@ -65,16 +74,32 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
     private String postId;
     private  List<Post> moments;
     private String userId;
+    boolean watching_status;
 
     private BGANinePhotoLayout mCurrentClickNpl;
+    private TextView btn_follow;
+    String cookie;
+    String bar_id;
+    boolean status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_bar);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
+        getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
+        cookie = sharedPreferences.getString("cookie", "");
         userId = sharedPreferences.getString("user_id", "");
+
         Intent intent = getIntent();
         String type = intent.getStringExtra("type");
         String barId = intent.getStringExtra("barId");
@@ -124,7 +149,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
             JSONObject jsonObject = new JSONObject(JsonData);
             boolean status = jsonObject.getBoolean("status");
             if(status){
-                String bar_id =jsonObject.getString("bar_id");
+                bar_id =jsonObject.getString("bar_id");
                 String name = jsonObject.getString("name");
                 String icon = jsonObject.getString("icon");
                 String post_number = jsonObject.getString("post_number");
@@ -188,11 +213,24 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
         TextView BarName  = headerView.findViewById(R.id.tv_bar);
         TextView ConcernNum = headerView.findViewById(R.id.tv_concern_num);
         TextView PostNum = headerView.findViewById(R.id.tv_post_num);
+        btn_follow = headerView.findViewById(R.id.btn_follow);
+        btn_follow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (watching_status){
+                    sendRequestWithOkHttp();
+                }
+                else sendRequestWithOkHttpa();
+            }
+        });
+
         Log.e("barImage","barImage = " + barImage);
         Glide.with(getApplicationContext()).load(barImage).into(BarImage);
         BarName.setText(barName);
         ConcernNum.setText("关注 "+concernNum);
         PostNum.setText("帖子" + postNum);
+        if (watching_status) btn_follow.setText("已关注");
+        else btn_follow.setText("+ 关注");
         postAdapter.addHeaderView(headerView);
     }
 
@@ -326,5 +364,152 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
             }
 
         };
+    }
+    private void sendRequestWithOkHttp(){
+        //开启现线程发起网络请求
+        new Thread(new Runnable(){
+            @Override
+            public void run(){
+                try{
+                    OkHttpClient client = new OkHttpClient.Builder()
+                            .retryOnConnectionFailure(true)  //网查解决end of the stream问题
+                            .connectTimeout(10, TimeUnit.SECONDS)
+                            .readTimeout(20,TimeUnit.SECONDS)
+                            .build();
+                    RequestBody requestBody = new FormBody.Builder()
+                            .add("bar_id",String.valueOf(bar_id))
+                            .build();
+
+                    Request request = new Request.Builder()
+                            .url("http://139.199.84.147/mytieba.api/user/"+userId+"/watching")
+                            .delete(requestBody)
+                            .addHeader("Cookie",cookie)
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    String responseDate = response.body().string();
+                    Log.d("返回的是啥",responseDate);
+                    //Log.d("要删的id",String.valueOf(userFollow.getUser_id()));
+                    JSONTokener(responseDate);
+                    showResponse(responseDate);
+
+                }catch (Exception e){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            e.printStackTrace();
+                            if (e instanceof SocketTimeoutException){
+                                Toast.makeText(DetailBarActivity.this,"连接超时",Toast.LENGTH_SHORT).show();
+                            }
+                            if (e instanceof ConnectException){
+                                Toast.makeText(DetailBarActivity.this,"连接异常",Toast.LENGTH_SHORT).show();
+                            }
+
+                            if (e instanceof ProtocolException) {
+                                Toast.makeText(DetailBarActivity.this,"未知异常，请稍后再试",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+    private static String JSONTokener(String in) {
+        // consume an optional byte order mark (BOM) if it exists
+        if (in != null && in.startsWith("\ufeff")) {
+            in = in.substring(1);
+        }
+        return in;
+    }
+    private void showResponse(final String response){
+        Gson gson = new Gson();
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            status = jsonObject.getBoolean("status");
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        runOnUiThread(new Runnable(){
+            @Override
+            public void run(){ //设置ui
+                if (status){
+                    btn_follow.setText("+ 关注");
+                    watching_status = false;
+                }
+                else Toast.makeText(DetailBarActivity.this,"请重试",Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+    private void sendRequestWithOkHttpa(){
+        //开启现线程发起网络请求
+        new Thread(new Runnable(){
+            @Override
+            public void run(){
+                try{
+                    OkHttpClient client = new OkHttpClient.Builder()
+                            .retryOnConnectionFailure(true)  //网查解决end of the stream问题
+                            .connectTimeout(10, TimeUnit.SECONDS)
+                            .readTimeout(20,TimeUnit.SECONDS)
+                            .build();
+                    RequestBody requestBody = new FormBody.Builder()
+                            .add("bar_id",String.valueOf(bar_id))
+                            .build();
+
+                    Request request = new Request.Builder()
+                            .url("http://139.199.84.147/mytieba.api/user/"+userId+"/watching")
+                            .post(requestBody)
+                            .addHeader("Cookie",cookie)
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    String responseDate = response.body().string();
+                    Log.d("返回的是啥",responseDate);
+                    //Log.d("要删的id",String.valueOf(userFollow.getUser_id()));
+                    JSONTokener(responseDate);
+                    showResponsea(responseDate);
+
+                }catch (Exception e){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            e.printStackTrace();
+                            if (e instanceof SocketTimeoutException){
+                                Toast.makeText(DetailBarActivity.this,"连接超时",Toast.LENGTH_SHORT).show();
+                            }
+                            if (e instanceof ConnectException){
+                                Toast.makeText(DetailBarActivity.this,"连接异常",Toast.LENGTH_SHORT).show();
+                            }
+
+                            if (e instanceof ProtocolException) {
+                                Toast.makeText(DetailBarActivity.this,"未知异常，请稍后再试",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+    private void showResponsea(final String response){
+        Gson gson = new Gson();
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            status = jsonObject.getBoolean("status");
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        runOnUiThread(new Runnable(){
+            @Override
+            public void run(){ //设置ui
+                if (status){
+                    btn_follow.setText("已关注");
+                    watching_status = true;
+                }
+                else Toast.makeText(DetailBarActivity.this,"请重试",Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
