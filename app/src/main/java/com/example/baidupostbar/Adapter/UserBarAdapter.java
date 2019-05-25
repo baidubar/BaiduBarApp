@@ -90,7 +90,7 @@ public class UserBarAdapter extends RecyclerView.Adapter<UserBarAdapter.ViewHold
                             public void onClick(View v) {
                                 holder.btn.setEnabled(false);
                                 sendRequestWithOkHttp(position,userBar,view,holder);
-                                if (status){
+                                //if (status){
                                     Toast.makeText(view.getContext(),"已取消",Toast.LENGTH_LONG).show();
 //                        Intent intent = new Intent(view.getContext(), NewsDetail.class);
 //                        intent.putExtra("user_id",userName);
@@ -102,14 +102,14 @@ public class UserBarAdapter extends RecyclerView.Adapter<UserBarAdapter.ViewHold
                                     notifyItemRemoved(position);
                                     notifyItemRangeChanged(position,getItemCount() - position);
 
-                                }else
-                                {
-                                    Toast.makeText(view.getContext(), "操作失败", Toast.LENGTH_LONG).show();
-                                    holder.btn.setEnabled(true);
-                                }
-                                list.remove(position);
-                                notifyItemRemoved(position);
-                                notifyItemRangeChanged(position,getItemCount() - position);
+//                                }else
+//                                {
+//                                    Toast.makeText(view.getContext(), "操作失败", Toast.LENGTH_LONG).show();
+//                                    holder.btn.setEnabled(true);
+//                                }
+//                                list.remove(position);
+//                                notifyItemRemoved(position);
+//                                notifyItemRangeChanged(position,getItemCount() - position);
                             }
                         })
                         .show();

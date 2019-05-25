@@ -1,9 +1,11 @@
 package com.example.baidupostbar.bean;
 
+import java.util.ArrayList;
+
 public class UserBar {
     private int bar_id;
     private String bar_name;
-    private String bar_tags;
+    private ArrayList<String> bar_tags;
     private String bar_icon;
 
     public int getBar_id() {
@@ -22,11 +24,11 @@ public class UserBar {
         this.bar_name = bar_name;
     }
 
-    public String getBar_tags() {
+    public ArrayList<String> getBar_tags() {
         return bar_tags;
     }
 
-    public void setBar_tags(String bar_tags) {
+    public void setBar_tags(ArrayList<String> bar_tags) {
         this.bar_tags = bar_tags;
     }
 

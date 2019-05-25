@@ -20,13 +20,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.baidupostbar.DetailBarActivity;
 import com.example.baidupostbar.DetailPost;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.SearchResultActivity;
 import com.example.baidupostbar.Utils.CheckNetUtil;
+import com.example.baidupostbar.bean.EmptyRecyclerView;
 import com.example.baidupostbar.bean.Post;
-import com.example.baidupostbar.bean.Search;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,12 +62,13 @@ public class SearchPostFragment extends Fragment implements EasyPermissions.Perm
     private static final int RC_ADD_MOMENT = 1;
 
     private String searchText;
-    private RecyclerView mMomentRv;
+    private EmptyRecyclerView mMomentRv;
     private PostAdapter postAdapter;
     private String url;
     private ArrayList<String> picture;
     private String responseData;
     private String cookie;
+    private View mEmptyView;
 
     private BGANinePhotoLayout mCurrentClickNpl;
 
@@ -83,6 +83,7 @@ public class SearchPostFragment extends Fragment implements EasyPermissions.Perm
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view =  inflater.inflate(R.layout.fragment_search_post, container, false);
+        mEmptyView = view.findViewById(R.id.empty_iv);
         return view;
 
     }
@@ -98,6 +99,7 @@ public class SearchPostFragment extends Fragment implements EasyPermissions.Perm
         mMomentRv.addOnScrollListener(new BGARVOnScrollListener(getActivity()));
         mMomentRv.setLayoutManager(new LinearLayoutManager(getContext()));
         mMomentRv.setAdapter(postAdapter);
+        mMomentRv.setEmptyView(mEmptyView);
 
         List<Map<String, String>> list_url = new ArrayList<>();
         Map<String, String> map = new HashMap<>();

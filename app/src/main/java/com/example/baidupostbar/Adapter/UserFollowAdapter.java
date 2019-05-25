@@ -91,7 +91,7 @@ public class UserFollowAdapter extends RecyclerView.Adapter<UserFollowAdapter.Vi
                             public void onClick(View v) {
                                 holder.btn.setEnabled(false);
                                 sendRequestWithOkHttp(position,userFollow,view,holder);
-                                if (status){
+                                //if (status){
                                     Toast.makeText(view.getContext(),"已取消",Toast.LENGTH_LONG).show();
 //                        Intent intent = new Intent(view.getContext(), NewsDetail.class);
 //                        intent.putExtra("user_id",userName);
@@ -103,11 +103,11 @@ public class UserFollowAdapter extends RecyclerView.Adapter<UserFollowAdapter.Vi
                                     notifyItemRemoved(position);
                                     notifyItemRangeChanged(position,getItemCount() - position);
 
-                                }else
-                                {
-                                    Toast.makeText(view.getContext(), "操作失败", Toast.LENGTH_LONG).show();
-                                    holder.btn.setEnabled(true);
-                                }
+//                                }else
+//                                {
+//                                    Toast.makeText(view.getContext(), "操作失败", Toast.LENGTH_LONG).show();
+//                                    holder.btn.setEnabled(true);
+//                                }
 
                             }
                         })
@@ -207,4 +207,5 @@ public class UserFollowAdapter extends RecyclerView.Adapter<UserFollowAdapter.Vi
         }
         return in;
     }
+
 }

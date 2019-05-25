@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +19,11 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.baidupostbar.Adapter.BarListAdapter;
 import com.example.baidupostbar.DetailBarActivity;
-import com.example.baidupostbar.ListBarActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.SearchResultActivity;
 import com.example.baidupostbar.Utils.CheckNetUtil;
 import com.example.baidupostbar.bean.BarList;
+import com.example.baidupostbar.bean.EmptyRecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,10 +48,11 @@ public class SearchBarFragment extends Fragment {
     private String searchText;
 
     private ArrayList<BarList> mDataList;
-    private RecyclerView mRecyclerView;
+    private EmptyRecyclerView mRecyclerView;
     private String url;
     private String BarLabel;
     private String responseData;
+    private View mEmptyView;
 
     @Override public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -64,6 +64,7 @@ public class SearchBarFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_search_bar,container,false);
         viewPager = view.findViewById(R.id.viewPager);
+        mEmptyView = view.findViewById(R.id.empty_iv);
 
         return view;
     }
@@ -114,6 +115,7 @@ public class SearchBarFragment extends Fragment {
     private void initView() {
         mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setEmptyView(mEmptyView);
     }
 
     @SuppressWarnings("unchecked")
@@ -133,6 +135,7 @@ public class SearchBarFragment extends Fragment {
         });
 
         mRecyclerView.setAdapter(barListAdapter);
+
     }
     private void initData(String url){
         try {

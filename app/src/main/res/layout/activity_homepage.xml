@@ -134,7 +134,7 @@
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            android:background="#25000000">
+            android:background="#37000000">
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">

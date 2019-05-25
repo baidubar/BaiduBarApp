@@ -111,6 +111,7 @@ public class ThirdFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ListUserCommentActivity.class);
                 startActivity(intent);
+                cv0.setVisibility(View.INVISIBLE);
             }
         });
         reply.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +119,7 @@ public class ThirdFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ListUserReplyActivity.class);
                 startActivity(intent);
+                cv1.setVisibility(View.INVISIBLE);
             }
         });
         like.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +127,7 @@ public class ThirdFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ListUserLikeActivity.class);
                 startActivity(intent);
+                cv2.setVisibility(View.INVISIBLE);
             }
         });
         attention.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +135,7 @@ public class ThirdFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ListUserAttention.class);
                 startActivity(intent);
+                cv3.setVisibility(View.INVISIBLE);
             }
         });
     }
