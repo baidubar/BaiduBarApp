@@ -130,6 +130,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
         if (new CheckNetUtil(getContext()).initNet()) {
             initData(url);
         }
+
     }
 
     /**
