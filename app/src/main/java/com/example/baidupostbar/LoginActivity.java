@@ -63,14 +63,15 @@ public class LoginActivity extends RootBaseActivity {
             public void onClick(View v) {
                 String account = et_account.getText().toString();
                 String password = et_password.getText().toString();
-                SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
                 if(remember) {
-
+                    SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("Re_name",account );
                     editor.putString("Re_password", password);
                     editor.apply();
                 }else {
+                    SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("Re_name","" );
                     editor.putString("Re_password","");
                     editor.apply();

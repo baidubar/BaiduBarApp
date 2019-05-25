@@ -99,7 +99,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             @Override
             public void loadMore() {
                 //sendRequestWithOkHttp(lastId);//加载更多，要带lastId，我已经取好了
-                if(page<=totalPage) {
+                if(page<totalPage) {
                     page++;
                     String remarkUrl = "http://139.199.84.147/mytieba.api/post/" + postId + "/comment" + "?page=" + page;
                     if (new CheckNetUtil(getApplicationContext()).initNet()) {
