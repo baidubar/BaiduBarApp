@@ -24,17 +24,24 @@ import com.example.baidupostbar.Adapter.FloorDetailAdapter;
 import com.example.baidupostbar.DetailPost;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.bean.FloorDetail;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.ConnectException;
+import java.net.ProtocolException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class FloorDetailFragment extends DialogFragment {
@@ -47,6 +54,8 @@ public class FloorDetailFragment extends DialogFragment {
     private String floor;
     String cookie;
     String userId;
+    boolean status;
+    BaseQuickAdapter floorDetailAdapter;
 
 
 
@@ -145,7 +154,7 @@ public class FloorDetailFragment extends DialogFragment {
 
     }
     private void initAdapter(){
-        BaseQuickAdapter floorDetailAdapter = new FloorDetailAdapter(R.layout.item_dialog_comment, mDataList,getContext(),cookie,userId);
+        floorDetailAdapter = new FloorDetailAdapter(R.layout.item_dialog_comment, mDataList,getContext(),cookie,userId);
         floorDetailAdapter.openLoadAnimation();
         View top = getLayoutInflater().inflate(R.layout.item_dialog_floor, (ViewGroup) recyclerView.getParent(), false);
         floorDetailAdapter.addHeaderView(top);
@@ -158,7 +167,14 @@ public class FloorDetailFragment extends DialogFragment {
                 commentDialogFragment.show(getFragmentManager(), "CommentDialogFragment");
             }
         });
-
+        floorDetailAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                FloorDetail floorDetail = mDataList.get(position + 1);
+                sendRequestWithOkHttp(position + 1,view,floorDetail);
+                Log.d("评论id2",String.valueOf(floorDetail.getCommentId()));
+            }
+        });
         recyclerView.setAdapter(floorDetailAdapter);
     }
     private void postHttp(String floor){
@@ -222,7 +238,7 @@ public class FloorDetailFragment extends DialogFragment {
                 JSONArray jsonArray = jsonObject.getJSONArray("comment_msg");
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                    String comment_id = jsonObject1.getString("comment_id");
+                    int comment_id = jsonObject1.getInt("comment_id");
                     boolean reply_status = jsonObject1.getBoolean("reply_status");
                    int person_id = jsonObject1.getInt("person_id");
                     String person_avatar = jsonObject1.getString("person_avatar");
@@ -241,8 +257,10 @@ public class FloorDetailFragment extends DialogFragment {
                     floorDetail.setContent(content);
                     floorDetail.setFloorNum("第"+ num + "楼");
                     floorDetail.setTime(datetime);
+                    floorDetail.setCommentId(comment_id);
                     floorDetail.setReply_person_id(person_id);
                     Log.d("评论者id",String.valueOf(person_id));
+                    Log.d("评论id",String.valueOf(comment_id));
                     mDataList.add(floorDetail);
                 }
                 getActivity().runOnUiThread(new Runnable() {
@@ -264,7 +282,104 @@ public class FloorDetailFragment extends DialogFragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
+    private void sendRequestWithOkHttp(int position, View view,FloorDetail floorDetail){
+        //开启现线程发起网络请求
+        new Thread(new Runnable(){
+            @Override
+            public void run(){
+                try{
+                    OkHttpClient client = new OkHttpClient.Builder()
+                            .retryOnConnectionFailure(true)  //网查解决end of the stream问题
+                            .connectTimeout(10, TimeUnit.SECONDS)
+                            .readTimeout(20,TimeUnit.SECONDS)
+                            .build();
+                    RequestBody requestBody = new FormBody.Builder()
+                            .add("comment_id",String.valueOf(floorDetail.getCommentId()))
+                            .build();
+
+                    Request request = new Request.Builder()
+                            .url("http://139.199.84.147/mytieba.api/user/"+userId+"/comment")
+                            .delete(requestBody)
+                            .addHeader("Cookie",cookie)
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    String responseDate = response.body().string();
+                    Log.d("返回的是啥",responseDate);
+                    //Log.d("要删的id",String.valueOf(userFollow.getUser_id()));
+                    JSONTokener(responseDate);
+                    showResponse(responseDate,position);
+//                    Looper.prepare();
+//                    if (status){
+//                        Toast.makeText(view.getContext(),"已取消",Toast.LENGTH_LONG).show();
+////                        Intent intent = new Intent(view.getContext(), NewsDetail.class);
+////                        intent.putExtra("user_id",userName);
+////                        intent.putExtra("session",session);
+////                        intent.putExtra("newsId",newsId);
+////                        view.getContext().startActivity(intent);
+//                        //changeUi(position);
+//
+//
+//                    }else
+//                    {
+//                        Toast.makeText(view.getContext(), "操作失败", Toast.LENGTH_LONG).show();
+//                        holder.btn.setEnabled(true);
+//                    }
+//
+//                    Looper.loop();
+
+                }catch (Exception e){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            e.printStackTrace();
+                            if (e instanceof SocketTimeoutException){
+                                Toast.makeText(getContext(),"连接超时",Toast.LENGTH_SHORT).show();
+                            }
+                            if (e instanceof ConnectException){
+                                Toast.makeText(getContext(),"连接异常",Toast.LENGTH_SHORT).show();
+                            }
+
+                            if (e instanceof ProtocolException) {
+                                Toast.makeText(getContext(),"未知异常，请稍后再试",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+    private static String JSONTokener(String in) {
+        // consume an optional byte order mark (BOM) if it exists
+        if (in != null && in.startsWith("\ufeff")) {
+            in = in.substring(1);
+        }
+        return in;
+    }
+    private void showResponse(final String response,int position){
+        Gson gson = new Gson();
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            status = jsonObject.getBoolean("status");
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        getActivity().runOnUiThread(new Runnable(){
+            @Override
+            public void run(){ //设置ui
+                if (status){
+
+                    mDataList.remove(position);
+                    floorDetailAdapter.notifyItemRemoved(position);
+                    floorDetailAdapter.notifyItemRangeChanged(position,mDataList.size() - position);
+                    Toast.makeText(getContext(),"已删除",Toast.LENGTH_LONG).show();
+                }
+                else Toast.makeText(getContext(),"请重试",Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }

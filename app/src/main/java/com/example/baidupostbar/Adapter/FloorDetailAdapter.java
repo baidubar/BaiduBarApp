@@ -58,7 +58,6 @@ public class FloorDetailAdapter extends BaseQuickAdapter<FloorDetail, BaseViewHo
                 holder.getView(R.id.btn_delete).setVisibility(View.VISIBLE);
             }
             else holder.getView(R.id.btn_delete).setVisibility(View.INVISIBLE);
-
         }
     }
     @Override

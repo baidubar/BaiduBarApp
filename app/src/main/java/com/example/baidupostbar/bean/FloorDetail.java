@@ -7,6 +7,15 @@ public class FloorDetail {
     private String time;
     private boolean collection_status;
     private int reply_person_id;
+    private int commentId;
+
+    public int getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(int commentId) {
+        this.commentId = commentId;
+    }
 
     private String floorNum;
     public FloorDetail(){}

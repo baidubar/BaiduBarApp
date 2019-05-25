@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@drawable/background_bar0">
+    android:background="@drawable/background_bar">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="170dp">
@@ -17,8 +17,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginLeft="45dp"
-                android:layout_marginRight="45dp">
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp">
                 <ImageView
                     android:id="@+id/iv_bar"
                     android:scaleType="fitXY"
@@ -57,12 +57,17 @@
                             android:text="帖子 58w"/>
                     </LinearLayout>
                 </LinearLayout>
-                <Button
-                    android:layout_width="70dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/btn_rounded_white"
-                    android:text="关注"
-                    android:layout_gravity="end|center_vertical"/>
+                <TextView
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="67dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:background="@drawable/square_text"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center_vertical"
+                    android:text="+ 关注"
+                    android:textColor="#000000"
+                    android:id="@+id/btn"/>
             </LinearLayout>
 
         </LinearLayout>
