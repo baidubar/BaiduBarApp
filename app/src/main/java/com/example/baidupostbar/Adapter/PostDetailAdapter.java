@@ -33,7 +33,7 @@ public class PostDetailAdapter extends BaseQuickAdapter<PostDetail, BaseViewHold
     protected void convert(BaseViewHolder helper, PostDetail item) {
         helper.addOnClickListener(R.id.btn_concerd);
         helper.addOnClickListener(R.id.btn_comment);
-        //helper.addOnClickListener(R.id.iv_author);
+        helper.addOnClickListener(R.id.iv_author);
     }
 
     @Override

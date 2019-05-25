@@ -267,7 +267,6 @@ public class HomepageActivity extends BaseActivity {
                 tv_nickname.setText(username);
                 String att = "关注 " +follower_number+"  |  "+"粉丝 "+ concern_number;
                 tv_attentionNum.setText(att);
-                Log.e("Homepage",description);
                 info.setText("简介："+description);
                 Glide.with(getApplicationContext()).load( avatar).into(iv_head);
                 Glide.with(getApplicationContext()).load( background_pic).into(iv_parallax);

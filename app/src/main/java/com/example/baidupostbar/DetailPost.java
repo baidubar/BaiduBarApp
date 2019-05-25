@@ -223,7 +223,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         postDetailAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                PostDetail postDetail1 = mDataList.get(position+1);
+                PostDetail postDetail1 = mDataList.get(position);
                 thisFloor = postDetail1.getFloor();
                 FloorDetailFragment dialogFragment = new FloorDetailFragment();
                 dialogFragment.show(getSupportFragmentManager(),"dialogFragment");
@@ -238,29 +238,45 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
                         commentDialogFragment.show(getSupportFragmentManager(), "CommentDialogFragment");
                         Log.e("DetailPost","postdetailAdapter点击"+ postId);
                         break;
-                    case R.id.btn_concerd:
-                        Log.e("DetailPost","关注:"+ RealConcernPeople);
-                        if(RealConcernPeople){
-                            HttpUtil httpUtil = new HttpUtil(DetailPost.this,getApplicationContext());
-                            String url = "http://139.199.84.147/mytieba.api/user/"+ userId +"/follow";
-                            PostDetail postDetail = mDataList.get(position);
-                            String personId = postDetail.getPersonId();
-                            FormBody formBody = new FormBody.Builder()
-                                    .add("user_id",personId)
-                                    .build();
-                            httpUtil.DeleteUtil(url,formBody,3);
-                            doHandler();
-                        }
-                        else {
-                            HttpUtil httpUtil = new HttpUtil(DetailPost.this,getApplicationContext());
-                            String url = "http://139.199.84.147/mytieba.api/user/"+ userId +"/follow";
-                            PostDetail postDetail = mDataList.get(position);
-                            String personId = postDetail.getPersonId();
-                            FormBody formBody = new FormBody.Builder()
-                                    .add("user_id",personId)
-                                    .build();
-                            httpUtil.PostUtilsWithCookie(url,formBody,4);
-                            doHandler();
+//                    case R.id.btn_concerd:
+//                        Log.e("DetailPost","关注:"+ RealConcernPeople);
+//                        if(RealConcernPeople){
+//                            HttpUtil httpUtil = new HttpUtil(DetailPost.this,getApplicationContext());
+//                            String url = "http://139.199.84.147/mytieba.api/user/"+ userId +"/follow";
+//                            PostDetail postDetail = mDataList.get(position);
+//                            String personId = postDetail.getPersonId();
+//                            FormBody formBody = new FormBody.Builder()
+//                                    .add("user_id",personId)
+//                                    .build();
+//                            httpUtil.DeleteUtil(url,formBody,3);
+//                            doHandler();
+//                        }
+//                        else {
+//                            HttpUtil httpUtil = new HttpUtil(DetailPost.this,getApplicationContext());
+//                            String url = "http://139.199.84.147/mytieba.api/user/"+ userId +"/follow";
+//                            PostDetail postDetail = mDataList.get(position);
+//                            String personId = postDetail.getPersonId();
+//                            FormBody formBody = new FormBody.Builder()
+//                                    .add("user_id",personId)
+//                                    .build();
+//                            httpUtil.PostUtilsWithCookie(url,formBody,4);
+//                            doHandler();
+//                        }
+//                        break;
+                    case R.id.iv_author:
+                        PostDetail postDetail = mDataList.get(position);
+                        int id = Integer.parseInt(postDetail.getPersonId())-1;
+                        String Id = String.valueOf(id);
+                        if(Id.equals(userId)){
+                            Intent intent = new Intent();
+                            intent.putExtra("userId",userId);
+                            intent.setClass(getApplicationContext(),DetailUserActivity.class);
+                            startActivity(intent);
+                        }else {
+                            Intent intent = new Intent();
+                            intent.putExtra("userId",Id);
+                            intent.setClass(getApplicationContext(),HomepageActivity.class);
+                            startActivity(intent);
                         }
                         break;
                     default:
