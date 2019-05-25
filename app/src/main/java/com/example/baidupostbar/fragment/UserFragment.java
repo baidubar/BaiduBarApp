@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.baidupostbar.ChangeInforActivity;
+import com.example.baidupostbar.ChangePasswordActivity;
 import com.example.baidupostbar.DetailUserActivity;
 import com.example.baidupostbar.LoginActivity;
 import com.example.baidupostbar.PostCollectActivity;
@@ -58,6 +59,7 @@ public class UserFragment extends Fragment {
     private LinearLayout info;
     private LinearLayout interest;
     private LinearLayout collect;
+    private LinearLayout changePassword;
 
     private Button btn_exit;
 
@@ -103,6 +105,7 @@ public class UserFragment extends Fragment {
         tv_fansNum = view.findViewById(R.id.tv_fansNum);
         tv_followNum = view.findViewById(R.id.tv_followNum);
         tv_postNum = view.findViewById(R.id.tv_postNum);
+        changePassword = view.findViewById(R.id.changePassword);
         follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,6 +159,13 @@ public class UserFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(getContext(), PostCollectActivity.class);
+                startActivity(intent);
+            }
+        });
+        changePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ChangePasswordActivity.class);
                 startActivity(intent);
             }
         });

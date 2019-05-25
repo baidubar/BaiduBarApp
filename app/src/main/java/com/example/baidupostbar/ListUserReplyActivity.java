@@ -4,11 +4,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.baidupostbar.Adapter.MsgReplyAdapter;
+import com.example.baidupostbar.bean.EmptyRecyclerView;
 import com.example.baidupostbar.bean.MsgReply;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -32,10 +33,11 @@ import okhttp3.Response;
 
 public class ListUserReplyActivity extends AppCompatActivity {
     private List<MsgReply> msgReplyList = new ArrayList<>();
-    RecyclerView mRecyclerView;
+    EmptyRecyclerView mRecyclerView;
     MsgReplyAdapter mAdapter;
     private String userId;
     private String cookie;
+    private View mEmptyView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,7 @@ public class ListUserReplyActivity extends AppCompatActivity {
         userId = preferences.getString("user_id","");
         cookie = preferences.getString("cookie", "");
         sendRequestWithOKHttp();
+        mEmptyView = findViewById(R.id.empty_iv);
         mAdapter = new MsgReplyAdapter(msgReplyList,this,cookie,userId);
     }
     private void sendRequestWithOKHttp(){
@@ -140,11 +143,12 @@ public class ListUserReplyActivity extends AppCompatActivity {
         runOnUiThread(new Runnable(){
             @Override
             public void run(){ //设置ui
-                mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+                mRecyclerView = (EmptyRecyclerView) findViewById(R.id.recyclerView);
                 LinearLayoutManager manager=new LinearLayoutManager(ListUserReplyActivity.this);
                 mRecyclerView.setLayoutManager(manager);
                 mAdapter = new MsgReplyAdapter(msgReplyList,getBaseContext(),cookie,userId);
                 mRecyclerView.setAdapter(mAdapter);
+                mRecyclerView.setEmptyView(mEmptyView);
             }
         });
     }

@@ -4,11 +4,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.baidupostbar.Adapter.MsgAttentionAdapter;
+import com.example.baidupostbar.bean.EmptyRecyclerView;
 import com.example.baidupostbar.bean.MsgAttention;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -31,10 +32,11 @@ import okhttp3.Response;
 
 public class ListUserAttention extends AppCompatActivity {
     private List<MsgAttention> msgAttentionList = new ArrayList<>();
-    RecyclerView mRecyclerView;
+    EmptyRecyclerView mRecyclerView;
     MsgAttentionAdapter mAdapter;
     private String userId;
     private String cookie;
+    private View mEmptyView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,11 +147,12 @@ public class ListUserAttention extends AppCompatActivity {
         runOnUiThread(new Runnable(){
             @Override
             public void run(){ //设置ui
-                mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+                mRecyclerView = (EmptyRecyclerView) findViewById(R.id.recyclerView);
                 LinearLayoutManager manager=new LinearLayoutManager(ListUserAttention.this);
                 mRecyclerView.setLayoutManager(manager);
                 mAdapter = new MsgAttentionAdapter(msgAttentionList,getBaseContext(),cookie,userId);
                 mRecyclerView.setAdapter(mAdapter);
+                mRecyclerView.setEmptyView(mEmptyView);
             }
         });
     }

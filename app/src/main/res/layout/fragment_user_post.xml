@@ -4,11 +4,23 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-
-    <android.support.v7.widget.RecyclerView
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.example.baidupostbar.bean.EmptyRecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recyclerView">
 
-    </android.support.v7.widget.RecyclerView>
+    </com.example.baidupostbar.bean.EmptyRecyclerView>
+    <ImageView
+        android:id="@+id/empty_iv"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@null"
+        android:src="@drawable/empty_view"
+        android:layout_centerInParent="true" />
+</RelativeLayout>
+
 </android.support.v4.widget.NestedScrollView>

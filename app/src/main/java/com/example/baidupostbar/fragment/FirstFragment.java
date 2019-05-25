@@ -21,6 +21,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.baidupostbar.DetailPost;
+import com.example.baidupostbar.DetailUserActivity;
+import com.example.baidupostbar.HomepageActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.Utils.CheckNetUtil;
 import com.example.baidupostbar.bean.Post;
@@ -65,6 +67,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     private String responseData;
     private List<Post> moments;
     private int lastId;
+    private String userId;
 
     private BGANinePhotoLayout mCurrentClickNpl;
     PullToRefreshLayout pullToRefreshLayout;
@@ -110,6 +113,9 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
             }
         });
 
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("theUser", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getString("user_id", "");
 
         postAdapter = new PostAdapter(mMomentRv,getContext());
         postAdapter.setOnRVItemClickListener(this);
@@ -161,7 +167,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                 String barId = jsonObject1.getString("bar_id");
                 String barName = jsonObject1.getString("bar_name");
                 String bar_tags = jsonObject1.getString("bar_tags");
-                moments.add(new Post(post_content,picture,comment_number,praise_number,writer_avatar,writer_name,bar_tags,barName,barId,postId));
+                moments.add(new Post(post_content,picture,comment_number,praise_number,writer_avatar,writer_name,bar_tags,barName,barId,postId,writer_id));
 
             }
         } catch (JSONException e){
@@ -282,6 +288,22 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                 helper.setText(R.id.tv_bar,moment.barName);
                 helper.setText(R.id.tv_author,moment.writterName);
             }
+            helper.getView(R.id.iv_author).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(moment.writer_id.equals(userId)){
+                        Intent intent = new Intent();
+                        intent.setClass(getContext(), DetailUserActivity.class);
+                        intent.putExtra("userId",userId);
+                        startActivity(intent);
+                    }else {
+                        Intent intent = new Intent();
+                        intent.setClass(getContext(), HomepageActivity.class);
+                        intent.putExtra("userId",moment.writer_id);
+                        startActivity(intent);
+                    }
+                }
+            });
             Glide.with(context).load("http://139.199.84.147"+moment.getHeadImage()).into(helper.getImageView(R.id.iv_author));
             BGANinePhotoLayout ninePhotoLayout = helper.getView(R.id.npl_item_moment_photos);
             ninePhotoLayout.setDelegate(FirstFragment.this::onClickNinePhotoItem);
@@ -329,6 +351,5 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                     e.printStackTrace();
                     Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
                 }
-
     }
 }

@@ -16,7 +16,16 @@ public class Post implements Parcelable {
     public String barName;
     public String barLabel;
     public String postId;
+    public String writer_id;
 
+
+    public String getWriter_id(){
+        return writer_id;
+    }
+
+    public void setWriter_id(String writer_id){
+        this.writer_id = writer_id;
+    }
 
     public String getBarId(){
         return barId;
@@ -107,12 +116,13 @@ public class Post implements Parcelable {
         dest.writeString(this.barName);
         dest.writeString(this.barId);
         dest.writeString(this.postId);
+        dest.writeString(this.writer_id);
     }
 
     public Post() {
     }
 
-    public Post(String content, ArrayList<String> photos,String comment_number,String praise_number,String headImage,String writterName,String barLabel,String barName,String barId,String postId) {
+    public Post(String content, ArrayList<String> photos,String comment_number,String praise_number,String headImage,String writterName,String barLabel,String barName,String barId,String postId,String writer_id) {
         this.content = content;
         this.photos = photos;
         this.comment_number = comment_number;
@@ -123,6 +133,7 @@ public class Post implements Parcelable {
         this.barName = barName;
         this.barId = barId;
         this.postId = postId;
+        this.writer_id = writer_id;
     }
 
     protected Post(Parcel in) {
@@ -136,6 +147,7 @@ public class Post implements Parcelable {
         this.barLabel = in.readString();
         this.barId = in.readString();
         this.postId = in.readString();
+        this.writer_id = in.readString();
     }
 
     public static final Parcelable.Creator<Post> CREATOR = new Parcelable.Creator<Post>() {

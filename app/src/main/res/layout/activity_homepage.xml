@@ -195,13 +195,14 @@
                             android:layout_marginRight="30dp"
                             android:layout_marginLeft="30dp"
                             android:textSize="16sp"/>
+
                         <TextView
                             android:id="@+id/tv_birthDay"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:text="2000-10-10"
-                            android:textSize="16sp"
-                            android:textColor="#FFFFFF"/>
+                            android:textColor="#FFFFFF"
+                            android:textSize="16sp" />
                     </LinearLayout>
                     <TextView
                         android:layout_width="match_parent"

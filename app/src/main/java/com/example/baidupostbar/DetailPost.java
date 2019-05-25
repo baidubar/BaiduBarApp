@@ -138,7 +138,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         btn_concerd = top.findViewById(R.id.btn_concerd);
         iv_praise = top.findViewById(R.id.btn_like);
         iv_headImage = top.findViewById(R.id.iv_author);
-        
+
         //关注用户按钮
         btn_concerd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,6 +199,24 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
                     HttpUtil httpUtil = new HttpUtil(DetailPost.this,getApplicationContext());
                     String url = "http://139.199.84.147/mytieba.api/praise";
                     httpUtil.PostUtilsWithCookie(url,formBody,9);
+                }
+            }
+        });
+        //头像点击事件
+        iv_headImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PostDetail postDetail = mDataList.get(0);
+                if(postDetail.getPersonId().equals(userId)) {
+                    Intent intent = new Intent();
+                    intent.putExtra("userId",userId);
+                    intent.setClass(getApplicationContext(),DetailUserActivity.class);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent();
+                    intent.putExtra("userId",postDetail.getPersonId());
+                    intent.setClass(getApplicationContext(),HomepageActivity.class);
+                    startActivity(intent);
                 }
             }
         });

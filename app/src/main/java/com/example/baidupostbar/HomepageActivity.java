@@ -68,6 +68,9 @@ public class HomepageActivity extends BaseActivity {
     private String concern_number;
     private String background_pic;
     private String interests;
+    private TextView tv_gender;
+    private TextView tv_birthday;
+    private TextView tv_interest;
 
 
 
@@ -101,6 +104,9 @@ public class HomepageActivity extends BaseActivity {
         tv_attentionNum = findViewById(R.id.tv_attentionNum);
         tv_nickname = findViewById(R.id.nickname);
         info = findViewById(R.id.info);
+        tv_gender = findViewById(R.id.tv_gender);
+        tv_birthday = findViewById(R.id.tv_birthDay);
+        tv_interest = findViewById(R.id.tv_interest);
 
         //初始化沉浸式
 
@@ -234,6 +240,7 @@ public class HomepageActivity extends BaseActivity {
             userId = jsonObject.getString("user_id");
             username = jsonObject.getString("username");
             description = jsonObject.getString("description");
+            gender = jsonObject.getString("gender");
             birthday = jsonObject.getString("birthday");
             avatar = "http://139.199.84.147/" + jsonObject.getString("avatar");
             follower_number = jsonObject.getString("follower_number");
@@ -244,7 +251,11 @@ public class HomepageActivity extends BaseActivity {
             for (int j = 0; j < jsonArray.length(); j++) {
                 String Picture = String.valueOf(jsonArray.get(j));
                 label.add(Picture);
-                interests = interests + Picture + "  ";
+                if(j==0){
+                    interests = Picture + "  ";
+                }else {
+                    interests = interests + Picture + "  ";
+                }
             }
 
         } catch (JSONException e) {
@@ -260,6 +271,15 @@ public class HomepageActivity extends BaseActivity {
                 info.setText("简介："+description);
                 Glide.with(getApplicationContext()).load( avatar).into(iv_head);
                 Glide.with(getApplicationContext()).load( background_pic).into(iv_parallax);
+                tv_birthday.setText(birthday);
+                if(gender.equals("0")){
+                    tv_gender.setText("男");
+                }else if(gender.equals("1")){
+                    tv_gender.setText("女");
+                }else if (gender.equals("2")){
+                    tv_gender.setText("保密");
+                }
+                tv_interest.setText(interests);
             }
         });
 

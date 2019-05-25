@@ -148,7 +148,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
                         String comment_number = jsonObject1.getString("comment_number");
                         String praise_number = jsonObject1.getString("praise_number");
                         String time = jsonObject1.getString("time");
-                        moments.add(new Post(post_content, picture,comment_number,praise_number,writer_avatar,writer_name,"#"+barLabel,name,bar_id,postId ));
+                        moments.add(new Post(post_content, picture,comment_number,praise_number,writer_avatar,writer_name,"#"+barLabel,name,bar_id,postId ,writer_id));
                         postAdapter.setData(moments);
 
                 }
