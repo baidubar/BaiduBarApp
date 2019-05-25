@@ -60,6 +60,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
     private boolean RealPraise;
     private ImageView btn_concerd;
     private ImageView iv_praise;
+    private ImageView iv_headImage;
     private FloatingActionButton actionA;
 
     @Override
@@ -126,14 +127,18 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
+    //adapter和头部点击事件
     @SuppressWarnings("unchecked")
     private void initAdapter() {
         BaseQuickAdapter postDetailAdapter = new PostDetailAdapter(R.layout.item_post_floor, mDataList,DetailPost.this,getApplicationContext());
         postDetailAdapter.openLoadAnimation();
         View top = getLayoutInflater().inflate(R.layout.header_detail_post, (ViewGroup) mRecyclerView.getParent(), false);
         postDetailAdapter.addHeaderView(top);
+
         btn_concerd = top.findViewById(R.id.btn_concerd);
         iv_praise = top.findViewById(R.id.btn_like);
+        iv_headImage = top.findViewById(R.id.iv_author);
+        
         //关注用户按钮
         btn_concerd.setOnClickListener(new View.OnClickListener() {
             @Override

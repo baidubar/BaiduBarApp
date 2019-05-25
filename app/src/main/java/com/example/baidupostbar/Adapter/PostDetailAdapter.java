@@ -61,7 +61,6 @@ public class PostDetailAdapter extends BaseQuickAdapter<PostDetail, BaseViewHold
             }else {
                 holder.setImageResource(R.id.btn_like,R.drawable.like);
             }
-            Log.e("PostDetailAdapter","postDetail.getPraise_status()"+ postDetail.getPraise_status());
 
             Glide.with(mContext).load(postDetail.getUserImg()).into((ImageView) holder.getView(R.id.iv_author));
             BGANinePhotoLayout ninePhotoLayout = holder.getView(R.id.npl_item_moment_photos);
