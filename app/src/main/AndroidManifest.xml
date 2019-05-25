@@ -24,6 +24,11 @@
             android:label="@string/title_activity_post_collect"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".UserAttentionActivity" />
+        <activity android:name=".ChangePasswordActivity"></activity>
+        <activity android:name=".UsersBarActivity" />
+        <activity android:name=".UsersFansActivity" />
+        <activity android:name=".UsersFollowActivity" />
+        <activity android:name=".UserAttentionActivity" />
         <activity android:name=".ListUserCommentActivity" />
         <activity android:name=".ListUserAttention" />
         <activity android:name=".ListUserLikeActivity" />

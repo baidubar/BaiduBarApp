@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,19 +17,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.baidupostbar.ChangeInforActivity;
 import com.example.baidupostbar.DetailPost;
-import com.example.baidupostbar.MainActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.Utils.CheckNetUtil;
-import com.example.baidupostbar.Utils.HttpUtil;
 import com.example.baidupostbar.bean.Post;
-import com.nostra13.universalimageloader.utils.L;
+import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
+import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +34,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +45,6 @@ import cn.bingoogolapple.baseadapter.BGAViewHolderHelper;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPreviewActivity;
 import cn.bingoogolapple.photopicker.imageloader.BGARVOnScrollListener;
 import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout;
-
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -69,8 +64,10 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     private ArrayList<String>picture;
     private String responseData;
     private List<Post> moments;
+    private int lastId;
 
     private BGANinePhotoLayout mCurrentClickNpl;
+    PullToRefreshLayout pullToRefreshLayout;
 
     @Nullable
     @Override
@@ -84,6 +81,34 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mMomentRv = view.findViewById(R.id.first_recyclerView);
+        pullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.activity_main);
+        pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
+            @Override
+            public void refresh() {
+                moments.clear();
+                //sendRequestWithOkHttp();//请求数据，不用带lastId
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        // 结束刷新
+                        pullToRefreshLayout.finishRefresh();
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void loadMore() {
+                //sendRequestWithOkHttp(lastId);//加载更多，要带lastId，我已经取好了
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 结束加载更多
+                        pullToRefreshLayout.finishLoadMore();
+                    }
+                }, 1000);
+            }
+        });
 
 
         postAdapter = new PostAdapter(mMomentRv,getContext());

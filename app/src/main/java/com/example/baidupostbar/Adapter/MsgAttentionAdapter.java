@@ -66,15 +66,10 @@ public class MsgAttentionAdapter extends RecyclerView.Adapter<MsgAttentionAdapte
         holder.btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (null != mOnSwipeListener) {
-//                    //Toast.makeText(context, "删除", Toast.LENGTH_SHORT).show();
-//                    //如果删除时，不使用mAdapter.notifyItemRemoved(pos)，则删除没有动画效果，
-//                    //且如果想让侧滑菜单同时关闭，需要同时调用 ((CstSwipeDelMenu) holder.itemView).quickClose();
-//                    //((CstSwipeDelMenu) holder.itemView).quickClose();
-//                    mOnSwipeListener.onDel(holder.getAdapterPosition());
-                list.remove(i);
-                notifyItemRemoved(i);
-                notifyDataSetChanged();
+                int position = holder.getAdapterPosition();
+                list.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position,getItemCount() - position);
 //                }
             }
         });
@@ -100,15 +95,6 @@ public class MsgAttentionAdapter extends RecyclerView.Adapter<MsgAttentionAdapte
     public interface onSwipeListener {
         void onDel(int pos);
 
-    }
-    private UserCommentAdapter.onSwipeListener mOnSwipeListener;
-
-    public UserCommentAdapter.onSwipeListener getOnDelListener() {
-        return mOnSwipeListener;
-    }
-
-    public void setOnDelListener(UserCommentAdapter.onSwipeListener mOnDelListener) {
-        this.mOnSwipeListener = mOnDelListener;
     }
     // 暴露接口，更新数据源，并修改hasMore的值，如果有增加数据，hasMore为true，否则为false
     public void updateList(List<MsgAttention> newDatas, boolean hasMore) {

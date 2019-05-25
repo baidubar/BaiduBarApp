@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
     <android.support.design.widget.AppBarLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,19 +23,12 @@
                 android:gravity="center_horizontal"
                 android:textColor="#000000"
                 android:textSize="17sp"
-                android:text="首页"/>
+                android:text="粉丝"/>
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
-    <com.jwenfeng.library.pulltorefresh.PullToRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        tools:overrideLibrary="com.jwenfeng.library"
-        android:id="@+id/activity_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/first_recyclerView"
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    </com.jwenfeng.library.pulltorefresh.PullToRefreshLayout>
 </LinearLayout>

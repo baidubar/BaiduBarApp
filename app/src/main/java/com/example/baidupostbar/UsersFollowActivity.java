@@ -8,8 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.baidupostbar.Adapter.UserCommentAdapter;
-import com.example.baidupostbar.bean.UserComment;
+import com.example.baidupostbar.Adapter.UserFollowAdapter;
+import com.example.baidupostbar.bean.UserFollow;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -20,7 +20,6 @@ import java.net.ConnectException;
 import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,30 +29,31 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ListUserCommentActivity extends AppCompatActivity {
-    private List<UserComment> userCommentList = new ArrayList<>();
-    RecyclerView mRecyclerView;
-    UserCommentAdapter mAdapter;
+public class UsersFollowActivity extends AppCompatActivity {
+    private RecyclerView recyclerView;
     private String userId;
     private String cookie;
+    private List<UserFollow> userFollowList = new ArrayList<>();
+    UserFollowAdapter mAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_user_comment);
+        setContentView(R.layout.activity_users_follow);
         SharedPreferences preferences = getSharedPreferences("theUser",MODE_PRIVATE);
         userId = preferences.getString("user_id","");
         cookie = preferences.getString("cookie", "");
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-//        LinearLayoutManager manager=new LinearLayoutManager(ListUserCommentActivity.this);
-//        mRecyclerView.setLayoutManager(manager);
+        Log.d("cookie",cookie);
+        Log.d("id",userId);
+        initView();
+
+        //initListener();
         sendRequestWithOKHttp();
+        mAdapter = new UserFollowAdapter(userFollowList,getBaseContext(),cookie,userId);
+        recyclerView.setAdapter(mAdapter);
+    }
 
-        mAdapter = new UserCommentAdapter(userCommentList,this);
-//        LinearLayoutManager manager=new LinearLayoutManager(ListUserCommentActivity.this);
-//
-//        mRecyclerView.setLayoutManager(manager);
-
-        mRecyclerView.setAdapter(mAdapter);
+    private void initView(){
+        recyclerView = findViewById(R.id.recyclerView);
     }
     private void sendRequestWithOKHttp(){
         new Thread(new Runnable() {
@@ -66,11 +66,11 @@ public class ListUserCommentActivity extends AppCompatActivity {
                             .readTimeout(10,TimeUnit.SECONDS)
                             .build();
 
-                    String url = "http://139.199.84.147/mytieba.api/user/"+userId+"/floor_comment-info";
+                    String url = "http://139.199.84.147/mytieba.api/user/"+userId+"/follow";
 
-                    List<Map<String, String>> list_url = new ArrayList<>();
-                    Map<String, String> map = new HashMap<>();
-                    list_url.add(map);
+//                    List<Map<String, String>> list_url = new ArrayList<>();
+//                    Map<String, String> map = new HashMap<>();
+//                    list_url.add(map);
 
                     //url = getUrl(url, list_url);
 
@@ -89,14 +89,14 @@ public class ListUserCommentActivity extends AppCompatActivity {
                         public void run() {
                             e.printStackTrace();
                             if (e instanceof SocketTimeoutException){
-                                Toast.makeText(ListUserCommentActivity.this,"连接超时",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(UsersFollowActivity.this,"连接超时",Toast.LENGTH_SHORT).show();
                             }
                             if (e instanceof ConnectException){
-                                Toast.makeText(ListUserCommentActivity.this,"连接异常",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(UsersFollowActivity.this,"连接异常",Toast.LENGTH_SHORT).show();
                             }
 
                             if (e instanceof ProtocolException) {
-                                Toast.makeText(ListUserCommentActivity.this,"未知异常，请稍后再试",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(UsersFollowActivity.this,"未知异常，请稍后再试",Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -105,6 +105,7 @@ public class ListUserCommentActivity extends AppCompatActivity {
         }).start();
     }
     private String getUrl(String url, List<Map<String, String>> list_url) {
+        StringBuilder urlBuilder = new StringBuilder(url);
         for (int i = 0; i < list_url.size(); i++) {
             Map<String, String> params = list_url.get(i);
             if (params != null) {
@@ -123,24 +124,25 @@ public class ListUserCommentActivity extends AppCompatActivity {
                     sb.append("=");
                     sb.append(value);
                 }
-                url += sb.toString();
+                assert sb != null;
+                urlBuilder.append(sb.toString());
             }
         }
+        url = urlBuilder.toString();
         return url;
     }
     private void showResponse(final String response){
         Gson gson = new Gson();
         try {
             JSONObject jsonObject = new JSONObject(response);
-            String list = jsonObject.getString("floor_comment_info");
-            String num = jsonObject.getString("floor_comment_number");
-            List<UserComment> t = new ArrayList<UserComment>();
-            t = gson.fromJson(list, new TypeToken<List<UserComment>>(){}.getType());
+            String list = jsonObject.getString("concern");
+            List<UserFollow> t = new ArrayList<UserFollow>();
+            t = gson.fromJson(list, new TypeToken<List<UserFollow>>(){}.getType());
 
-            userCommentList.addAll(t);
+            userFollowList.addAll(t);
             //if (userCommentList != null)
             //{
-                Log.d("建楼消息列表",userCommentList.toString());
+            Log.d("关注的人列表",userFollowList.toString());
             //}
 
         } catch (JSONException e) {
@@ -149,11 +151,13 @@ public class ListUserCommentActivity extends AppCompatActivity {
         runOnUiThread(new Runnable(){
             @Override
             public void run(){ //设置ui
-                mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-                LinearLayoutManager manager=new LinearLayoutManager(ListUserCommentActivity.this);
-                mRecyclerView.setLayoutManager(manager);
-                //mAdapter = new UserCommentAdapter(userCommentList,getBaseContext());
+                //recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+                LinearLayoutManager manager=new LinearLayoutManager(UsersFollowActivity.this);
+                recyclerView.setLayoutManager(manager);
+                mAdapter = new UserFollowAdapter(userFollowList,getBaseContext(),cookie,userId);
+                recyclerView.setAdapter(mAdapter);
             }
         });
     }
+
 }
