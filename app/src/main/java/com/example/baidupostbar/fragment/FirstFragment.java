@@ -108,14 +108,14 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                     }
                 }, 1000);
             }
-
             @Override
             public void loadMore() {
                 //sendRequestWithOkHttp(lastId);//加载更多，要带lastId，我已经取好了
-                url = url + "?lastId=" + lastId;
+                url =  "http://139.199.84.147/mytieba.api/posts?lastId=" + lastId;
                 if (new CheckNetUtil(getContext()).initNet()) {
                     initData(url);
                 }
+                Log.e("FistFragment","urlloadMore"+url);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -148,6 +148,8 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
         url = "http://139.199.84.147/mytieba.api/posts";
 
         if (new CheckNetUtil(getContext()).initNet()) {
+            mDataList = new ArrayList<>();
+            moments = new ArrayList<>();
             initData(url);
         }
 
@@ -163,6 +165,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
             JSONObject jsonObject = new JSONObject(jsonData);
             JSONArray jsonArray = jsonObject.getJSONArray("post_msg");
             lastId = jsonObject.getInt("lastId");
+
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                 String postId = jsonObject1.getString("post_id");
@@ -335,7 +338,10 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
             helper.getView(R.id.btn_like).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(booleanPraise.getPraise_status()){
+                    BooleanPraise booleanPraise = mDataList.get(position);
+                    boolean praisePrasie = booleanPraise.getPraise_status();
+                    Log.e("FirstFragment","praisePrasie"+ praisePrasie);
+                    if(praisePrasie){
                         if (new CheckNetUtil(getContext()).initNet()) {
                             //如果是已点赞状态
                             //********************************
@@ -453,6 +459,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                                         if(status) {
                                             BooleanPraise booleanPraise = mDataList.get(position);
                                             booleanPraise.setPraise_status(false);
+                                            Log.e("DeletePraise",responseData);
                                             Toast.makeText(getContext(), "取消点赞成功", Toast.LENGTH_LONG).show();
                                         }else {
                                             Toast.makeText(getContext(), "请求失败", Toast.LENGTH_LONG).show();
@@ -525,6 +532,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                                         BooleanPraise booleanPraise = mDataList.get(position);
                                         booleanPraise.setPraise_status(true);
                                         Toast.makeText(getContext(), "点赞成功", Toast.LENGTH_LONG).show();
+                                        Log.e("DeletePraise",responseData);
                                     }else {
                                         Toast.makeText(getContext(), "请求失败", Toast.LENGTH_LONG).show();
                                     }
