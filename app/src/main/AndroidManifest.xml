@@ -19,7 +19,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UserAttentionActivity"></activity>
+        <activity android:name=".ChangePasswordActivity"></activity>
+        <activity android:name=".UsersBarActivity" />
+        <activity android:name=".UsersFansActivity" />
+        <activity android:name=".UsersFollowActivity" />
+        <activity android:name=".UserAttentionActivity" />
         <activity android:name=".ListUserCommentActivity" />
         <activity android:name=".ListUserAttention" />
         <activity android:name=".ListUserLikeActivity" />
@@ -31,7 +35,7 @@
         <activity android:name=".FindNewPasswordActivity" />
         <activity android:name=".FindPasswordActivity" />
         <activity android:name=".CreatePostActivity" />
-        <activity android:name=".SetFloorActivity"></activity>
+        <activity android:name=".SetFloorActivity" />
         <activity android:name=".SearchResultActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".DetailBarActivity" />

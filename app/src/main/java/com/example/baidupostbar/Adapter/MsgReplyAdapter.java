@@ -78,9 +78,10 @@ public class MsgReplyAdapter extends RecyclerView.Adapter<MsgReplyAdapter.ViewHo
 //                    //且如果想让侧滑菜单同时关闭，需要同时调用 ((CstSwipeDelMenu) holder.itemView).quickClose();
 //                    //((CstSwipeDelMenu) holder.itemView).quickClose();
 //                    mOnSwipeListener.onDel(holder.getAdapterPosition());
-                list.remove(i);
-                notifyItemRemoved(i);
-                notifyDataSetChanged();
+                int position = holder.getAdapterPosition();
+                list.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position,getItemCount() - position);
 //                }
             }
         });

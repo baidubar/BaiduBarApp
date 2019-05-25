@@ -24,6 +24,13 @@ import com.example.baidupostbar.DetailUserActivity;
 import com.example.baidupostbar.LoginActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.RegisterInterest;
+import com.example.baidupostbar.UsersBarActivity;
+import com.example.baidupostbar.UsersFansActivity;
+import com.example.baidupostbar.UsersFollowActivity;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -56,6 +63,10 @@ public class UserFragment extends Fragment {
     private String cookie;
     private RelativeLayout follow, fans, bar, post;
     private TextView tv_followNum, tv_fansNum, tv_barNum, tv_postNum;
+    int fans_num;
+    int post_num;
+    int follow_num;
+    int bar_num;
 
     @Nullable
     @Override
@@ -93,20 +104,23 @@ public class UserFragment extends Fragment {
         follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getContext(), UsersFollowActivity.class);
+                startActivity(intent);
 
             }
         });
         fans.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getContext(), UsersFansActivity.class);
+                startActivity(intent);
             }
         });
         bar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getContext(), UsersBarActivity.class);
+                startActivity(intent);
             }
         });
         post.setOnClickListener(new View.OnClickListener() {
@@ -177,7 +191,7 @@ public class UserFragment extends Fragment {
                             .readTimeout(10, TimeUnit.SECONDS)
                             .build();
 
-                    String url = "http://139.199.84.147/mytieba.api/user/" + userId + "/msg";
+                    String url = "http://139.199.84.147/mytieba.api/user/" + userId + "/info";
 
 //                    List<Map<String, String>> list_url = new ArrayList<>();
 //                    Map<String, String> map = new HashMap<>();
@@ -192,8 +206,8 @@ public class UserFragment extends Fragment {
 
                     Response response = client.newCall(request).execute();
                     String responseData = response.body().string();
-                    Log.d("建楼消息", responseData);
-                    //showResponse(responseData);
+                    Log.d("个人信息", responseData);
+                    showResponse(responseData);
                 } catch (Exception e) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -214,6 +228,28 @@ public class UserFragment extends Fragment {
                 }
             }
         }).start();
+    }
+    private void showResponse(final String response){
+        Gson gson = new Gson();
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            fans_num = jsonObject.getInt("follower_number");
+            post_num = jsonObject.getInt("posts");
+            follow_num = jsonObject.getInt("concern_number");
+            bar_num = jsonObject.getInt("watched_bar_number");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        getActivity().runOnUiThread(new Runnable(){
+            @Override
+            public void run(){ //设置ui
+                tv_barNum.setText(String.valueOf(bar_num));
+                tv_fansNum.setText(String.valueOf(fans_num));
+                tv_followNum.setText(String.valueOf(follow_num));
+                tv_postNum.setText(String.valueOf(post_num));
+            }
+        });
     }
 
     @Override

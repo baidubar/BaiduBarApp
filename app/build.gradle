@@ -8,7 +8,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.baidupostbar"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -83,4 +83,5 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.litepal.android:java:3.0.0'
     implementation 'com.github.mcxtzhang:SwipeDelMenuLayout:V1.3.0'
+    implementation 'com.jwenfeng.pulltorefresh:library:1.0.3'
 }
