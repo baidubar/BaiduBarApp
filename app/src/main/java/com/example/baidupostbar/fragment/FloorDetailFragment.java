@@ -142,17 +142,6 @@ public class FloorDetailFragment extends DialogFragment {
         super.onResume();
         postHttp(floor);
     }
-
-    private void initData() {
-//        mDataList = new ArrayList<>();
-//        for (int i = 0; i < 5; i++) {
-//            FloorDetail item = new FloorDetail();
-//
-//            mDataList.add(item);
-//        }
-
-
-    }
     private void initAdapter(){
         floorDetailAdapter = new FloorDetailAdapter(R.layout.item_dialog_comment, mDataList,getContext(),cookie,userId);
         floorDetailAdapter.openLoadAnimation();

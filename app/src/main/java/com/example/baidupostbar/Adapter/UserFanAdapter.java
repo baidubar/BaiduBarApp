@@ -51,6 +51,7 @@ public class UserFanAdapter extends RecyclerView.Adapter<UserFanAdapter.ViewHold
         View userFanView;
         TextView btn;
 
+
         public ViewHolder(View view) {
             super(view);
             userFanView = view;
@@ -215,7 +216,6 @@ public class UserFanAdapter extends RecyclerView.Adapter<UserFanAdapter.ViewHold
 //
 //                    Looper.loop();
                     status = jsonObject.getBoolean("status");
-
                 }catch (Exception e){
                     e.printStackTrace();
                 }

@@ -63,7 +63,7 @@ public class CommentDialogFragment extends android.support.v4.app.DialogFragment
         }
         reply_floor = ((DetailPost) activity).getThisFloor();
         postId = ((DetailPost) activity).getPostId();
-        Log.e("CDF","postId"+postId);
+        Log.e("CDF","postId"+ postId);
     }
 
     @Override

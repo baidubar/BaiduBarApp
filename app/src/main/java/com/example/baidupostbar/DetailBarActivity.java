@@ -3,6 +3,7 @@ package com.example.baidupostbar;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -63,6 +64,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
     private String type;
     private String postId;
     private  List<Post> moments;
+    private String userId;
 
     private BGANinePhotoLayout mCurrentClickNpl;
 
@@ -71,6 +73,8 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_bar);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getString("user_id", "");
         Intent intent = getIntent();
         String type = intent.getStringExtra("type");
         String barId = intent.getStringExtra("barId");
@@ -281,6 +285,22 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
                 helper.setText(R.id.tv_label,moment.barLabel);
                 helper.setText(R.id.tv_bar,moment.barName);
             }
+            helper.getView(R.id.iv_author).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    String id = moment.writer_id;
+                    if(id.equals(userId)) {
+                        intent.putExtra("userId",userId);
+                        intent.setClass(getApplicationContext(),DetailUserActivity.class );
+                        startActivity(intent);
+                    }else {
+                        intent.putExtra("userId",id);
+                        intent.setClass(getApplicationContext(),HomepageActivity.class );
+                        startActivity(intent);
+                    }
+                }
+            });
             Glide.with(context).load("http://139.199.84.147"+moment.getHeadImage()).into(helper.getImageView(R.id.iv_author));
             Log.e("DetailBArActivity",moment.getHeadImage());
             BGANinePhotoLayout ninePhotoLayout = helper.getView(R.id.npl_item_moment_photos);

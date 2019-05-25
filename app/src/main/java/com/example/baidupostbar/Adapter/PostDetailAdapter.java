@@ -70,11 +70,13 @@ public class PostDetailAdapter extends BaseQuickAdapter<PostDetail, BaseViewHold
                 ninePhotoLayout.setData(postDetail.getPhoto());
             }
         }else {
+            int num = position + 1;
             holder.setText(R.id.tv_time,postDetail.getTime())
                     .setText(R.id.tv_author,postDetail.getUserName())
                     .setText(R.id.tv_content,postDetail.getContent())
-                    .setText(R.id.tv_floor,"第"+ position + "楼");
+                    .setText(R.id.tv_floor,"第" + num + "楼");
             Glide.with(mContext).load(postDetail.getUserImg()).into((ImageView) holder.getView(R.id.iv_author));
+            holder.addOnClickListener(R.id.iv_author);
         }
 
     }

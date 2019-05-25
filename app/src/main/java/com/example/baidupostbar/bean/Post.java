@@ -17,6 +17,7 @@ public class Post implements Parcelable {
     public String barLabel;
     public String postId;
     public String writer_id;
+    private boolean praise_status;
 
 
     public String getWriter_id(){

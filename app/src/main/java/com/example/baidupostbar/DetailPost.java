@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.baidupostbar.Adapter.PostDetailAdapter;
+import com.example.baidupostbar.Utils.CheckNetUtil;
 import com.example.baidupostbar.Utils.HttpUtil;
 import com.example.baidupostbar.bean.PostDetail;
 import com.example.baidupostbar.fragment.CommentDialogFragment;
@@ -118,8 +119,10 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
     @Override
     protected void onResume() {
         super.onResume();
-        initData();
-        initRemark();
+        if (new CheckNetUtil(getApplicationContext()).initNet()) {
+            initData();
+        }
+
     }
 
     private void initView() {
@@ -223,7 +226,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         postDetailAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                PostDetail postDetail1 = mDataList.get(position);
+                PostDetail postDetail1 = mDataList.get(position +1);
                 thisFloor = postDetail1.getFloor();
                 FloorDetailFragment dialogFragment = new FloorDetailFragment();
                 dialogFragment.show(getSupportFragmentManager(),"dialogFragment");
@@ -234,6 +237,8 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (view.getId()){
                     case R.id.btn_comment:
+                        PostDetail postDetail1 = mDataList.get(position +1);
+                        thisFloor = postDetail1.getFloor();
                         CommentDialogFragment commentDialogFragment = new CommentDialogFragment();
                         commentDialogFragment.show(getSupportFragmentManager(), "CommentDialogFragment");
                         Log.e("DetailPost","postdetailAdapter点击"+ postId);
@@ -264,8 +269,8 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
 //                        }
 //                        break;
                     case R.id.iv_author:
-                        PostDetail postDetail = mDataList.get(position);
-                        int id = Integer.parseInt(postDetail.getPersonId())-1;
+                        PostDetail postDetail = mDataList.get(position + 1);
+                        int id = Integer.parseInt(postDetail.getPersonId());
                         String Id = String.valueOf(id);
                         if(Id.equals(userId)){
                             Intent intent = new Intent();
