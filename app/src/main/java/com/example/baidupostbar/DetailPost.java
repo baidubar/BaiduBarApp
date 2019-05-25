@@ -27,6 +27,8 @@ import com.example.baidupostbar.bean.PostDetail;
 import com.example.baidupostbar.fragment.CommentDialogFragment;
 import com.example.baidupostbar.fragment.FloorDetailFragment;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
+import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -64,11 +66,59 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
     private ImageView iv_praise;
     private ImageView iv_headImage;
     private FloatingActionButton actionA;
+    PullToRefreshLayout pullToRefreshLayout;
+    private String url;
+    private int page = 1;
+    private BaseQuickAdapter postDetailAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_post);
+
+        initView();
+        initAdapter();
+
+        pullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.activity_main);
+        pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
+            @Override
+            public void refresh() {
+                mDataList.clear();
+                //sendRequestWithOkHttp();//请求数据，不用带lastId
+                if (new CheckNetUtil(getApplicationContext()).initNet()) {}
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(DetailPost.this,"刷新成功",Toast.LENGTH_LONG).show();
+                        // 结束刷新
+                        pullToRefreshLayout.finishRefresh();
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void loadMore() {
+                //sendRequestWithOkHttp(lastId);//加载更多，要带lastId，我已经取好了
+                if(page<=totalPage) {
+                    page++;
+                    String remarkUrl = "http://139.199.84.147/mytieba.api/post/" + postId + "/comment" + "?page=" + page;
+                    if (new CheckNetUtil(getApplicationContext()).initNet()) {
+                        initRefreshData(remarkUrl);
+                    }
+                    Log.e("DetailPost","remarkUrl:"+ remarkUrl);
+                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 结束加载更多
+                        Toast.makeText(DetailPost.this,"刷新成功",Toast.LENGTH_LONG).show();
+                        pullToRefreshLayout.finishLoadMore();
+                    }
+                }, 1000);
+            }
+        });
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
@@ -121,7 +171,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
                 startActivity(intent);
             }
         });
-        initView();
+
 
     }
 
@@ -143,7 +193,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
     //adapter和头部点击事件
     @SuppressWarnings("unchecked")
     private void initAdapter() {
-        BaseQuickAdapter postDetailAdapter = new PostDetailAdapter(R.layout.item_post_floor, mDataList,DetailPost.this,getApplicationContext());
+        postDetailAdapter = new PostDetailAdapter(R.layout.item_post_floor, mDataList,DetailPost.this,getApplicationContext());
         postDetailAdapter.openLoadAnimation();
         View top = getLayoutInflater().inflate(R.layout.header_detail_post, (ViewGroup) mRecyclerView.getParent(), false);
         postDetailAdapter.addHeaderView(top);
@@ -158,7 +208,6 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             public void onClick(View v) {
                 //未关注时是follow，已关注时是follow_fill，自己的帖子时是delete
                 //以上是图片的名字，放进btn_concerd就可以
-                Log.e("DetailPost","关注:"+ RealConcernPeople);
                 //从mDataList获取楼主id
                 PostDetail postDetail = mDataList.get(0);
                 String personId = postDetail.getPersonId();
@@ -378,6 +427,11 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         httpUtil2.GetUtilWithCookie(remarkUrl,2);
         doHandler();
     }
+    private void initRefreshData(String url){
+        HttpUtil httpUtil2 = new HttpUtil(DetailPost.this,getApplicationContext());
+        httpUtil2.GetUtilWithCookie(url,10);
+        doHandler();
+    }
 
     private void doHandler() {
         viewHandler = new Handler() {
@@ -416,6 +470,9 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
                         break;
                     case 9:
                         prasedWithJsonData9(String.valueOf(msg.obj));
+                        break;
+                    case 10:
+                        prasedWithJsonData10(String.valueOf(msg.obj));
                         break;
                     default:
                         break;
@@ -519,7 +576,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        initAdapter();
+        postDetailAdapter.addData(mDataList);
     }
     private void prasedWithJsonData3(String JosnData){
         Log.e("DetailPost","3:"+JosnData);
@@ -637,6 +694,44 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             }else {
                 String msg = jsonObject.getString("msg");
                 Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private void prasedWithJsonData10(String JsonData){
+        Log.e("DetailPost","Pj:"+ JsonData);
+        mDataList = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(JsonData);
+            totalPage = jsonObject.getInt("total_page");
+            String number = jsonObject.getString("number");
+            if (!number.equals("0")) {
+                JSONArray jsonArray = jsonObject.getJSONArray("floor_info");
+                for(int i = 0;i<jsonArray.length();i++){
+                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                    String floor = jsonObject1.getString("floor");
+                    String person_id = jsonObject1.getString("person_id");
+                    String person_name = jsonObject1.getString("person_name");
+                    String person_avatar = jsonObject1.getString("person_avatar");
+                    String datetime = jsonObject1.getString("datetime");
+                    String content = jsonObject1.getString("content");
+
+                    Log.e("DetailPost",content);
+
+                    postDetail = new PostDetail();
+                    postDetail.setContent(content);
+                    postDetail.setTime(datetime);
+                    postDetail.setUserName(person_name);
+                    postDetail.setPersonId(person_id);
+                    postDetail.setFloor(floor);
+                    Log.e("DetailPost","floor1"+floor);
+                    postDetail.setUserImg("http://139.199.84.147" + person_avatar);
+                    postDetail.setFloor(floor);
+                    mDataList.add(postDetail);
+                }
+                postDetailAdapter.addData(mDataList);
+
             }
         } catch (JSONException e) {
             e.printStackTrace();

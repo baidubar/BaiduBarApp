@@ -68,8 +68,8 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     private String url;
     private ArrayList<String>picture;
     private String responseData;
-    private List<Post> moments;
-    private int lastId;
+    private List<Post> moments = new ArrayList<>();
+    private int lastId=0;
     private String userId;
     private ArrayList<BooleanPraise>mDataList = new ArrayList<>();
     private boolean Realpraise;
@@ -95,10 +95,14 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
             public void refresh() {
                 moments.clear();
                 //sendRequestWithOkHttp();//请求数据，不用带lastId
+                url = "http://139.199.84.147/mytieba.api/posts";
+                if (new CheckNetUtil(getContext()).initNet()) {
+                    initData(url);
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-
+                        Toast.makeText(getContext(),"刷新成功",Toast.LENGTH_LONG).show();
                         // 结束刷新
                         pullToRefreshLayout.finishRefresh();
                     }
@@ -108,10 +112,15 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
             @Override
             public void loadMore() {
                 //sendRequestWithOkHttp(lastId);//加载更多，要带lastId，我已经取好了
+                url = url + "?lastId=" + lastId;
+                if (new CheckNetUtil(getContext()).initNet()) {
+                    initData(url);
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         // 结束加载更多
+                        Toast.makeText(getContext(),"刷新成功",Toast.LENGTH_LONG).show();
                         pullToRefreshLayout.finishLoadMore();
                     }
                 }, 1000);
@@ -148,12 +157,12 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
      * 添加网络图片测试数据
      */
     private void addNetImageTestData(String jsonData) {
-        moments = new ArrayList<>();
-        mDataList = new ArrayList<>();
+//        moments = new ArrayList<>();
         try {
 
             JSONObject jsonObject = new JSONObject(jsonData);
             JSONArray jsonArray = jsonObject.getJSONArray("post_msg");
+            lastId = jsonObject.getInt("lastId");
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                 String postId = jsonObject1.getString("post_id");
