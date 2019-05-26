@@ -85,7 +85,9 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             public void refresh() {
                 mDataList.clear();
                 //sendRequestWithOkHttp();//请求数据，不用带lastId
-                if (new CheckNetUtil(getApplicationContext()).initNet()) {}
+                if (new CheckNetUtil(getApplicationContext()).initNet()) {
+                    initData();
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -179,6 +181,10 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
     @Override
     protected void onResume() {
         super.onResume();
+        //if (mDataList!= null){
+            mDataList.clear();
+        //}
+
         if (new CheckNetUtil(getApplicationContext()).initNet()) {
             initData();
         }

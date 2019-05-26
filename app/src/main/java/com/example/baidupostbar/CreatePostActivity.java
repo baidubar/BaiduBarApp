@@ -121,7 +121,6 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
                 int num = content.length();
                 tv_countNum.setText(num +"/200");
             }
-
             @Override
             public void afterTextChanged(Editable s) {
 
