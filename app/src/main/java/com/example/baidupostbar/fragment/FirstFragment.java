@@ -285,10 +285,13 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     @Override
     public void onRVItemClick(ViewGroup viewGroup, View view, int position) {
 
-        String postId = moments.get(position).postId;
-        Intent intent = new Intent(getContext(), DetailPost.class);
-        intent.putExtra("post_id",postId);
-        startActivity(intent);
+        if (moments.size() > 0 && moments != null){
+            String postId = moments.get(position).postId;
+            Intent intent = new Intent(getContext(), DetailPost.class);
+            intent.putExtra("post_id",postId);
+            startActivity(intent);
+        }
+
     }
 
     //帖子的长按事件

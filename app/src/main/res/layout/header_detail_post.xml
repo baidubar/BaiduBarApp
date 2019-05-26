@@ -127,6 +127,7 @@
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:id="@+id/btn_like"
+                    android:background="@drawable/like"
                     android:layout_gravity="center_vertical"/>
 
             </LinearLayout>
