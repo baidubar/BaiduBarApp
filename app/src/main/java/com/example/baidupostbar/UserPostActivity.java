@@ -123,7 +123,7 @@ public class UserPostActivity extends RootBaseActivity implements EasyPermission
                 String barId = jsonObject1.getString("bar_id");
                 String barName = jsonObject1.getString("bar_name");
                 String bar_tags = jsonObject1.getString("bar_tags");
-                moments.add(new Post(post_content, picture, comment_number, praise_number, writer_avatar, writer_name, bar_tags, barName, barId, postId,writer_id));
+                moments.add(new Post(post_content, picture, comment_number, praise_number, writer_avatar, writer_name, bar_tags, barName, barId, postId,writer_id,""));
                 postAdapter.setData(moments);
             }
         } catch (JSONException e) {

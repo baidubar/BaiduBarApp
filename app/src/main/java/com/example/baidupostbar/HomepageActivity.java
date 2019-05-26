@@ -37,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -71,7 +72,8 @@ public class HomepageActivity extends BaseActivity {
     private TextView tv_gender;
     private TextView tv_birthday;
     private TextView tv_interest;
-
+    private boolean follow_status;
+    private String myId;
 
 
     @Override
@@ -81,6 +83,9 @@ public class HomepageActivity extends BaseActivity {
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("userId");
+
+        SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
+        myId = sharedPreferences.getString("user_id", "");
 
         initView();
         initViewPager();
@@ -185,6 +190,16 @@ public class HomepageActivity extends BaseActivity {
                 finish();
             }
         });
+        tv_attention.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(follow_status){
+                    deletePeople();
+                }else {
+                    concernedPeople();
+                }
+            }
+        });
     }
     private void initData(){
         String url = "http://139.199.84.147/mytieba.api/user/"+ userId +"/info";
@@ -257,6 +272,7 @@ public class HomepageActivity extends BaseActivity {
                     interests = interests + Picture + "  ";
                 }
             }
+            follow_status = jsonObject.getBoolean("follow_status");
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -279,8 +295,156 @@ public class HomepageActivity extends BaseActivity {
                     tv_gender.setText("保密");
                 }
                 tv_interest.setText(interests);
+                if(follow_status){
+                    tv_attention.setText("已关注");
+                }else {
+                    tv_attention.setText("加关注");
+                }
             }
         });
 
+    }
+    private void concernedPeople() {
+        try {
+
+            SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
+            String cookie = sharedPreferences.getString("cookie", "");
+            FormBody formBody = new FormBody.Builder()
+                    .add("user_id", userId)
+                    .build();
+            String url = "http://139.199.84.147/mytieba.api/user/" + myId + "/follow";
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .retryOnConnectionFailure(true)
+                    .connectTimeout(10, TimeUnit.SECONDS)
+                    .writeTimeout(10, TimeUnit.SECONDS)
+                    .readTimeout(10, TimeUnit.SECONDS)
+                    .build();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(formBody)
+                    .addHeader("Cookie", cookie)
+                    .build();
+            okHttpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(okhttp3.Call call, IOException e) {
+                    Log.e("onFailure", "获取数据失败");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            Toast.makeText(getApplicationContext(), "网络请求失败", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+
+                @Override
+                public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                    String responseData = response.body().string();
+                    Log.e("HttpUtilsDelete", responseData);
+                    if (response.isSuccessful()) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(responseData);
+                            boolean status = jsonObject.getBoolean("status");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (status) {
+                                        follow_status = true;
+                                        tv_attention.setText("已关注   ");
+                                        Toast.makeText(getApplicationContext(), "关注成功", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "关注失败", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "服务器请求失败", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }
+
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "请求失败", Toast.LENGTH_LONG).show();
+        }
+    }
+    private void deletePeople(){
+        try {
+            SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
+            String cookie = sharedPreferences.getString("cookie", "");
+            FormBody formBody = new FormBody.Builder()
+                    .add("user_id",userId)
+                    .build();
+            String url = "http://139.199.84.147/mytieba.api/user/"+ myId +"/follow";
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .retryOnConnectionFailure(true)
+                    .connectTimeout(10, TimeUnit.SECONDS)
+                    .writeTimeout(10, TimeUnit.SECONDS)
+                    .readTimeout(10, TimeUnit.SECONDS)
+                    .build();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .delete(formBody)
+                    .addHeader("Cookie",cookie)
+                    .build();
+            okHttpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(okhttp3.Call call, IOException e) {
+                    Log.e("onFailure", "获取数据失败");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            Toast.makeText(getApplicationContext(),"网络请求失败",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+
+                @Override
+                public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                    String responseData = response.body().string();
+                    Log.e("HttpUtilsDelete",responseData);
+                    if (response.isSuccessful()) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(responseData);
+                            boolean status = jsonObject.getBoolean("status");
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(status) {
+                                        follow_status = false;
+                                        tv_attention.setText("+ 关注");
+                                        Toast.makeText(getApplicationContext(), "取消关注成功", Toast.LENGTH_LONG).show();
+                                    }else {
+                                        Toast.makeText(getApplicationContext(), "取消关注失败", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(),"服务器请求失败",Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }
+
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
+        }
     }
 }

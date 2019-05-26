@@ -127,7 +127,7 @@ public class PostCollectActivity extends RootBaseActivity implements EasyPermiss
 //                String barId = jsonObject1.getString("bar_id");
 //                String barName = jsonObject1.getString("bar_name");
 //                String bar_tags = jsonObject1.getString("bar_tags");
-                moments.add(new Post(post_content, picture,"1","1",master_avatar,master_name,"1","1","1",postId,"" ));
+                moments.add(new Post(post_content, picture,"1","1",master_avatar,master_name,"1","1","1",postId,"" ,""));
 
                 postAdapter.setData(moments);
             }

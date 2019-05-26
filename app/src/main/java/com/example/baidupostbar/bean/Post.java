@@ -17,14 +17,14 @@ public class Post implements Parcelable {
     public String barLabel;
     public String postId;
     public String writer_id;
-    private boolean praise_status;
+    public String praise_status;
 
 
-    public boolean getPraise_status(){
+    public String getPraise_status(){
         return praise_status;
     }
 
-    public void setPraise_status(boolean praise_status){
+    public void setPraise_status(String praise_status){
         this.praise_status = praise_status;
     }
 
@@ -126,12 +126,13 @@ public class Post implements Parcelable {
         dest.writeString(this.barId);
         dest.writeString(this.postId);
         dest.writeString(this.writer_id);
+        dest.writeString(this.praise_number);
     }
 
     public Post() {
     }
 
-    public Post(String content, ArrayList<String> photos,String comment_number,String praise_number,String headImage,String writterName,String barLabel,String barName,String barId,String postId,String writer_id) {
+    public Post(String content, ArrayList<String> photos,String comment_number,String praise_number,String headImage,String writterName,String barLabel,String barName,String barId,String postId,String writer_id,String praise_status) {
         this.content = content;
         this.photos = photos;
         this.comment_number = comment_number;
@@ -143,6 +144,7 @@ public class Post implements Parcelable {
         this.barId = barId;
         this.postId = postId;
         this.writer_id = writer_id;
+        this.praise_status = praise_status;
     }
 
     protected Post(Parcel in) {
@@ -157,6 +159,7 @@ public class Post implements Parcelable {
         this.barId = in.readString();
         this.postId = in.readString();
         this.writer_id = in.readString();
+        this.praise_status = in.readString();
     }
 
     public static final Parcelable.Creator<Post> CREATOR = new Parcelable.Creator<Post>() {

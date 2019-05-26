@@ -69,6 +69,7 @@ public class SearchPostFragment extends Fragment implements EasyPermissions.Perm
     private String responseData;
     private String cookie;
     private View mEmptyView;
+    private ArrayList<Post>moments;
 
     private BGANinePhotoLayout mCurrentClickNpl;
 
@@ -167,6 +168,9 @@ public class SearchPostFragment extends Fragment implements EasyPermissions.Perm
     @Override
     public void onRVItemClick(ViewGroup viewGroup, View view, int position) {
         Intent intent = new Intent(getContext(), DetailPost.class);
+        Post post = moments.get(position);
+        String postId = post.postId;
+        intent.putExtra("post_id",postId);
         startActivity(intent);
     }
 
@@ -209,7 +213,7 @@ public class SearchPostFragment extends Fragment implements EasyPermissions.Perm
 
     private void addNetImageTestData(String jsonData) {
 
-        List<Post> moments = new ArrayList<>();
+        moments = new ArrayList<>();
         try {
 
             JSONObject jsonObject = new JSONObject(jsonData);
@@ -252,7 +256,7 @@ public class SearchPostFragment extends Fragment implements EasyPermissions.Perm
 //                    }
                     picture = new ArrayList<>();
                     picture.add("http://139.199.84.147/" + post_photo);
-                    moments.add(new Post(post_content, picture, comment_number, praise_number, post_writer_avatar,post_writer_name, "", bar_name,post_id,post_id,post_writer_id));
+                    moments.add(new Post(post_content, picture, comment_number, praise_number, post_writer_avatar,post_writer_name, "", bar_name,post_id,post_id,post_writer_id,""));
 
                 }
             }
