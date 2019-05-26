@@ -25,6 +25,7 @@ import com.example.baidupostbar.DetailUserActivity;
 import com.example.baidupostbar.HomepageActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.Utils.CheckNetUtil;
+import com.example.baidupostbar.bean.EmptyRecyclerView;
 import com.example.baidupostbar.bean.Post;
 
 import org.json.JSONArray;
@@ -56,7 +57,7 @@ public class UserPostFragment extends Fragment implements EasyPermissions.Permis
 
     private static final int RC_ADD_MOMENT = 1;
 
-    private RecyclerView mMomentRv;
+    private EmptyRecyclerView mMomentRv;
     private PostAdapter postAdapter;
     private String url;
     private ArrayList<String>picture;
@@ -67,13 +68,14 @@ public class UserPostFragment extends Fragment implements EasyPermissions.Permis
 
 
     private String userId;
+    private View mEmptyView;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_user_post,container,false);
-
+        mEmptyView = view.findViewById(R.id.empty_iv);
         return view;
     }
     @Override
@@ -87,6 +89,7 @@ public class UserPostFragment extends Fragment implements EasyPermissions.Permis
         mMomentRv.addOnScrollListener(new BGARVOnScrollListener(getActivity()));
         mMomentRv.setLayoutManager(new LinearLayoutManager(getContext()));
         mMomentRv.setAdapter(postAdapter);
+        mMomentRv.setEmptyView(mEmptyView);
 
 
 

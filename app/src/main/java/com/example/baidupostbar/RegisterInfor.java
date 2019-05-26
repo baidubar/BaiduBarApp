@@ -3,6 +3,7 @@ package com.example.baidupostbar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 import cn.qqtheme.framework.util.ConvertUtils;
+
+import static com.example.baidupostbar.ChangePasswordActivity.setEditTextInhibitInputSpace;
 
 public class RegisterInfor extends AppCompatActivity {
     private RadioGroup rg_sex;
@@ -59,6 +62,8 @@ public class RegisterInfor extends AppCompatActivity {
         rb_male = findViewById(R.id.rb_male);
         tv_birthDay = findViewById(R.id.tv_birthDay);
         et_signture = findViewById(R.id.et_signature);
+        setEditTextInhibitInputSpace(et_signture);
+        et_signture.setFilters(new InputFilter[] {new InputFilter.LengthFilter(16)});
 
         rg_sex.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
         @Override

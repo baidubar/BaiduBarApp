@@ -19,6 +19,13 @@ public class Post implements Parcelable {
     public String writer_id;
     private boolean praise_status;
 
+    public boolean isPraise_status() {
+        return praise_status;
+    }
+
+    public void setPraise_status(boolean praise_status) {
+        this.praise_status = praise_status;
+    }
 
     public String getWriter_id(){
         return writer_id;
@@ -123,6 +130,20 @@ public class Post implements Parcelable {
     public Post() {
     }
 
+    public Post(String content, ArrayList<String> photos,String comment_number,String praise_number,String headImage,String writterName,String barLabel,String barName,String barId,String postId,String writer_id,boolean praise_status) {
+        this.content = content;
+        this.photos = photos;
+        this.comment_number = comment_number;
+        this.praise_number = praise_number;
+        this.writterName = writterName;
+        this.headImage = headImage;
+        this.barLabel = barLabel;
+        this.barName = barName;
+        this.barId = barId;
+        this.postId = postId;
+        this.writer_id = writer_id;
+        this.praise_status = praise_status;
+    }
     public Post(String content, ArrayList<String> photos,String comment_number,String praise_number,String headImage,String writterName,String barLabel,String barName,String barId,String postId,String writer_id) {
         this.content = content;
         this.photos = photos;

@@ -152,8 +152,10 @@ public class FloorDetailFragment extends DialogFragment {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 //设置点击事件
                 //应该是做成点击此条评论，弹出评论框
-                CommentDialogFragment commentDialogFragment = new CommentDialogFragment();
+                FloorDetail floorDetail = mDataList.get(position + 1);
+                CommentDialogFragment commentDialogFragment = new CommentDialogFragment(floorDetail.getAuthorName());
                 commentDialogFragment.show(getFragmentManager(), "CommentDialogFragment");
+                dismiss();
             }
         });
         floorDetailAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {

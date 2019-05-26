@@ -1,5 +1,6 @@
 package com.example.baidupostbar.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -54,6 +55,7 @@ public class CommentDialogFragment extends android.support.v4.app.DialogFragment
     private String postId;
     private String reply_id = "0";
     private String reply_floor;
+    private String userName;
 
     @Override
     public void onAttach(Activity activity) {
@@ -65,7 +67,13 @@ public class CommentDialogFragment extends android.support.v4.app.DialogFragment
         postId = ((DetailPost) activity).getPostId();
         Log.e("CDF","postId"+ postId);
     }
-
+    @SuppressLint("ValidFragment")
+    public  CommentDialogFragment(String userName){
+        this.userName = userName;
+    }
+    public  CommentDialogFragment(){
+        this.userName = null;
+    }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -85,7 +93,9 @@ public class CommentDialogFragment extends android.support.v4.app.DialogFragment
 
         commentEditText = (EditText) mDialog.findViewById(R.id.edit_comment);
         sendButton = (ImageView) mDialog.findViewById(R.id.image_btn_comment_send);
-
+        if(userName!= null){
+            commentEditText.setHint("回复"+userName+"：");
+        }
         setSoftKeyboard();
 
         commentEditText.addTextChangedListener(mTextWatcher);
@@ -151,7 +161,11 @@ public class CommentDialogFragment extends android.support.v4.app.DialogFragment
                 String content = commentEditText.getText().toString();
                 content = trim(content);
                 if(!content.equals("")){
-                    postComment(content);
+                    if (userName!=null)
+                    {
+                        postComment("回复"+userName+":"+content);
+                    }
+                    else postComment(content);
                 }
                 else {
                     Toast.makeText(getContext(),"请填入内容",Toast.LENGTH_LONG).show();

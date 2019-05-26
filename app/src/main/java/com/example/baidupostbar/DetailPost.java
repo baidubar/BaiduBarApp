@@ -111,7 +111,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
                     @Override
                     public void run() {
                         // 结束加载更多
-                        Toast.makeText(DetailPost.this,"刷新成功",Toast.LENGTH_LONG).show();
+                        Toast.makeText(DetailPost.this,"加载完成",Toast.LENGTH_LONG).show();
                         pullToRefreshLayout.finishLoadMore();
                     }
                 }, 1000);

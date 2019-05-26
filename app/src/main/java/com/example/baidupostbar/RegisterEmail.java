@@ -14,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -60,6 +61,8 @@ public class RegisterEmail extends RootBaseActivity {
         et_code = findViewById(R.id.et_code);
         et_email = findViewById(R.id.et_email);
         btn_next = findViewById(R.id.btn_next);
+        et_email.setFilters(new InputFilter[] {new InputFilter.LengthFilter(30)});
+        et_code.setFilters(new InputFilter[] {new InputFilter.LengthFilter(10)});
         btn_getCode = findViewById(R.id.btn_getCode);
         btn_getCode.setOnClickListener(new View.OnClickListener() {
             @Override

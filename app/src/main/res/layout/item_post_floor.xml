@@ -52,8 +52,8 @@
 
         </LinearLayout>
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:background="@drawable/comment"
             android:id="@+id/btn_comment"/>
     </LinearLayout>

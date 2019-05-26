@@ -50,6 +50,7 @@ public class ListUserAttention extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+
             }
         });
         SharedPreferences preferences = getSharedPreferences("theUser",MODE_PRIVATE);

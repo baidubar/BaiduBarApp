@@ -51,6 +51,7 @@
                         android:layout_height="wrap_content"
                         android:theme="@style/MyEditText"
                         android:layout_marginLeft="3dp"
+                        android:textColor="#FFFFFF"
                         android:id="@+id/et_account" />
                 </LinearLayout>
             </RelativeLayout>
@@ -71,11 +72,12 @@
                         android:background="@drawable/password"/>
                     <EditText
                         android:maxLines="1"
-                        android:maxLength="12"
+                        android:maxLength="16"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:theme="@style/MyEditText"
                         android:layout_marginLeft="3dp"
+                        android:textColor="#FFFFFF"
                         android:inputType="textPassword"
                         android:id="@+id/et_password" />
                 </LinearLayout>

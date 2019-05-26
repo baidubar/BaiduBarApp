@@ -19,8 +19,8 @@
             android:id="@+id/iv_author"/>
 
         <LinearLayout
-            android:layout_width="298dp"
-            android:layout_height="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -30,21 +30,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_vertical"
                 android:text="美渣重症患者"
                 android:textColor="#000000"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tv_time"
-                android:layout_width="wrap_content"
-                android:layout_height="5dp"
-                android:text="2019-01-01" />
         </LinearLayout>
 
         <ImageView
             android:id="@+id/btn_concerd"
-            android:layout_width="30dp"
-            android:layout_height="35dp"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
             />
     </LinearLayout>
     <TextView
@@ -105,8 +102,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:background="@drawable/comment"
                 android:layout_gravity="center_vertical"/>
             <TextView
@@ -128,8 +125,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true">
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:id="@+id/btn_like"
                     android:layout_gravity="center_vertical"/>
                 <TextView

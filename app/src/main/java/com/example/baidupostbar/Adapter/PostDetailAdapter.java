@@ -43,7 +43,7 @@ public class PostDetailAdapter extends BaseQuickAdapter<PostDetail, BaseViewHold
         Log.e("PostDetail", String.valueOf(position));
         PostDetail postDetail = mList.get(position);
         if(position == 0){
-            holder.setText(R.id.tv_time,postDetail.getTime())
+            holder
                     .setText(R.id.tv_author,postDetail.getUserName())
                     .setText(R.id.tv_content,postDetail.getContent())
                     .setText(R.id.tv_likeNum,postDetail.getLikeNum())

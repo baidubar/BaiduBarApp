@@ -21,6 +21,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.engine.Resource;
 import com.example.baidupostbar.Utils.HttpUtil;
 
 import org.json.JSONException;
@@ -156,7 +157,8 @@ public class LoginActivity extends RootBaseActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(!et_password.getText().toString().equals("")&&!et_account.getText().toString().equals("")){
                     btn_login.setEnabled(true);
-                    btn_login.setBackgroundColor(Color.parseColor("#6495ED"));
+                    btn_login.setBackground(getResources().getDrawable(R.drawable.btn_ok));
+                    btn_login.setTextColor(Integer.parseInt("#FFFFFF"));
                 }else {
                     btn_login.setEnabled(false);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

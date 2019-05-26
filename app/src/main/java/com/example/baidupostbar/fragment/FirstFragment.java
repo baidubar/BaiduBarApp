@@ -120,7 +120,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                     @Override
                     public void run() {
                         // 结束加载更多
-                        Toast.makeText(getContext(),"刷新成功",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),"加载完成",Toast.LENGTH_LONG).show();
                         pullToRefreshLayout.finishLoadMore();
                     }
                 }, 1000);
@@ -308,7 +308,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                 helper.setText(R.id.tv_content, moment.content);
                 helper.setText(R.id.tv_commentNum,moment.comment_number);
                 helper.setText(R.id.tv_likeNum,moment.praise_number);
-                helper.setText(R.id.tv_label,moment.barLabel);
+                helper.setText(R.id.tv_label,"#"+moment.barLabel.substring(2,moment.barLabel.length()-2));
                 helper.setText(R.id.tv_bar,moment.barName);
                 helper.setText(R.id.tv_author,moment.writterName);
             }

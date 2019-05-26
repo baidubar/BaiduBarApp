@@ -34,6 +34,7 @@
             app:hintAnimationEnabled="false"
             app:hintEnabled="false"
             android:textColorHint="#FFFFFF"
+            android:maxLines="1"
             android:scrollbarAlwaysDrawHorizontalTrack="true"
             >
             <android.support.design.widget.TextInputEditText
@@ -54,6 +55,7 @@
             app:hintAnimationEnabled="false"
             app:hintEnabled="false"
             android:textColorHint="#FFFFFF"
+            android:maxLines="1"
             android:layout_marginTop="5dp"
             android:scrollbarAlwaysDrawHorizontalTrack="true"
             >
@@ -61,6 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="验证码"
+                android:inputType="number"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#FFFFFF"
                 android:theme="@style/MyEditText"

@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.example.baidupostbar.Adapter.UserCommentAdapter;
 import com.example.baidupostbar.bean.EmptyRecyclerView;
 import com.example.baidupostbar.bean.UserComment;
+import com.example.baidupostbar.fragment.ThirdFragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

@@ -21,6 +21,7 @@ import com.example.baidupostbar.DetailBarActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.Utils.HttpUtil;
 import com.example.baidupostbar.bean.BarList;
+import com.example.baidupostbar.bean.EmptyRecyclerView;
 import com.example.baidupostbar.bean.Post;
 
 import org.json.JSONArray;
@@ -38,17 +39,18 @@ import okhttp3.Response;
 public class UserBarFragment extends Fragment {
     View view;
     private ArrayList<BarList> mDataList;
-    private RecyclerView mRecyclerView;
+    private EmptyRecyclerView mRecyclerView;
     private String userId;
     private String url;
     private String barId;
     private String barLabel;
     private String responseData;
-
+    private View mEmptyView;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_user_bar,container,false);
+        mEmptyView = view.findViewById(R.id.empty_iv);
         return view;
     }
 
@@ -63,8 +65,9 @@ public class UserBarFragment extends Fragment {
         initData(url);
     }
     private void initView() {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = (EmptyRecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setEmptyView(mEmptyView);
     }
 
     @SuppressWarnings("unchecked")

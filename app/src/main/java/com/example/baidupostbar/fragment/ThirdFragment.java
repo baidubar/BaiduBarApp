@@ -58,6 +58,10 @@ public class ThirdFragment extends Fragment {
     private String cookie;
     private List<UserComment> userCommentList = new ArrayList<>();
     private int sfNum,likeNum,replyNum,attentionNum;
+    private String a = null;
+    private String b = null;
+    private String c = null;
+    private String d = null;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,6 +79,7 @@ public class ThirdFragment extends Fragment {
         Log.d("艾迪",userId);
         initView();
         initListener();
+
     }
 
     @Override

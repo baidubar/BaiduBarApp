@@ -6,6 +6,7 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
@@ -18,6 +19,8 @@ import com.example.baidupostbar.Utils.HttpUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.example.baidupostbar.ChangePasswordActivity.setEditTextInhibitInputSpace;
 
 public class Register_user extends AppCompatActivity {
 
@@ -41,6 +44,12 @@ public class Register_user extends AppCompatActivity {
         et_confirmPassword = findViewById(R.id.et_confirmPassword);
         et_password = findViewById(R.id.et_password);
         btn_next = findViewById(R.id.btn_next);
+        setEditTextInhibitInputSpace(et_confirmPassword);
+        setEditTextInhibitInputSpace(et_account);
+        setEditTextInhibitInputSpace(et_password);
+        et_account.setFilters(new InputFilter[] {new InputFilter.LengthFilter(10)});
+        et_confirmPassword.setFilters(new InputFilter[] {new InputFilter.LengthFilter(16)});
+        et_password.setFilters(new InputFilter[] {new InputFilter.LengthFilter(16)});
 
         setTextWatcher();
 
