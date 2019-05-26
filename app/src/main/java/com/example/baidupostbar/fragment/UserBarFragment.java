@@ -16,10 +16,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.example.baidupostbar.Adapter.AaaAdapter;
 import com.example.baidupostbar.Adapter.BarListAdapter;
 import com.example.baidupostbar.DetailBarActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.Utils.HttpUtil;
+import com.example.baidupostbar.bean.Aaa;
 import com.example.baidupostbar.bean.BarList;
 import com.example.baidupostbar.bean.EmptyRecyclerView;
 import com.example.baidupostbar.bean.Post;
@@ -38,7 +40,7 @@ import okhttp3.Response;
 
 public class UserBarFragment extends Fragment {
     View view;
-    private ArrayList<BarList> mDataList;
+    private ArrayList<Aaa> mDataList;
     private EmptyRecyclerView mRecyclerView;
     private String userId;
     private String url;
@@ -72,7 +74,7 @@ public class UserBarFragment extends Fragment {
 
     @SuppressWarnings("unchecked")
     private void initAdapter() {
-        BaseQuickAdapter barListAdapter = new BarListAdapter(R.layout.item_bar, mDataList);
+        BaseQuickAdapter barListAdapter = new AaaAdapter(R.layout.aaa, mDataList);
         barListAdapter.openLoadAnimation();
         barListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -135,7 +137,7 @@ public class UserBarFragment extends Fragment {
                 String bar_name = jsonObject1.getString("bar_name");
                 String bar_tags = jsonObject1.getString("bar_tags");
                 String bar_icon = jsonObject1.getString("bar_icon");
-                BarList item = new BarList();
+                Aaa item = new Aaa();
                 item.setBarImg("http://139.199.84.147/" + bar_icon);
                 item.setBarName(bar_name);
                 item.setBarId(barId);

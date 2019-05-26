@@ -46,7 +46,6 @@ public class PostDetailAdapter extends BaseQuickAdapter<PostDetail, BaseViewHold
             holder
                     .setText(R.id.tv_author,postDetail.getUserName())
                     .setText(R.id.tv_content,postDetail.getContent())
-                    .setText(R.id.tv_likeNum,postDetail.getLikeNum())
                     .setText(R.id.tv_label,postDetail.getLabel())
                     .setText(R.id.tv_commentNum,postDetail.getCommentNum())
                     .setText(R.id.tv_bar,postDetail.getBarName());

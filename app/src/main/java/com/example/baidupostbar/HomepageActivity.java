@@ -301,7 +301,7 @@ public class HomepageActivity extends BaseActivity {
                 if(follow_status){
                     tv_attention.setText("已关注");
                 }else {
-                    tv_attention.setText("加关注");
+                    tv_attention.setText("+ 关注");
                 }
             }
         });

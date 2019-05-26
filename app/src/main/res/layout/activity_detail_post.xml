@@ -76,7 +76,7 @@
                 android:id="@+id/btn_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="#FFF176"
+                fab:fab_colorNormal="#1976D2"
                 fab:fab_icon="@drawable/comment_64"
                 fab:fab_size="mini"/>
 
@@ -84,7 +84,7 @@
                 android:id="@+id/btn_collect"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                fab:fab_colorNormal="#AED581"
+                fab:fab_colorNormal="#1976D2"
                 fab:fab_icon="@drawable/collect"
                 fab:fab_size="mini"/>
 
