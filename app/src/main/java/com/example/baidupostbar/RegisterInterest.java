@@ -116,7 +116,7 @@ Button btn_ignore;
                             .add("username", username)
                             .add("password", password)
                             .add("email_access", email_access)
-//                            .add("birthday", birthday)
+                            .add("birthday","2000-01-01")
 //                            .add("description", description)
 //                            .add("gender", gender)
                             .build();
@@ -158,7 +158,7 @@ Button btn_ignore;
                             .add("username",username)
                             .add("password",password)
                             .add("email_access",email_access)
-                           // .add("description",description)
+                            .add("birthday","2000-01-01")
 //                            .add("gender",gender)
                             .build();
                     HttpUtil httpUtil = new HttpUtil(RegisterInterest.this,getApplicationContext());

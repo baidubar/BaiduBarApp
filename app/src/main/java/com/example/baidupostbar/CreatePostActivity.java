@@ -4,16 +4,22 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.baidupostbar.model.Moment;
@@ -21,7 +27,9 @@ import com.example.baidupostbar.model.Moment;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +74,8 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
     private String userId;
     private String bar_id;
     private String content;
+    private File postFile;
+    private TextView tv_countNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +108,25 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         builder = new MultipartBody.Builder();
+        tv_countNum = findViewById(R.id.countNum);
+        mContentEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String content = mContentEt.getText().toString();
+                int num = content.length();
+                tv_countNum.setText(num +"/200");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -118,9 +147,13 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
 
                     for(int i = 0;i<photo.size();i++){
                         String filePath = photo.get(i);
+                        filePath = compressImage(filePath,getApplicationContext());
                         File file = new File(filePath);
                         RequestBody image = RequestBody.create(MediaType.parse("image/png"),file );
                         builder.addFormDataPart("pic",file.getName(),image);
+//                        long num = file.length();
+
+
                     }
                     RequestBody requestBody = builder
                             .setType(MultipartBody.FORM)
@@ -301,5 +334,50 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
         }
         return result;
     }
+    public static String compressImage(String mCurrentPhotoPath, Context context) {
+        if (mCurrentPhotoPath != null) {
+            try {
+                File f = new File(mCurrentPhotoPath);
+        Bitmap bm = getSmallBitmap(mCurrentPhotoPath);
+        //获取文件路径 即：/data/data/***/files目录下的文件
+        String path = context.getFilesDir().getPath();
+//                Log.e(TAG, "compressImage:path== "+path );
+        //获取缓存路径
+        File cacheDir = context.getCacheDir();
+//                Log.e(TAG, "compressImage:cacheDir== "+cacheDir );
+//                File newfile = new File(
+//                getAlbumDir(), "small_" + f.getName());
+        File newfile = new File( cacheDir, "small_" + f.getName());
+        FileOutputStream fos = new FileOutputStream(newfile);
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, fos);
 
+        return newfile.getPath();
+            } catch (Exception e) {
+                Log.e("TAG", "error", e);
+            }
+        }
+        else {
+            Log.e("TAG", "save: 图片路径为空");
+        } return mCurrentPhotoPath;
+    }
+    public static Bitmap getSmallBitmap(String filePath) { final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+
+        options.inSampleSize = calculateInSampleSize(options, 480, 800);
+
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeFile(filePath, options);
+    }
+    public static int calculateInSampleSize(BitmapFactory.Options options,
+                                            int reqWidth, int reqHeight) { final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) { final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        } return inSampleSize;
+    }
 }

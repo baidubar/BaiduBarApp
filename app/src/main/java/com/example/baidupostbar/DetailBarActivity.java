@@ -378,7 +378,8 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
                 helper.setVisibility(R.id.tv_content, View.VISIBLE);
                 helper.setText(R.id.tv_content, moment.content);
                 helper.setText(R.id.tv_author,moment.writterName);
-                helper.setText(R.id.tv_commentNum,moment.comment_number);
+                helper.setText(R.id.tv_commentNum,"评论："+moment.comment_number);
+                helper.setText(R.id.tv_concerned,moment.comment_number);
                 helper.setText(R.id.tv_likeNum,moment.praise_number);
                 helper.setText(R.id.tv_label,moment.barLabel);
                 helper.setText(R.id.tv_bar,moment.barName);

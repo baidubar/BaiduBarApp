@@ -101,26 +101,8 @@ public class FloorDetailFragment extends DialogFragment {
         lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
         lp.height = getActivity().getWindowManager().getDefaultDisplay().getHeight() * 13 / 14;
         window.setAttributes(lp);
+        postHttp(floor);
 
-//        initView(dialog);
-//        initData();
-//        initAdapter();
-//        if (getDialog() != null) {
-//            getDialog().setOnKeyListener(new DialogInterface.OnKeyListener() {
-//                @Override
-//                public boolean onKey(DialogInterface anInterface, int keyCode, KeyEvent event) {
-//                    if(keyCode==KeyEvent.KEYCODE_ENTER&&event.getAction()==KeyEvent.ACTION_DOWN){
-////                        if(!TextUtils.isEmpty(gridPasswordView.getText().toString().trim())){
-////                            if("123456".equals(gridPasswordView.getText().toString().trim())){
-////                            }
-////                        }
-//                    }else{
-//                        Toast.makeText(getContext(),"密码不能为空",Toast.LENGTH_SHORT).show();
-//                    }
-//                    return false;
-//                }
-//            });
-//        }
         this.dialog = dialog;
         return dialog;
     }
@@ -137,11 +119,6 @@ public class FloorDetailFragment extends DialogFragment {
         }
     };
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        postHttp(floor);
-    }
     private void initAdapter(){
         floorDetailAdapter = new FloorDetailAdapter(R.layout.item_dialog_comment, mDataList,getContext(),cookie,userId);
         floorDetailAdapter.openLoadAnimation();
@@ -208,6 +185,46 @@ public class FloorDetailFragment extends DialogFragment {
         }
 
     }
+    private void postHttp1(String floor){
+        try {
+            OkHttpClient client = new OkHttpClient();
+
+            String url = "http://139.199.84.147/mytieba.api/post/"+postId+"/comment"+ "?floor=" + floor;
+
+            Log.e("FloorDetailFragment",url);
+            Request request = new Request.Builder().url(url)
+                    .addHeader("Cookie",cookie)
+                    .build();
+            Log.e("FloorDrtail",url);
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(okhttp3.Call call, IOException e) {
+                    Log.e("onFailure","获取数据失败");
+                    Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                    String responseData = response.body().string();
+                    Log.e("rsponseData",responseData);
+                    if (response.isSuccessful()){
+                        prasedWithJsonData2(responseData);
+                    }else {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(),"服务器请求失败",Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
+        }
+
+    }
     private void prasedWithJsonData(String JsonData){
         Log.e("FloorDetail",JsonData);
         mDataList = new ArrayList<>();
@@ -258,6 +275,71 @@ public class FloorDetailFragment extends DialogFragment {
                     @Override
                     public void run() {
                         initAdapter();
+                    }
+                });
+            }else {
+                String msg = jsonObject.getString("msg");
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private void prasedWithJsonData2(String JsonData){
+        Log.e("FloorDetail",JsonData);
+        mDataList = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(JsonData);
+            boolean status = jsonObject.getBoolean("status");
+            if(status) {
+                String floor_number = jsonObject.getString("floor_number");
+                String floor_content = jsonObject.getString("floor_content");
+                String floor_writer_name = jsonObject.getString("floor_writer_name");
+                String floor_writer_avatar = jsonObject.getString("floor_writer_avatar");
+                FloorDetail floorDetail1 = new FloorDetail();
+                floorDetail1.setFloorNum(floor_number);
+                floorDetail1.setAuthorName(floor_writer_name);
+                floorDetail1.setHeadImag("http://139.199.84.147/" + floor_writer_avatar);
+                floorDetail1.setContent(floor_content);
+                floorDetail1.setTime("");
+                mDataList.add(floorDetail1);
+                JSONArray jsonArray = jsonObject.getJSONArray("comment_msg");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                    int comment_id = jsonObject1.getInt("comment_id");
+                    boolean reply_status = jsonObject1.getBoolean("reply_status");
+                    int person_id = jsonObject1.getInt("person_id");
+                    String person_avatar = jsonObject1.getString("person_avatar");
+                    String person_name = jsonObject1.getString("person_name");
+                    String datetime = jsonObject1.getString("datetime");
+                    String content = jsonObject1.getString("content");
+                    if (reply_status)
+                    {
+                        String reply_person_id = jsonObject1.getString("reply_person_id");
+                        String reply_person_name = jsonObject1.getString("reply_person_name");
+                    }
+                    int num = i+1;
+                    FloorDetail floorDetail = new FloorDetail();
+                    floorDetail.setAuthorName(person_name);
+                    floorDetail.setHeadImag("http://139.199.84.147/" + person_avatar);
+                    floorDetail.setContent(content);
+                    floorDetail.setFloorNum("第"+ num + "楼");
+                    floorDetail.setTime(datetime);
+                    floorDetail.setCommentId(comment_id);
+                    floorDetail.setReply_person_id(person_id);
+                    Log.d("评论者id",String.valueOf(person_id));
+                    Log.d("评论id",String.valueOf(comment_id));
+                    mDataList.add(floorDetail);
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
                     }
                 });
             }else {

@@ -1,6 +1,7 @@
 package com.example.baidupostbar.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.baidupostbar.HomepageActivity;
 import com.example.baidupostbar.R;
 import com.example.baidupostbar.bean.UserFollow;
 
@@ -78,6 +80,12 @@ public class UserFollowAdapter extends RecyclerView.Adapter<UserFollowAdapter.Vi
             public void onClick(View view) {
                 int position = holder.getAdapterPosition();
                 UserFollow userFollow = list.get(position);
+                String PersonId = String.valueOf(userFollow.getUser_id());
+                Intent intent = new Intent();
+                intent.setClass(context, HomepageActivity.class);
+                intent.putExtra("userId",PersonId);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+                context.startActivity(intent);
             }
         });
         holder.btn.setOnClickListener(new View.OnClickListener() {

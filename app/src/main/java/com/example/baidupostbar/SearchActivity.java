@@ -35,15 +35,15 @@ public class SearchActivity extends AppCompatActivity {
         final SearchView searchView ;
         searchView = findViewById(R.id.searchView);
         //searchView.autoOpenOrClose();
-
-          List<String> historyList = new ArrayList<>();
-        List<Search> searches = LitePal.where("userName like ? ", userName).order("userName").find(Search.class);
-        for(int i = 0;i<searches.size();i++){
-            historyList.add(searches.get(i).getSearchData());
-        }
-        Log.e("SearchActivity", String.valueOf(searches.size()));
-        //设置全新的历史记录列表
-        searchView.setNewHistoryList(historyList);
+//
+//          List<String> historyList = new ArrayList<>();
+//        List<Search> searches = LitePal.where("userName like ? ", userName).order("userName").find(Search.class);
+//        for(int i = 0;i<searches.size();i++){
+//            historyList.add(searches.get(i).getSearchData());
+//        }
+//        Log.e("SearchActivity", String.valueOf(searches.size()));
+//        //设置全新的历史记录列表
+//        searchView.setNewHistoryList(historyList);
 
         //添加一条历史记录
 //        searchView.addOneHistory("Jenson");
@@ -51,22 +51,22 @@ public class SearchActivity extends AppCompatActivity {
         //设置搜索框默认值
         //searchView.setSearchEditText("test string");
 
-        //设置历史记录点击事件
-        searchView.setHistoryItemClickListener(new SearchView.OnHistoryItemClickListener() {
-            @Override
-            public void onClick(String historyStr, int position) {
-                //Toast.makeText(MainActivity.this, historyStr, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(SearchActivity.this,SearchResultActivity.class);
-                intent.putExtra("searchText",historyStr);
-                startActivity(intent);
-            }
-        });
-        searchView.setOnCleanHistoryClickListener(new SearchView.OnCleanHistoryClickListener() {
-            @Override
-            public void onClick() {
-                LitePal.deleteAll(Search.class, "userName = ?" , userName);
-            }
-        });
+//        //设置历史记录点击事件
+//        searchView.setHistoryItemClickListener(new SearchView.OnHistoryItemClickListener() {
+//            @Override
+//            public void onClick(String historyStr, int position) {
+//                //Toast.makeText(MainActivity.this, historyStr, Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(SearchActivity.this,SearchResultActivity.class);
+//                intent.putExtra("searchText",historyStr);
+//                startActivity(intent);
+//            }
+//        });
+//        searchView.setOnCleanHistoryClickListener(new SearchView.OnCleanHistoryClickListener() {
+//            @Override
+//            public void onClick() {
+//                LitePal.deleteAll(Search.class, "userName = ?" , userName);
+//            }
+//        });
         //设置软键盘搜索按钮点击事件
         searchView.setOnSearchActionListener(new SearchView.OnSearchActionListener() {
             @Override
