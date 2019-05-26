@@ -99,28 +99,35 @@ Button btn_ignore;
                 }
                 Log.e("labelList.size()", String.valueOf(labelList.size()));
                 if (type.equals("1")) {
-                    if(!birthday.equals("点击选择")&&birthday!=null){
-                        builder.add("birthday",birthday);
-                    }else{
-                    birthday = "2019-01-01";
+                    if (!birthday.equals("点击选择") && birthday != null) {
+                        builder.add("birthday", birthday);
+                    } else {
+                        birthday = "2019-01-01";
                     }
-                    if(!description.equals("")&&description!=null){
-                        builder.add("description",description);
+                    if (!description.equals("") && description != null) {
+                        builder.add("description", description);
                     }
-                    if(!gender.equals("")&&gender!=null){
-                        builder.add("gender",gender);
+                    if (!gender.equals("") && gender != null) {
+                        builder.add("gender", gender);
                     }
-                    else if(type.equals("2"))
                     formBody = builder
                             .add("email", email)
                             .add("username", username)
                             .add("password", password)
                             .add("email_access", email_access)
                             .build();
+                }
+                    else if (type.equals("2")) {
+                        formBody = builder
+                                .add("email", email)
+                                .add("username", username)
+                                .add("password", password)
+                                .add("email_access", email_access)
+                                .build();
                     HttpUtil httpUtil = new HttpUtil(RegisterInterest.this, getApplicationContext());
                     httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register", formBody, 1);
 
-                    Log.e("Birthday",birthday);
+                    Log.e("Birthday", birthday);
 
                 }else if(type.equals("3")){
                     formBody = builder
