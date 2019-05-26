@@ -20,7 +20,7 @@
             android:layout_gravity="center_horizontal"
             android:textSize="17sp"
             android:textColor="#000000"
-            android:text="搜索 "/>
+            android:text=""/>
     </android.support.v7.widget.Toolbar>
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"

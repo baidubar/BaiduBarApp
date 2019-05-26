@@ -286,7 +286,10 @@ public class HomepageActivity extends BaseActivity {
                 info.setText("简介："+description);
                 Glide.with(getApplicationContext()).load( avatar).into(iv_head);
                 Glide.with(getApplicationContext()).load( background_pic).into(iv_parallax);
-                tv_birthday.setText(birthday);
+                if (birthday!=null){
+                    tv_birthday.setText(birthday);
+                }
+                else tv_birthday.setText("保密");
                 if(gender.equals("0")){
                     tv_gender.setText("男");
                 }else if(gender.equals("1")){

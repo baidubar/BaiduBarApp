@@ -256,7 +256,7 @@ public class SearchPostFragment extends Fragment implements EasyPermissions.Perm
 //                    }
                     picture = new ArrayList<>();
                     picture.add("http://139.199.84.147/" + post_photo);
-                    moments.add(new Post(post_content, picture, comment_number, praise_number, post_writer_avatar,post_writer_name, "", bar_name,post_id,post_id,post_writer_id,""));
+                    moments.add(new Post(post_content, picture, comment_number, praise_number, post_writer_avatar,post_writer_name, "", bar_name,post_id,post_id,post_writer_id));
 
                 }
             }

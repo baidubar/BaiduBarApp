@@ -24,7 +24,7 @@
                 android:textColor="#000000"
                 android:textSize="15sp"
                 android:layout_marginLeft="5dp"
-                android:text="第x楼回复" />
+                android:text="详情" />
         </LinearLayout>
     </LinearLayout>
     <TextView

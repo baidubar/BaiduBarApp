@@ -104,7 +104,6 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:background="@drawable/comment"
                 android:layout_gravity="center_vertical"/>
             <TextView
                 android:id="@+id/tv_commentNum"
@@ -112,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="666"/>
+                android:text=""/>
         </LinearLayout>
         <RelativeLayout
             android:layout_width="0dp"
@@ -129,12 +128,7 @@
                     android:layout_height="22dp"
                     android:id="@+id/btn_like"
                     android:layout_gravity="center_vertical"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/tv_likeNum"
-                    android:layout_marginLeft="3dp"
-                    android:text="22"/>
+
             </LinearLayout>
         </RelativeLayout>
 

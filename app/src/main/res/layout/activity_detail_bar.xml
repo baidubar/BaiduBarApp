@@ -28,7 +28,7 @@
                     android:layout_gravity="center_horizontal"
                     android:textColor="#000000"
                     android:textSize="20sp"
-                    android:text="Baidu"/>
+                    android:text=""/>
             </android.support.v7.widget.Toolbar>
             <View
                 android:layout_width="match_parent"

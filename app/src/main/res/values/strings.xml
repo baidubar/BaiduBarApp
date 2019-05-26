@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BaiduPostBar</string>
+    <string name="app_name">百度贴吧</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_register_email">RegisterEmail</string>
 
