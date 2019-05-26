@@ -44,7 +44,7 @@
             android:id="@+id/tv_words_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="140/140"/>
+            android:hint="0/140"/>
     </LinearLayout>
     <Button
         android:text="发表"

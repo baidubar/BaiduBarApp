@@ -65,18 +65,6 @@ public class RegisterEmail extends RootBaseActivity {
         btn_next = findViewById(R.id.btn_next);
         et_email.setFilters(new InputFilter[] {new InputFilter.LengthFilter(30)});
         et_code.setFilters(new InputFilter[] {new InputFilter.LengthFilter(10)});
-        et_email.setOnEditorActionListener(new TextView.OnEditorActionListener(){
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
-                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
-            }
-        });
-        et_code.setOnEditorActionListener(new TextView.OnEditorActionListener(){
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
-                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
-            }
-        });
         btn_getCode = findViewById(R.id.btn_getCode);
         btn_getCode.setOnClickListener(new View.OnClickListener() {
             @Override

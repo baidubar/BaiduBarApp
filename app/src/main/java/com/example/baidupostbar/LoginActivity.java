@@ -56,18 +56,6 @@ public class LoginActivity extends RootBaseActivity {
         btn_login = findViewById(R.id.btn_login);
         btn_register = findViewById(R.id.btn_register);
         remember_code = findViewById(R.id.remember_password);
-        et_account.setOnEditorActionListener(new TextView.OnEditorActionListener(){
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
-                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
-            }
-        });
-        et_password.setOnEditorActionListener(new TextView.OnEditorActionListener(){
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
-                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
-            }
-        });
 
         //SetTextWatcher();
         initData();

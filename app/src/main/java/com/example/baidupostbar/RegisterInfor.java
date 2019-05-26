@@ -63,12 +63,6 @@ public class RegisterInfor extends AppCompatActivity {
         rb_male = findViewById(R.id.rb_male);
         tv_birthDay = findViewById(R.id.tv_birthDay);
         et_signture = findViewById(R.id.et_signature);
-        et_signture.setOnEditorActionListener(new TextView.OnEditorActionListener(){
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
-                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
-            }
-        });
         setEditTextInhibitInputSpace(et_signture);
         et_signture.setFilters(new InputFilter[] {new InputFilter.LengthFilter(16)});
 

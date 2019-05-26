@@ -52,47 +52,34 @@ public class Register_user extends AppCompatActivity {
         et_account.setFilters(new InputFilter[] {new InputFilter.LengthFilter(10)});
         et_confirmPassword.setFilters(new InputFilter[] {new InputFilter.LengthFilter(16)});
         et_password.setFilters(new InputFilter[] {new InputFilter.LengthFilter(16)});
-        et_password.setOnEditorActionListener(new TextView.OnEditorActionListener(){
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
-                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
-            }
-        });
-        et_account.setOnEditorActionListener(new TextView.OnEditorActionListener(){
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
-                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
-            }
-        });
-        //setTextWatcher();
-        et_confirmPassword.setOnEditorActionListener(new TextView.OnEditorActionListener(){
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
-                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
-            }
-        });
 
+        //setTextWatcher();
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name = et_account.getText().toString();
                 String password = et_password.getText().toString();
                 String rePassword = et_confirmPassword.getText().toString();
-                if(checkName(name)){
-                    if(password.equals(rePassword)){
-                        Intent intent = new Intent();
-                        intent.setClass(Register_user.this,RegisterInfor.class);
-                        intent.putExtra("name",name);
-                        intent.putExtra("password",password);
-                        startActivity(intent);
-                        finish();
-                    }else {
-                        Toast.makeText(Register_user.this,"两次密码不一致",Toast.LENGTH_LONG).show();
-                    }
-                }else {
-                    Toast.makeText(Register_user.this,"用户名不能含有空白字符",Toast.LENGTH_LONG).show();
-                }
+                if(!name.equals("")&&!password.equals("")&&!rePassword.equals("")) {
 
+                    if (checkName(name)) {
+                        if (password.equals(rePassword)) {
+                            Intent intent = new Intent();
+                            intent.setClass(Register_user.this, RegisterInfor.class);
+                            intent.putExtra("name", name);
+                            intent.putExtra("password", password);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(Register_user.this, "两次密码不一致", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(Register_user.this, "用户名不能含有空白字符", Toast.LENGTH_LONG).show();
+                    }
+                }
+                else {
+                    Toast.makeText(Register_user.this, "请填入数据", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }

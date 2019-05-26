@@ -99,29 +99,28 @@ Button btn_ignore;
                 }
                 Log.e("labelList.size()", String.valueOf(labelList.size()));
                 if (type.equals("1")) {
+                    if(!birthday.equals("点击选择")&&birthday!=null){
+                        builder.add("birthday",birthday);
+                    }else{
+                    birthday = "2019-01-01";
+                    }
+                    if(!description.equals("")&&description!=null){
+                        builder.add("description",description);
+                    }
+                    if(!gender.equals("")&&gender!=null){
+                        builder.add("gender",gender);
+                    }
+                    else if(type.equals("2"))
                     formBody = builder
                             .add("email", email)
                             .add("username", username)
                             .add("password", password)
                             .add("email_access", email_access)
-                            .add("birthday", birthday)
-                            .add("description", description)
-                            .add("gender", gender)
                             .build();
                     HttpUtil httpUtil = new HttpUtil(RegisterInterest.this, getApplicationContext());
                     httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register", formBody, 1);
-                } else if(type.equals("2")){
-                    formBody = builder
-                            .add("email", email)
-                            .add("username", username)
-                            .add("password", password)
-                            .add("email_access", email_access)
-                            .add("birthday","2000-01-01")
-//                            .add("description", description)
-//                            .add("gender", gender)
-                            .build();
-                    HttpUtil httpUtil = new HttpUtil(RegisterInterest.this, getApplicationContext());
-                    httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register", formBody, 1);
+
+                    Log.e("Birthday",birthday);
 
                 }else if(type.equals("3")){
                     formBody = builder
@@ -139,28 +138,34 @@ Button btn_ignore;
         btn_ignore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(type.equals("1")){
-                    formBody = new FormBody.Builder()
-                            .add("email",email)
-                            .add("username",username)
-                            .add("password",password)
-                            .add("email_access",email_access)
-                            .add("birthday",birthday)
-                            .add("description",description)
-                            .add("gender",gender)
+                if(type.equals("1")) {
+                    FormBody.Builder builder = new FormBody.Builder();
+                    if (!birthday.equals("点击选择") && birthday != null) {
+                        builder.add("birthday", birthday);
+                    } else {
+                        birthday = "2019-01-01";
+                    }
+                    if (!description.equals("") && description != null) {
+                        builder.add("description", description);
+                    }
+                    if (!gender.equals("") && gender != null) {
+                        builder.add("gender", gender);
+                    }
+                    formBody = builder
+                            .add("email", email)
+                            .add("username", username)
+                            .add("password", password)
+                            .add("email_access", email_access)
                             .build();
-                    HttpUtil httpUtil = new HttpUtil(RegisterInterest.this,getApplicationContext());
-                    httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register",formBody,1);
-                    doHandler();
-                }else if(type.equals("2")){
-                    formBody = new FormBody.Builder()
-                            .add("email",email)
-                            .add("username",username)
-                            .add("password",password)
-                            .add("email_access",email_access)
-                            .add("birthday","2000-01-01")
-//                            .add("gender",gender)
-                            .build();
+                }
+                else if(type.equals("2")){
+                    FormBody.Builder builder = new FormBody.Builder();
+                    formBody = builder
+                                .add("email", email)
+                                .add("username", username)
+                                .add("password", password)
+                                .add("email_access", email_access)
+                                .build();
                     HttpUtil httpUtil = new HttpUtil(RegisterInterest.this,getApplicationContext());
                     httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register",formBody,1);
                     doHandler();
