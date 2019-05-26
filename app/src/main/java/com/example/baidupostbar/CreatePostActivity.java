@@ -71,7 +71,6 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_post);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//左侧添加一个默认的返回图标
@@ -88,8 +87,6 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
 
         Intent intent = getIntent();
         bar_id = intent.getStringExtra("bar_id");
-
-
         mContentEt = findViewById(R.id.et_moment_add_content);
         mPhotosSnpl = findViewById(R.id.snpl_moment_add_photos);
         mPhotosSnpl.setMaxItemCount(9);

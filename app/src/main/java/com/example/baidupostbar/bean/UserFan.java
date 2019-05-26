@@ -2,7 +2,7 @@ package com.example.baidupostbar.bean;
 
 public class UserFan {
     private int follower_id;
-    private String follower_avater;
+    private String follower_avatar;
     private  String follower_name;
     private boolean concern_status;
 
@@ -15,11 +15,11 @@ public class UserFan {
     }
 
     public String getFollower_avater() {
-        return follower_avater;
+        return follower_avatar;
     }
 
-    public void setFollower_avater(String follower_avater) {
-        this.follower_avater = follower_avater;
+    public void setFollower_avater(String follower_avatar) {
+        this.follower_avatar = follower_avatar;
     }
 
     public String getFollower_name() {

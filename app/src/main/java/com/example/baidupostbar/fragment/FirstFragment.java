@@ -27,6 +27,7 @@ import com.example.baidupostbar.R;
 import com.example.baidupostbar.Utils.CheckNetUtil;
 import com.example.baidupostbar.bean.BooleanPraise;
 import com.example.baidupostbar.bean.Post;
+import com.example.baidupostbar.bean.PostDetail;
 import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
 import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 
@@ -71,8 +72,9 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     private List<Post> moments = new ArrayList<>();
     private int lastId=0;
     private String userId;
-    private ArrayList<BooleanPraise>mDataList = new ArrayList<>();
     private boolean Realpraise;
+    private ArrayList<BooleanPraise>mDataList = new ArrayList<>();
+    private boolean praisePrasie;
 
     private BGANinePhotoLayout mCurrentClickNpl;
     PullToRefreshLayout pullToRefreshLayout;
@@ -88,6 +90,10 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("theUser", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getString("user_id", "");
+
         mMomentRv = view.findViewById(R.id.first_recyclerView);
         pullToRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.activity_main);
         pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
@@ -104,6 +110,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                     public void run() {
                         Toast.makeText(getContext(),"刷新成功",Toast.LENGTH_LONG).show();
                         // 结束刷新
+                        mDataList = new ArrayList<>();
                         pullToRefreshLayout.finishRefresh();
                     }
                 }, 1000);
@@ -128,9 +135,6 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
         });
 
 
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("theUser", Context.MODE_PRIVATE);
-        userId = sharedPreferences.getString("user_id", "");
-
         postAdapter = new PostAdapter(mMomentRv,getContext());
         postAdapter.setOnRVItemClickListener(this);
         postAdapter.setOnRVItemLongClickListener(this);
@@ -139,16 +143,9 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
         mMomentRv.setLayoutManager(new LinearLayoutManager(getContext()));
         mMomentRv.setAdapter(postAdapter);
 
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         url = "http://139.199.84.147/mytieba.api/posts";
 
         if (new CheckNetUtil(getContext()).initNet()) {
-            mDataList = new ArrayList<>();
             moments = new ArrayList<>();
             initData(url);
         }
@@ -174,24 +171,25 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                 String writer_name = jsonObject1.getString("writer_name");
                 String writer_avatar = jsonObject1.getString("writer_avatar");
                 boolean praise_status = jsonObject1.getBoolean("praise_status");
+
+                BooleanPraise booleanPraise = new BooleanPraise();
+                booleanPraise.setPraise_status(praise_status);
+                mDataList.add(booleanPraise);
+
                 picture = new ArrayList<>();
                 for (int j = 0;j < jsonArray1.length();j++){
                     String pic = "http://139.199.84.147/" + jsonArray1.get(j);
                     picture.add(pic);
                 }
 
-
-                BooleanPraise booleanPraise = new BooleanPraise();
-                booleanPraise.setPraise_status(praise_status);
-                mDataList.add(booleanPraise);
-
+                String praise = String.valueOf(praise_status);
                 String post_content = jsonObject1.getString("post_content");
                 String comment_number = jsonObject1.getString("comment_number");
                 String praise_number = jsonObject1.getString("praise_number");
                 String barId = jsonObject1.getString("bar_id");
                 String barName = jsonObject1.getString("bar_name");
                 String bar_tags = jsonObject1.getString("bar_tags");
-                moments.add(new Post(post_content,picture,comment_number,praise_number,writer_avatar,writer_name,bar_tags,barName,barId,postId,writer_id));
+                moments.add(new Post(post_content,picture,comment_number,praise_number,writer_avatar,writer_name,bar_tags,barName,barId,postId,writer_id,praise));
 
             }
         } catch (JSONException e){
@@ -312,9 +310,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                 helper.setText(R.id.tv_bar,moment.barName);
                 helper.setText(R.id.tv_author,moment.writterName);
             }
-            BooleanPraise booleanPraise = mDataList.get(position);
-            boolean praisePrasie = booleanPraise.getPraise_status();
-            if(praisePrasie){
+            if(moment.praise_status.equals("true")){
                 helper.setImageResource(R.id.btn_like,R.drawable.like_fill);
             }else {
                 helper.setImageResource(R.id.btn_like,R.drawable.like);
@@ -338,16 +334,13 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
             helper.getView(R.id.btn_like).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    BooleanPraise booleanPraise = mDataList.get(position);
-                    boolean praisePrasie = booleanPraise.getPraise_status();
-                    Log.e("FirstFragment","praisePrasie"+ praisePrasie);
-                    if(praisePrasie){
+                    if(moment.praise_status.equals("true")){
                         if (new CheckNetUtil(getContext()).initNet()) {
                             //如果是已点赞状态
                             //********************************
                             //此处有个bug
                             //********************************
-                            deletePraise(moment.postId,position);
+                            deletePraise(moment.postId,moment);
                             helper.setImageResource(R.id.btn_like,R.drawable.like);
                             int likeNum = Integer.parseInt(moment.praise_number);
                             String lN = String.valueOf(likeNum);
@@ -356,7 +349,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                     }else {
                         if (new CheckNetUtil(getContext()).initNet()) {
                             //如果是已点赞状态
-                            postPraise(moment.postId,position);
+                            postPraise(moment.postId,moment);
                             helper.setImageResource(R.id.btn_like,R.drawable.like_fill);
                             int likeNum = Integer.parseInt(moment.praise_number) + 1;
                             String lN = String.valueOf(likeNum);
@@ -413,7 +406,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                     Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
                 }
     }
-    private void deletePraise(String postId,int position){
+    private void deletePraise(String postId,Post moment){
         try {
             SharedPreferences sharedPreferences = getContext().getSharedPreferences("theUser", Context.MODE_PRIVATE);
             String cookie = sharedPreferences.getString("cookie", "");
@@ -421,6 +414,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                     .add("post_id",postId)
                     .add("user_id",userId)
                     .build();
+            Log.e("DeletePost_id",postId+"|"+userId);
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .retryOnConnectionFailure(true)
                     .connectTimeout(10, TimeUnit.SECONDS)
@@ -430,7 +424,6 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
             Request request = new Request.Builder()
                     .url("http://139.199.84.147/mytieba.api/praise")
                     .delete(formBody)
-                    .addHeader("Connection", "close")
                     .addHeader("Cookie",cookie)
                     .build();
             okHttpClient.newCall(request).enqueue(new Callback() {
@@ -440,6 +433,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+
                             Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
                         }
                     });
@@ -457,8 +451,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                                     @Override
                                     public void run() {
                                         if(status) {
-                                            BooleanPraise booleanPraise = mDataList.get(position);
-                                            booleanPraise.setPraise_status(false);
+                                            moment.setPraise_status("false");
                                             Log.e("DeletePraise",responseData);
                                             Toast.makeText(getContext(), "取消点赞成功", Toast.LENGTH_LONG).show();
                                         }else {
@@ -485,7 +478,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
             Toast.makeText(getContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
     }
-    private void postPraise(String postId,int position){
+    private void postPraise(String postId,Post moment){
         try {
             SharedPreferences sharedPreferences = getContext().getSharedPreferences("theUser", Context.MODE_PRIVATE);
             String cookie = sharedPreferences.getString("cookie", "");
@@ -493,6 +486,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                     .add("post_id",postId)
                     .add("user_id",userId)
                     .build();
+            Log.e("PostPost_id",postId+"|"+ userId);
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .retryOnConnectionFailure(true)
                     .connectTimeout(10, TimeUnit.SECONDS)
@@ -502,7 +496,6 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
             Request request = new Request.Builder()
                     .url("http://139.199.84.147/mytieba.api/praise")
                     .delete(formBody)
-                    .addHeader("Connection", "close")
                     .addHeader("Cookie",cookie)
                     .build();
             okHttpClient.newCall(request).enqueue(new Callback() {
@@ -520,7 +513,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                 @Override
                 public void onResponse(okhttp3.Call call, Response response) throws IOException {
                     responseData = response.body().string();
-                    Log.e("HttpUtilsDelete",responseData);
+                    Log.e("PostPraise",responseData);
                     if (response.isSuccessful()) {
                         try {
                             JSONObject jsonObject = new JSONObject(responseData);
@@ -529,10 +522,9 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                                 @Override
                                 public void run() {
                                     if(status) {
-                                        BooleanPraise booleanPraise = mDataList.get(position);
-                                        booleanPraise.setPraise_status(true);
+                                        moment.setPraise_status("false");
                                         Toast.makeText(getContext(), "点赞成功", Toast.LENGTH_LONG).show();
-                                        Log.e("DeletePraise",responseData);
+                                        Log.e("PostPraise",responseData);
                                     }else {
                                         Toast.makeText(getContext(), "请求失败", Toast.LENGTH_LONG).show();
                                     }

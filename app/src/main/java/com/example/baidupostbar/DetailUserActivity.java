@@ -95,7 +95,7 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
     private ArrayList<String> TitleList = new ArrayList<>();  //页卡标题集合
     private ArrayList<Fragment> ViewList = new ArrayList<>();   //页卡视图集合
     private Fragment userBarFragment, userPostFragment, userInforFragment;
-    private ArrayList<String>label;
+    private ArrayList<String> label;
     //以下有关修改头像及头像裁剪
     private static final int REQUEST_CODE_PERMISSION_CHOOSE_PHOTO = 1;
     private static final int REQUEST_CODE_PERMISSION_TAKE_PHOTO = 2;
@@ -120,14 +120,14 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
 
 
     private String avatar;
-    private String username ;
-    private String gender ;
-    private String description ;
-    private String follower_number ;
-    private String collection_number ;
-    private String concern_number ;
-    private String watched_bar_number ;
-    private String background_pic ;
+    private String username;
+    private String gender;
+    private String description;
+    private String follower_number;
+    private String collection_number;
+    private String concern_number;
+    private String watched_bar_number;
+    private String background_pic;
     private String user_id;
 
 
@@ -141,8 +141,8 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
         processLogic(savedInstanceState);
         SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
         cookie = sharedPreferences.getString("cookie", "");
-        userId = sharedPreferences.getString("user_id","");
-        GetUrl = "http://139.199.84.147/mytieba.api/user/"+ userId + "/info";
+        userId = sharedPreferences.getString("user_id", "");
+        GetUrl = "http://139.199.84.147/mytieba.api/user/" + userId + "/info";
         GetUserInformation();
 
     }
@@ -373,9 +373,9 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
                 }
             } else if (requestCode == REQUEST_CODE_CROP) {
                 //mPhotoHelper.getCropFilePath()获取当前图片的路径
-                if(type.equals("avatar")) {
+                if (type.equals("avatar")) {
                     BGAImage.display(iv_head, R.mipmap.bga_pp_ic_holder_light, mPhotoHelper.getCropFilePath(), BGABaseAdapterUtil.dp2px(200));
-                }else if (type.equals("background")){
+                } else if (type.equals("background")) {
                     BGAImage.display(iv_parallax, R.mipmap.bga_pp_ic_holder_light, mPhotoHelper.getCropFilePath(), BGABaseAdapterUtil.dp2px(200));
                 }
                 CheckNetUtil checkNetUtil = new CheckNetUtil(getApplicationContext());
@@ -391,22 +391,22 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
         }
     }
 
-        @Override
-        public void onRequestPermissionsResult ( int requestCode, @NonNull String[] permissions,
-        @NonNull int[] grantResults){
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-            EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-        }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
 
-        @Override
-        public void onPermissionsGranted ( int requestCode, List<String > perms){
-        }
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+    }
 
-        @Override
-        public void onPermissionsDenied ( int requestCode, List<String > perms){
-        }
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+    }
 
-//    private File convertBitmapToFile(Bitmap bitmap) {
+    //    private File convertBitmapToFile(Bitmap bitmap) {
 //        try {
 //            // create a file to write bitmap data
 //            postFile = new File(this.getCacheDir(), "output_image.jpg");
@@ -439,96 +439,97 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
         // 在低版本中用一行的字节x高度
         return bitmap.getRowBytes() * bitmap.getHeight();                //earlier version
     }
+
     private void postImage(String filePath) {
-        Log.e("DetailUserActivity",filePath);
+        Log.e("DetailUserActivity", filePath);
 //        if (imagePath != null) {
 //            //这里可以上服务器;
-            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .retryOnConnectionFailure(true)
-                    .connectTimeout(20, TimeUnit.SECONDS)
-                    .writeTimeout(20, TimeUnit.SECONDS)
-                    .readTimeout(20, TimeUnit.SECONDS)
-                    .build();
-            File file = new File(filePath);
-            //File file = convertBitmapToFile(bitmap);
-            Log.e("PCActivity", "ok1");
-            //RequestBody image = RequestBody.create(MediaType.parse("image/png"), convertBitmapToFile(bitmap));
-            RequestBody image = RequestBody.create(MediaType.parse("image/png"),file );
-            Log.e("DetailFileName",file.getName());
-            Log.e("DetailFilePath",file.getPath());
-            RequestBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    // .addFormDataPart("headImage", imagePath, image)
-                    .addFormDataPart("pic", file.getName() , image)
-                    .addFormDataPart("type",type)
-                    .addFormDataPart("user_id",userId)
-                    .build();
-            Log.e("PCActivity", "为啥传不上去"+ image + "type:"+type + "userId:"+ userId);
-            final Request request = new Request.Builder()
-                    .url("http://139.199.84.147/mytieba.api/upload/photo")
-                    .addHeader("Cookie",cookie)
-                    .post(requestBody)
-                    .build();
-            Log.e("PCActivity", "ok2");
-            okHttpClient.newCall(request).enqueue(new Callback() {
-                //请求错误回调方法
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Log.e("DetailUserActivity", "获取数据失败");
-                    Log.e("DetailUserActivity", String.valueOf(e));
-                }
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    String responseData = response.body().string();
-                    Log.e("DetailresponseData", responseData);
-                    if (response.isSuccessful()) {
-                        try {
-                            Log.e("DetailUserActivity", "ok3");
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .retryOnConnectionFailure(true)
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .build();
+        File file = new File(filePath);
+        //File file = convertBitmapToFile(bitmap);
+        Log.e("PCActivity", "ok1");
+        //RequestBody image = RequestBody.create(MediaType.parse("image/png"), convertBitmapToFile(bitmap));
+        RequestBody image = RequestBody.create(MediaType.parse("image/png"), file);
+        Log.e("DetailFileName", file.getName());
+        Log.e("DetailFilePath", file.getPath());
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                // .addFormDataPart("headImage", imagePath, image)
+                .addFormDataPart("pic", file.getName(), image)
+                .addFormDataPart("type", type)
+                .addFormDataPart("user_id", userId)
+                .build();
+        Log.e("PCActivity", "为啥传不上去" + image + "type:" + type + "userId:" + userId);
+        final Request request = new Request.Builder()
+                .url("http://139.199.84.147/mytieba.api/upload/photo")
+                .addHeader("Cookie", cookie)
+                .post(requestBody)
+                .build();
+        Log.e("PCActivity", "ok2");
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            //请求错误回调方法
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("DetailUserActivity", "获取数据失败");
+                Log.e("DetailUserActivity", String.valueOf(e));
+            }
 
-                            Log.e("DetailUserActivity", "ResponseData" + responseData);
-                            JSONObject jsonObject = new JSONObject(responseData);
-                            statu = jsonObject.getBoolean("status");
-                            if(statu) {
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseData = response.body().string();
+                Log.e("DetailresponseData", responseData);
+                if (response.isSuccessful()) {
+                    try {
+                        Log.e("DetailUserActivity", "ok3");
 
-                                String pic = "http://139.199.84.147" + jsonObject.getString("pic");
-                                SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                if(type.equals("avatar")){
-                                    editor.putString("avater", pic);
-                                    editor.apply();
-                                }else {
-                                    editor.putString("background", pic);
-                                    editor.apply();
-                                }
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getApplicationContext(),"成功",Toast.LENGTH_LONG).show();
-                                    }
-                                });
-                            }else {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getApplicationContext(),"发送失败",Toast.LENGTH_LONG).show();
-                                    }
-                                });
+                        Log.e("DetailUserActivity", "ResponseData" + responseData);
+                        JSONObject jsonObject = new JSONObject(responseData);
+                        statu = jsonObject.getBoolean("status");
+                        if (statu) {
+
+                            String pic = "http://139.199.84.147" + jsonObject.getString("pic");
+                            SharedPreferences sharedPreferences = getSharedPreferences("theUser", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            if (type.equals("avatar")) {
+                                editor.putString("avater", pic);
+                                editor.apply();
+                            } else {
+                                editor.putString("background", pic);
+                                editor.apply();
                             }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Log.e("DetailUserActivity", response.body().string());
-                            Log.e("DetailUserActivity", String.valueOf(e));
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "成功", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), "发送失败", Toast.LENGTH_LONG).show();
+                                }
+                            });
                         }
 
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.e("DetailUserActivity", response.body().string());
+                        Log.e("DetailUserActivity", String.valueOf(e));
                     }
+
                 }
-            });
+            }
+        });
     }
 
-    private void GetUserInformation(){
+    private void GetUserInformation() {
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)
@@ -539,7 +540,7 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
 
         Request request = new Request.Builder()
                 .url(GetUrl)
-                .addHeader("Cookie",cookie)
+                .addHeader("Cookie", cookie)
                 .build();
         Log.e("PCActivity", "ok2");
         okHttpClient.newCall(request).enqueue(new Callback() {
@@ -561,7 +562,8 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
         });
 
     }
-    private void prasedWithjsonData(String JsonData){
+
+    private void prasedWithjsonData(String JsonData) {
         try {
             JSONObject jsonObject = new JSONObject(JsonData);
 //            boolean state = jsonObject.getBoolean("status");
@@ -569,7 +571,7 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
             String user_id = jsonObject.getString("user_id");
             username = jsonObject.getString("username");
             gender = jsonObject.getString("gender");
-            Log.e("DetailUser + gender1",gender);
+            Log.e("DetailUser + gender1", gender);
             description = jsonObject.getString("description");
             birthday = jsonObject.getString("birthday");
             avatar = jsonObject.getString("avatar");
@@ -591,7 +593,7 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
             editor.putString("avater", avatar);
             editor.putString("username", username);
             editor.apply();
-        //}
+            //}
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -602,24 +604,57 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
             }
         });
     }
-    private void initData(){
-        Glide.with(getApplicationContext()).load("http://139.199.84.147"+ avatar).into(iv_head);
-        Glide.with(getApplicationContext()).load("http://139.199.84.147"+ background_pic).into(iv_parallax);
+
+    private void initData() {
+        Glide.with(getApplicationContext()).load("http://139.199.84.147" + avatar).into(iv_head);
+        Glide.with(getApplicationContext()).load("http://139.199.84.147" + background_pic).into(iv_parallax);
         nickname.setText(username);
-        String atten = "关注 "+ concern_number + " | " + "粉丝 " + follower_number;
+        String atten = "关注 " + concern_number + " | " + "粉丝 " + follower_number;
         attention.setText(atten);
-        info.setText("简介："+description);
+        info.setText("简介：" + description);
     }
 
-    public String getGender(){
-        Log.e("DetailUser + gender2",gender);
+    public String getGender() {
+        Log.e("DetailUser + gender2", gender);
         return gender;
     }
-    public String getBirthday(){
-        return  birthday;
+
+    public String getBirthday() {
+        return birthday;
     }
-    public String getLabel(){
+
+    public String getLabel() {
         return interests;
     }
-    public String getUserId(){return userId;}
+
+    public String getUserId() {
+        return userId;
     }
+
+    private File convertBitmapToFile(Bitmap bitmap) {
+        try {
+            // create a file to write bitmap data
+            postFile = new File(this.getCacheDir(), "output_image.jpg");
+            postFile.createNewFile();
+            // convert bitmap to byte array
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            int num = getBitmapSize(bitmap);
+            if (num >= 20000000 && num <= 40000000) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 5, bos);
+            } else if (num < 20000000) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            } else if (num > 40000000) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 1, bos);
+            }
+            byte[] bitmapdata = bos.toByteArray();
+            // write the bytes in file
+            FileOutputStream fos = new FileOutputStream(postFile);
+            fos.write(bitmapdata);
+            fos.flush();
+            fos.close();
+        } catch (Exception e) {
+
+        }
+        return postFile;
+    }
+}

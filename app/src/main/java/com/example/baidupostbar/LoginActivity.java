@@ -215,6 +215,7 @@ public class LoginActivity extends RootBaseActivity {
             remember_code .setChecked(true);
             et_account.setText(account);
             et_password.setText(password);
+            remember = true;
         }
 
     }

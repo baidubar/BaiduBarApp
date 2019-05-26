@@ -75,6 +75,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
     private  List<Post> moments;
     private String userId;
     boolean watching_status;
+    private String barId;
 
     private BGANinePhotoLayout mCurrentClickNpl;
     private TextView btn_follow;
@@ -101,19 +102,15 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
         userId = sharedPreferences.getString("user_id", "");
 
         Intent intent = getIntent();
-        String type = intent.getStringExtra("type");
-        String barId = intent.getStringExtra("barId");
+        type = intent.getStringExtra("type");
+        barId = intent.getStringExtra("barId");
         barLabel = intent.getStringExtra("barLabel");
         Log.e("DetailBarActivity", "barId" + barId);
 
-
-        if(new CheckNetUtil(getApplicationContext()).initNet()) {
-            HttpUtil httpUtil = new HttpUtil(DetailBarActivity.this, getApplicationContext());
-            httpUtil.GetUtilWithCookie("http://139.199.84.147/mytieba.api/postbar?bar_id=" + barId, 1);
-            Log.e("DetailBArActivity", "bae_Id" + barId);
-            doHandler();
-        }
-
+        HttpUtil httpUtil = new HttpUtil(DetailBarActivity.this, getApplicationContext());
+        httpUtil.GetUtilWithCookie("http://139.199.84.147/mytieba.api/postbar?bar_id=" + barId, 2);
+        Log.e("DetailBArActivity", "bae_Id" + barId);
+        doHandler();
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -141,6 +138,20 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
 //        initAdapter();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
+    }
+
+    private void initData(){
+        if(new CheckNetUtil(getApplicationContext()).initNet()) {
+            HttpUtil httpUtil = new HttpUtil(DetailBarActivity.this, getApplicationContext());
+            httpUtil.GetUtilWithCookie("http://139.199.84.147/mytieba.api/postbar?bar_id=" + barId, 1);
+            Log.e("DetailBArActivity", "bae_Id" + barId);
+            doHandler();
+        }
+    }
     private void addNetImageTestData(String JsonData) {
         Log.e("DetailBarActivity",JsonData);
         moments = new ArrayList<>();
@@ -156,7 +167,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
                 String watcher_number = jsonObject.getString("watcher_number");
                 String description = jsonObject.getString("description");
                // postAdapter.addHeaderView();
-                addBannerHeader("http://139.199.84.147" + icon,name,watcher_number,post_number  );
+               // addBannerHeader("http://139.199.84.147" + icon,name,watcher_number,post_number  );
                 boolean watching_status = jsonObject.getBoolean("watching_status");
                 Log.e("watching_status", String.valueOf(watching_status));
                     JSONArray jsonArray = jsonObject.getJSONArray("post_info");
@@ -177,7 +188,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
                         String comment_number = jsonObject1.getString("comment_number");
                         String praise_number = jsonObject1.getString("praise_number");
                         String time = jsonObject1.getString("time");
-                        moments.add(new Post(post_content, picture,comment_number,praise_number,writer_avatar,writer_name,"#"+barLabel,name,bar_id,postId ,writer_id));
+                        moments.add(new Post(post_content, picture,comment_number,praise_number,writer_avatar,writer_name,"#"+barLabel,name,bar_id,postId ,writer_id,""));
                         postAdapter.setData(moments);
 
                 }
@@ -190,6 +201,55 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
             e.printStackTrace();
         }
 
+    }
+    private void addNetImageTestData2(String JsonData) {
+        Log.e("DetailBarActivity",JsonData);
+        moments = new ArrayList<>();
+        mDataList = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(JsonData);
+            boolean status = jsonObject.getBoolean("status");
+            if(status){
+                bar_id =jsonObject.getString("bar_id");
+                String name = jsonObject.getString("name");
+                String icon = jsonObject.getString("icon");
+                String post_number = jsonObject.getString("post_number");
+                String watcher_number = jsonObject.getString("watcher_number");
+                String description = jsonObject.getString("description");
+                // postAdapter.addHeaderView();
+                addBannerHeader("http://139.199.84.147" + icon,name,watcher_number,post_number  );
+                boolean watching_status = jsonObject.getBoolean("watching_status");
+                Log.e("watching_status", String.valueOf(watching_status));
+                JSONArray jsonArray = jsonObject.getJSONArray("post_info");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                    String writer_id = jsonObject1.getString("writer_id");
+                    postId = jsonObject1.getString("post_id");
+                    String writer_avatar = jsonObject1.getString("writer_avatar");
+                    String writer_name = jsonObject1.getString("writer_name");
+                    String post_content = jsonObject1.getString("post_content");
+                    JSONArray jsonArray1 = jsonObject1.getJSONArray("post_pic");
+                    picture = new ArrayList<>();
+                    for (int j = 0; j < jsonArray1.length(); j++) {
+                        String Picture = "http://139.199.84.147/" + jsonArray1.get(j);
+                        picture.add(Picture);
+                        Log.e("DeatailBarActivity","Picture + " + Picture);
+                    }
+                    String comment_number = jsonObject1.getString("comment_number");
+                    String praise_number = jsonObject1.getString("praise_number");
+                    String time = jsonObject1.getString("time");
+                    moments.add(new Post(post_content, picture,comment_number,praise_number,writer_avatar,writer_name,"#"+barLabel,name,bar_id,postId ,writer_id,""));
+                    postAdapter.setData(moments);
+
+                }
+
+
+            }else {
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -357,6 +417,9 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
                         break;
                     case 1:
                         addNetImageTestData(String.valueOf(msg.obj));
+                        break;
+                    case 2:
+                        addNetImageTestData2(String.valueOf(msg.obj));
                         break;
                     default:
                         break;
