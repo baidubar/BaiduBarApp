@@ -79,7 +79,7 @@ public class HttpUtil {
                             Log.e("posr", responseData);
                             ctx.viewHandler.obtainMessage(type, "网络请求失败！").sendToTarget();
                         }
-                        ctx.viewHandler.obtainMessage(0, "服务器请求失败！").sendToTarget();
+                        ctx.viewHandler.obtainMessage(0, "请求失败！").sendToTarget();
                     }
 
                 });
@@ -154,7 +154,7 @@ public class HttpUtil {
                         if (response.isSuccessful()) {
                             ctx.viewHandler.obtainMessage(type, responseData).sendToTarget();
                         }else {
-                            ctx.viewHandler.obtainMessage(0, "服务器请求失败！").sendToTarget();
+                            ctx.viewHandler.obtainMessage(0, "请求失败！").sendToTarget();
                         }
                     }
                 });
@@ -225,7 +225,7 @@ public class HttpUtil {
                         if (response.isSuccessful()) {
                             ctx.viewHandler.obtainMessage(type, responseData).sendToTarget();
                         } else {
-                            ctx.viewHandler.obtainMessage(0, "服务器请求失败！").sendToTarget();
+                            ctx.viewHandler.obtainMessage(0, "请求失败！").sendToTarget();
                         }
                     }
 
@@ -265,7 +265,7 @@ public class HttpUtil {
                             ctx.viewHandler.obtainMessage(type, responseData).sendToTarget();
                             Log.e("GetUtils",responseData);
                         }else {
-                            ctx.viewHandler.obtainMessage(0, "服务器请求失败！").sendToTarget();
+                            ctx.viewHandler.obtainMessage(0, "请求失败！").sendToTarget();
                         }
                     }
                 });
@@ -339,7 +339,7 @@ public class HttpUtil {
                         if (response.isSuccessful()) {
                             ctx.viewHandler.obtainMessage(type, responseData).sendToTarget();
                         }else {
-                            ctx.viewHandler.obtainMessage(0, "服务器请求失败！").sendToTarget();
+                            ctx.viewHandler.obtainMessage(0, "请求失败！").sendToTarget();
                         }
                     }
                 });

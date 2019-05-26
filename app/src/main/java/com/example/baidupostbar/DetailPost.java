@@ -70,7 +70,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
     private String url;
     private int page = 1;
     private BaseQuickAdapter postDetailAdapter;
-
+    boolean Flag = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,9 +85,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             public void refresh() {
                 mDataList.clear();
                 //sendRequestWithOkHttp();//请求数据，不用带lastId
-                if (new CheckNetUtil(getApplicationContext()).initNet()) {
-                    initData();
-                }
+                initData();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -181,13 +179,9 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
     @Override
     protected void onResume() {
         super.onResume();
-        //if (mDataList!= null){
             mDataList.clear();
-        //}
-
-        if (new CheckNetUtil(getApplicationContext()).initNet()) {
             initData();
-        }
+
 
     }
 
@@ -355,6 +349,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             }
         });
         mRecyclerView.setAdapter(postDetailAdapter);
+
     }
 
     //获取第一楼及数据
@@ -498,6 +493,8 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
     }
     //以下为对获取json数据解析
     private void prasedWithJosnData1(String JsonData) {
+        mDataList.clear();
+
         mDataList = new ArrayList<>();
         Log.e("DetailPost1",JsonData);
         try {
@@ -582,7 +579,10 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        postDetailAdapter.addData(mDataList);
+        if(!Flag) {
+            postDetailAdapter.addData(mDataList);
+        }
+        Flag = true;
     }
     private void prasedWithJsonData3(String JosnData){
         Log.e("DetailPost","3:"+JosnData);
