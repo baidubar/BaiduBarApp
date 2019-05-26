@@ -27,6 +27,7 @@ import com.example.baidupostbar.R;
 import com.example.baidupostbar.Utils.CheckNetUtil;
 import com.example.baidupostbar.bean.BooleanPraise;
 import com.example.baidupostbar.bean.Post;
+import com.example.baidupostbar.bean.PostDetail;
 import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
 import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 
@@ -71,8 +72,9 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     private List<Post> moments = new ArrayList<>();
     private int lastId=0;
     private String userId;
-    private ArrayList<BooleanPraise>mDataList = new ArrayList<>();
     private boolean Realpraise;
+    private ArrayList<BooleanPraise>mDataList = new ArrayList<>();
+    private boolean praisePrasie;
 
     private BGANinePhotoLayout mCurrentClickNpl;
     PullToRefreshLayout pullToRefreshLayout;
@@ -104,6 +106,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                     public void run() {
                         Toast.makeText(getContext(),"刷新成功",Toast.LENGTH_LONG).show();
                         // 结束刷新
+                        mDataList = new ArrayList<>();
                         pullToRefreshLayout.finishRefresh();
                     }
                 }, 1000);
@@ -148,7 +151,6 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
         url = "http://139.199.84.147/mytieba.api/posts";
 
         if (new CheckNetUtil(getContext()).initNet()) {
-            mDataList = new ArrayList<>();
             moments = new ArrayList<>();
             initData(url);
         }
@@ -174,16 +176,16 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                 String writer_name = jsonObject1.getString("writer_name");
                 String writer_avatar = jsonObject1.getString("writer_avatar");
                 boolean praise_status = jsonObject1.getBoolean("praise_status");
+
+                BooleanPraise booleanPraise = new BooleanPraise();
+                booleanPraise.setPraise_status(praise_status);
+                mDataList.add(booleanPraise);
+
                 picture = new ArrayList<>();
                 for (int j = 0;j < jsonArray1.length();j++){
                     String pic = "http://139.199.84.147/" + jsonArray1.get(j);
                     picture.add(pic);
                 }
-
-
-                BooleanPraise booleanPraise = new BooleanPraise();
-                booleanPraise.setPraise_status(praise_status);
-                mDataList.add(booleanPraise);
 
                 String post_content = jsonObject1.getString("post_content");
                 String comment_number = jsonObject1.getString("comment_number");
@@ -313,7 +315,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                 helper.setText(R.id.tv_author,moment.writterName);
             }
             BooleanPraise booleanPraise = mDataList.get(position);
-            boolean praisePrasie = booleanPraise.getPraise_status();
+            praisePrasie = booleanPraise.getPraise_status();
             if(praisePrasie){
                 helper.setImageResource(R.id.btn_like,R.drawable.like_fill);
             }else {
@@ -338,9 +340,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
             helper.getView(R.id.btn_like).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    BooleanPraise booleanPraise = mDataList.get(position);
-                    boolean praisePrasie = booleanPraise.getPraise_status();
-                    Log.e("FirstFragment","praisePrasie"+ praisePrasie);
+
                     if(praisePrasie){
                         if (new CheckNetUtil(getContext()).initNet()) {
                             //如果是已点赞状态
@@ -440,6 +440,9 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            BooleanPraise booleanPraise = new BooleanPraise();
+                            booleanPraise.setPraise_status(false);
+                            mDataList.set(position,booleanPraise);
                             Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
                         }
                     });
@@ -457,8 +460,9 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                                     @Override
                                     public void run() {
                                         if(status) {
-                                            BooleanPraise booleanPraise = mDataList.get(position);
-                                            booleanPraise.setPraise_status(false);
+                                            BooleanPraise booleanPraise = new BooleanPraise();
+                                            booleanPraise.setPraise_status(true);
+                                            mDataList.set(position,booleanPraise);
                                             Log.e("DeletePraise",responseData);
                                             Toast.makeText(getContext(), "取消点赞成功", Toast.LENGTH_LONG).show();
                                         }else {
@@ -520,7 +524,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                 @Override
                 public void onResponse(okhttp3.Call call, Response response) throws IOException {
                     responseData = response.body().string();
-                    Log.e("HttpUtilsDelete",responseData);
+                    Log.e("PostPraise",responseData);
                     if (response.isSuccessful()) {
                         try {
                             JSONObject jsonObject = new JSONObject(responseData);
@@ -529,8 +533,6 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                                 @Override
                                 public void run() {
                                     if(status) {
-                                        BooleanPraise booleanPraise = mDataList.get(position);
-                                        booleanPraise.setPraise_status(true);
                                         Toast.makeText(getContext(), "点赞成功", Toast.LENGTH_LONG).show();
                                         Log.e("DeletePraise",responseData);
                                     }else {

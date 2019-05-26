@@ -20,6 +20,14 @@ public class Post implements Parcelable {
     private boolean praise_status;
 
 
+    public boolean getPraise_status(){
+        return praise_status;
+    }
+
+    public void setPraise_status(boolean praise_status){
+        this.praise_status = praise_status;
+    }
+
     public String getWriter_id(){
         return writer_id;
     }
