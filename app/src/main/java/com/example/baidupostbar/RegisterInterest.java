@@ -116,6 +116,8 @@ Button btn_ignore;
                             .add("password", password)
                             .add("email_access", email_access)
                             .build();
+                    HttpUtil httpUtil = new HttpUtil(RegisterInterest.this, getApplicationContext());
+                    httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register", formBody, 1);
                 }
                     else if (type.equals("2")) {
                         formBody = builder
