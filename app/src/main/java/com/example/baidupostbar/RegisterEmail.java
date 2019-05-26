@@ -17,11 +17,13 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.baidupostbar.Utils.HttpUtil;
@@ -63,6 +65,18 @@ public class RegisterEmail extends RootBaseActivity {
         btn_next = findViewById(R.id.btn_next);
         et_email.setFilters(new InputFilter[] {new InputFilter.LengthFilter(30)});
         et_code.setFilters(new InputFilter[] {new InputFilter.LengthFilter(10)});
+        et_email.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
+                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
+            }
+        });
+        et_code.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
+                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
+            }
+        });
         btn_getCode = findViewById(R.id.btn_getCode);
         btn_getCode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,31 +91,31 @@ public class RegisterEmail extends RootBaseActivity {
             }
         });
         //EditText监听
-        et_code.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!et_code.getText().toString().equals("")&&!et_email.getText().toString().equals("")){
-                    btn_next.setEnabled(true);
-                    btn_next.setBackgroundColor(Color.parseColor("#6495ED"));
-                }
-                if(et_code.getText().toString().equals("")||et_email.getText().toString().equals("")){
-                    btn_next.setEnabled(false);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        btn_next.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
-                    }
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+//        et_code.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if(!et_code.getText().toString().equals("")&&!et_email.getText().toString().equals("")){
+//                    btn_next.setEnabled(true);
+//                    btn_next.setBackgroundColor(Color.parseColor("#6495ED"));
+//                }
+//                if(et_code.getText().toString().equals("")||et_email.getText().toString().equals("")){
+//                    btn_next.setEnabled(false);
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                        btn_next.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
         //下一步
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override

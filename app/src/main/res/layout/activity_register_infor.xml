@@ -119,18 +119,18 @@
                 android:layout_marginRight="40dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/btn_blank" />
+                android:background="#00000000" />
             <Button
                 android:id="@+id/btn_next"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="下一步"
-                android:textColor="#E8FFFFFF"
                 android:textStyle="bold"
                 android:layout_marginRight="40dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/btn_rounded" />
+                android:background="#39FFFFFF"
+                android:textColor="#000000" />
         </LinearLayout>
     </RelativeLayout>
 

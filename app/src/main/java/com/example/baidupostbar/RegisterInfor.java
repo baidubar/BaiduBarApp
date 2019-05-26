@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -62,6 +63,12 @@ public class RegisterInfor extends AppCompatActivity {
         rb_male = findViewById(R.id.rb_male);
         tv_birthDay = findViewById(R.id.tv_birthDay);
         et_signture = findViewById(R.id.et_signature);
+        et_signture.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
+                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
+            }
+        });
         setEditTextInhibitInputSpace(et_signture);
         et_signture.setFilters(new InputFilter[] {new InputFilter.LengthFilter(16)});
 
@@ -85,6 +92,9 @@ public class RegisterInfor extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String birthday = tv_birthDay.getText().toString();
+                if (birthday.equals("")){
+                    birthday = "2019-5-26";
+                }
                 String signture = et_signture.getText().toString();
                 Log.e("RegisterInfor",signture);
                 Log.e("RegisterInfor",birthday);

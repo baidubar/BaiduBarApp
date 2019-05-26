@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.Resource;
@@ -54,8 +56,20 @@ public class LoginActivity extends RootBaseActivity {
         btn_login = findViewById(R.id.btn_login);
         btn_register = findViewById(R.id.btn_register);
         remember_code = findViewById(R.id.remember_password);
+        et_account.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
+                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
+            }
+        });
+        et_password.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
+                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
+            }
+        });
 
-        SetTextWatcher();
+        //SetTextWatcher();
         initData();
 
         btn_login.setEnabled(true);
@@ -122,57 +136,57 @@ public class LoginActivity extends RootBaseActivity {
 
     }
     //Edittext的监听
-    private void SetTextWatcher(){
-        et_password.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!et_password.getText().toString().equals("")&&!et_account.getText().toString().equals("")){
-                    btn_login.setEnabled(true);
-                    btn_login.setBackgroundColor(Color.parseColor("#6495ED"));
-                }else {
-                    btn_login.setEnabled(false);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        btn_login.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
-                    }
-
-                }
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        et_account.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!et_password.getText().toString().equals("")&&!et_account.getText().toString().equals("")){
-                    btn_login.setEnabled(true);
-                    btn_login.setBackground(getResources().getDrawable(R.drawable.btn_ok));
-                    btn_login.setTextColor(Integer.parseInt("#FFFFFF"));
-                }else {
-                    btn_login.setEnabled(false);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        btn_login.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
-                    }
-
-                }
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-    }
+//    private void SetTextWatcher(){
+//        et_password.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if(!et_password.getText().toString().equals("")&&!et_account.getText().toString().equals("")){
+//                    btn_login.setEnabled(true);
+//                    btn_login.setBackgroundColor(Color.parseColor("#6495ED"));
+//                }else {
+//                    btn_login.setEnabled(false);
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                        btn_login.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
+//                    }
+//
+//                }
+//            }
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
+//        et_account.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if(!et_password.getText().toString().equals("")&&!et_account.getText().toString().equals("")){
+//                    btn_login.setEnabled(true);
+//                    btn_login.setBackground(getResources().getDrawable(R.drawable.btn_ok));
+//                    btn_login.setTextColor(Integer.parseInt("#FFFFFF"));
+//                }else {
+//                    btn_login.setEnabled(false);
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                        btn_login.setBackground(getResources().getDrawable(R.drawable.btn_rounded));
+//                    }
+//
+//                }
+//            }
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
+//    }
     private void prasedWithJsonData(String jsonData){
         try {
             JSONObject jsonObject = new JSONObject(jsonData);

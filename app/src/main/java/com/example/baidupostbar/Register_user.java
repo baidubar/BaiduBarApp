@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.baidupostbar.Utils.HttpUtil;
@@ -50,8 +52,25 @@ public class Register_user extends AppCompatActivity {
         et_account.setFilters(new InputFilter[] {new InputFilter.LengthFilter(10)});
         et_confirmPassword.setFilters(new InputFilter[] {new InputFilter.LengthFilter(16)});
         et_password.setFilters(new InputFilter[] {new InputFilter.LengthFilter(16)});
-
-        setTextWatcher();
+        et_password.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
+                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
+            }
+        });
+        et_account.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
+                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
+            }
+        });
+        //setTextWatcher();
+        et_confirmPassword.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
+                return(event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
+            }
+        });
 
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
