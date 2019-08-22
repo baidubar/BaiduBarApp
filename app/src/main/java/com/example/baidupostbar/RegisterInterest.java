@@ -129,8 +129,6 @@ Button btn_ignore;
                     HttpUtil httpUtil = new HttpUtil(RegisterInterest.this, getApplicationContext());
                     httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/register", formBody, 1);
 
-                    Log.e("Birthday", birthday);
-
                 }else if(type.equals("3")){
                     formBody = builder
                             .add("username",username)
@@ -269,6 +267,7 @@ Button btn_ignore;
             });
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
 
     }

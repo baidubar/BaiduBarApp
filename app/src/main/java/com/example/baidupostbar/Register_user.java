@@ -1,8 +1,12 @@
 package com.example.baidupostbar;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,13 +23,21 @@ import android.widget.Toast;
 
 import com.example.baidupostbar.Utils.HttpUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.FormBody;
+
 import static com.example.baidupostbar.ChangePasswordActivity.setEditTextInhibitInputSpace;
 
-public class Register_user extends AppCompatActivity {
+public class Register_user extends RootBaseActivity {
 
+    private String email;
+    private String name;
+    private String password;
     EditText et_account;
     EditText et_password;
     EditText et_confirmPassword;
@@ -53,23 +65,23 @@ public class Register_user extends AppCompatActivity {
         et_confirmPassword.setFilters(new InputFilter[] {new InputFilter.LengthFilter(16)});
         et_password.setFilters(new InputFilter[] {new InputFilter.LengthFilter(16)});
 
+        SharedPreferences sharedPreferences =getSharedPreferences("theUser", Context.MODE_PRIVATE);
+        email = sharedPreferences.getString("email", "");
+
         //setTextWatcher();
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = et_account.getText().toString();
-                String password = et_password.getText().toString();
+                name = et_account.getText().toString();
+                password = et_password.getText().toString();
                 String rePassword = et_confirmPassword.getText().toString();
                 if(!name.equals("")&&!password.equals("")&&!rePassword.equals("")) {
 
                     if (checkName(name)) {
                         if (password.equals(rePassword)) {
-                            Intent intent = new Intent();
-                            intent.setClass(Register_user.this, RegisterInfor.class);
-                            intent.putExtra("name", name);
-                            intent.putExtra("password", password);
-                            startActivity(intent);
-                            finish();
+                            HttpUtil httpUtil = new HttpUtil(Register_user.this, getApplicationContext());
+                            httpUtil.GetUtil("http://139.199.84.147/mytieba.api/register?name="+email+"&email="+email, 1);
+                            doHandler();
                         } else {
                             Toast.makeText(Register_user.this, "两次密码不一致", Toast.LENGTH_LONG).show();
                         }
@@ -161,5 +173,44 @@ public class Register_user extends AppCompatActivity {
 
             }
         });
+    }
+    private void doHandler() {
+        viewHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case 0:
+                        Toast.makeText(getApplicationContext(),String.valueOf(msg.obj),Toast.LENGTH_LONG).show();
+                        break;
+                    case 1:
+                        prasedWithCodeJsonData(String.valueOf(msg.obj));
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        };
+    }
+    private void prasedWithCodeJsonData(String JsonData){
+        try {
+            JSONObject jsonObject = new JSONObject(JsonData);
+            boolean state = jsonObject.getBoolean("status");
+            if(state){
+                Intent intent = new Intent();
+                intent.setClass(Register_user.this, RegisterInfor.class);
+                intent.putExtra("name", name);
+                intent.putExtra("password", password);
+                startActivity(intent);
+                finish();
+            }else {
+                String msg  = jsonObject.getString("msg");
+                Toast.makeText(Register_user.this,msg,Toast.LENGTH_LONG).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
+        }
     }
 }

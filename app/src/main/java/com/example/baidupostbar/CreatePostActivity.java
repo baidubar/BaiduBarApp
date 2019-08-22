@@ -317,8 +317,7 @@ public class CreatePostActivity extends AppCompatActivity implements EasyPermiss
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Log.e("DetailUserActivity", response.body().string());
-                        Log.e("DetailUserActivity", String.valueOf(e));
+                        Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
                     }
 
                 }

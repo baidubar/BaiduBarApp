@@ -47,6 +47,7 @@ public class RegisterEmail extends RootBaseActivity {
     CountDownTime timer;
     Button btn_next;
     private String email;
+    private String CheckEmail;
     private String code;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,10 @@ public class RegisterEmail extends RootBaseActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_register_email);
         timer = new CountDownTime(60000, 1000);
+
+        //此步骤防止意外退出页面后需要重新请求验证码
+        SharedPreferences sharedPreferences = getSharedPreferences("theTemporary", Context.MODE_PRIVATE);
+        CheckEmail = sharedPreferences.getString("checkEmail", "");
         //监听事件
         et_code = findViewById(R.id.et_code);
         et_email = findViewById(R.id.et_email);
@@ -66,16 +71,27 @@ public class RegisterEmail extends RootBaseActivity {
         et_email.setFilters(new InputFilter[] {new InputFilter.LengthFilter(30)});
         et_code.setFilters(new InputFilter[] {new InputFilter.LengthFilter(10)});
         btn_getCode = findViewById(R.id.btn_getCode);
+        //获取验证码
         btn_getCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 email = et_email.getText().toString();
-                HttpUtil httpUtil = new HttpUtil(RegisterEmail.this,getApplicationContext());
-                FormBody formBody = new FormBody.Builder()
-                        .add("email",email)
-                        .build();
-                httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/email",formBody,1);
-                doHandler();
+                SharedPreferences sharedPreferences = getSharedPreferences("theTemporary", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("checkEmail",email );
+                editor.apply();
+                CheckEmail = email;
+                if(checkEmail(email)) {
+                    //请求验证码
+                    HttpUtil httpUtil = new HttpUtil(RegisterEmail.this, getApplicationContext());
+                    FormBody formBody = new FormBody.Builder()
+                            .add("email", email)
+                            .build();
+                    httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/email", formBody, 1);
+                    doHandler();
+                }else {
+                    Toast.makeText(RegisterEmail.this, "邮箱格式不正确", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         //EditText监听
@@ -110,16 +126,15 @@ public class RegisterEmail extends RootBaseActivity {
             public void onClick(View v) {
                 email = et_email.getText().toString();
                 code = et_code.getText().toString();
-                if(checkEmail(email)){
-                    HttpUtil httpUtil = new HttpUtil(RegisterEmail.this,getApplicationContext());
+                if(email.equals(CheckEmail)) {
+                    HttpUtil httpUtil = new HttpUtil(RegisterEmail.this, getApplicationContext());
                     FormBody formBody = new FormBody.Builder()
-                            .add("code",code)
+                            .add("code", code)
                             .build();
-                    httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/email/vertify",formBody,2);
+                    httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/email/vertify", formBody, 2);
                     doHandler();
-//                    }
                 }else {
-                    Toast.makeText(RegisterEmail.this, "邮箱格式不正确", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterEmail.this, "请填入获取验证码的邮箱", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -158,12 +173,14 @@ public class RegisterEmail extends RootBaseActivity {
             JSONObject jsonObject = new JSONObject(jsondata);
             boolean state = jsonObject.getBoolean("status");
             String msg = jsonObject.getString("msg");
+            //开计时器
             if (state) {
                 timer.start();
             }
             showResponse(msg);
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
     }
     private void prasedWithJsonData(String jsondata){
@@ -194,6 +211,7 @@ public class RegisterEmail extends RootBaseActivity {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
     }
     private void showResponse(String msg){
@@ -214,9 +232,11 @@ public class RegisterEmail extends RootBaseActivity {
                         Toast.makeText(getApplicationContext(),String.valueOf(msg.obj),Toast.LENGTH_LONG).show();
                         break;
                     case 1:
+                        //获取验证码
                         prasedWithCodeJsonData(String.valueOf(msg.obj));
                         break;
                     case 2:
+                        //注册
                         prasedWithJsonData(String.valueOf(msg.obj));
                         break;
                     default:

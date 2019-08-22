@@ -61,5 +61,6 @@ public class BaseActivity extends RootBaseActivity {
         super.onDestroy();
         if (mImmersionBar != null)
             mImmersionBar.destroy();  //在BaseActivity里销毁
+
     }
 }

@@ -1,9 +1,13 @@
 package com.example.baidupostbar.Utils;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -154,17 +158,21 @@ public class HttpUtil {
                         if (response.isSuccessful()) {
                             ctx.viewHandler.obtainMessage(type, responseData).sendToTarget();
                         }else {
-                            ctx.viewHandler.obtainMessage(0, "请求失败！").sendToTarget();
+                            //ctx.viewHandler.obtainMessage(0, "请求失败！").sendToTarget();
+                            Toast.makeText(context,"网络请求失败！",Toast.LENGTH_LONG).show();
                         }
                     }
                 });
                 Log.e("post","4");
             }catch (Exception e) {
                 e.printStackTrace();
-                ctx.viewHandler.obtainMessage(0, "网络请求失败！").sendToTarget();
+                //ctx.viewHandler.obtainMessage(0, "网络请求失败！").sendToTarget();
+                Log.e("PostWithCookieResponse","catch");
+                Toast.makeText(context,"网络请求失败！",Toast.LENGTH_LONG).show();
             }
         }else {
-            ctx.viewHandler.obtainMessage(0, "网络未连接！").sendToTarget();
+            //ctx.viewHandler.obtainMessage(0, "网络未连接！").sendToTarget();
+            Toast.makeText(context,"网络未连接！",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -225,17 +233,20 @@ public class HttpUtil {
                         if (response.isSuccessful()) {
                             ctx.viewHandler.obtainMessage(type, responseData).sendToTarget();
                         } else {
-                            ctx.viewHandler.obtainMessage(0, "请求失败！").sendToTarget();
+                            //ctx.viewHandler.obtainMessage(0, "请求失败！").sendToTarget();
+                            Toast.makeText(context,"网络请求失败！",Toast.LENGTH_LONG).show();
                         }
                     }
 
                 });
             } catch (Exception e) {
                 e.printStackTrace();
-                ctx.viewHandler.obtainMessage(0, "网络请求失败！").sendToTarget();
+                //ctx.viewHandler.obtainMessage(0, "网络请求失败！").sendToTarget();
+                Toast.makeText(context,"网络请求失败！",Toast.LENGTH_LONG).show();
             }
         }else {
-            ctx.viewHandler.obtainMessage(0, "网络未连接！").sendToTarget();
+            //ctx.viewHandler.obtainMessage(0, "网络未连接！").sendToTarget();
+            Toast.makeText(context,"网络未连接！",Toast.LENGTH_LONG).show();
         }
     }
     public void GetUtil(String url,int type){
@@ -255,7 +266,8 @@ public class HttpUtil {
                     @Override
                     public void onFailure(okhttp3.Call call, IOException e) {
                         Log.e("onFailure","获取数据失败");
-                        ctx.viewHandler.obtainMessage(0, "网络请求失败！").sendToTarget();
+                        //ctx.viewHandler.obtainMessage(type, "网络请求失败！").sendToTarget();
+                        Toast.makeText(context,"网络请求失败！",Toast.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -265,7 +277,8 @@ public class HttpUtil {
                             ctx.viewHandler.obtainMessage(type, responseData).sendToTarget();
                             Log.e("GetUtils",responseData);
                         }else {
-                            ctx.viewHandler.obtainMessage(0, "请求失败！").sendToTarget();
+                            //ctx.viewHandler.obtainMessage(0, "请求失败！").sendToTarget();
+                            Toast.makeText(context,"网络请求失败！",Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -275,7 +288,8 @@ public class HttpUtil {
                 Log.e("GetUtils", String.valueOf(e));
             }
         }else {
-            ctx.viewHandler.obtainMessage(0, "网络未连接！").sendToTarget();
+            //ctx.viewHandler.obtainMessage(0, "网络未连接！").sendToTarget();
+            Toast.makeText(context,"网络未连接！",Toast.LENGTH_LONG).show();
         }
     }
     public void GetUtilWithCookie(String url,int type){
@@ -339,36 +353,28 @@ public class HttpUtil {
                         if (response.isSuccessful()) {
                             ctx.viewHandler.obtainMessage(type, responseData).sendToTarget();
                         }else {
-                            ctx.viewHandler.obtainMessage(0, "请求失败！").sendToTarget();
+                            //ctx.viewHandler.obtainMessage(0, "请求失败！").sendToTarget();
+                            Toast.makeText(context,"网络请求失败！",Toast.LENGTH_LONG).show();
                         }
                     }
                 });
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.e("HttpUtil","GetWithCookie2:"+ e);
-                ctx.viewHandler.obtainMessage(0, "网络请求失败！").sendToTarget();
+                //ctx.viewHandler.obtainMessage(0, "网络请求失败！").sendToTarget();
+                Toast.makeText(context,"网络请求失败！",Toast.LENGTH_LONG).show();
             }
 
+        }else {
+            //ctx.viewHandler.obtainMessage(0, "网络未连接！").sendToTarget();
+            Toast.makeText(context,"网络未连接！",Toast.LENGTH_LONG).show();
         }
     }
     public boolean initNet() {
-        if (isNet())
+        if (isNet()) {
             return true;
+        }
         else {
-            Toast.makeText(context, "没有网络哦！", Toast.LENGTH_SHORT).show();
-//            AlertDialog dialog = new AlertDialog.Builder(context)
-//                    .setTitle("设置网络")
-//                    .setMessage("是否进行网络设置")
-//                    .setNegativeButton("取消", null)
-//                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            context.startActivity(new Intent(
-//                                    Settings.ACTION_WIRELESS_SETTINGS));
-//                        }
-//                    })
-//                    .create();
-//            dialog.show();
             return false;
         }
     }
@@ -376,5 +382,18 @@ public class HttpUtil {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = manager.getActiveNetworkInfo();
         return info != null && info.isConnected();
+    }
+    //这个方法会造成联网十分缓慢
+    public boolean isNetworkOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("ping -c 3 www.baidu.com");
+            int exitValue = ipProcess.waitFor();
+            Log.i("Avalible", "Process:"+exitValue);
+            return (exitValue == 0);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

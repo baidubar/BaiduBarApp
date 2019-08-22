@@ -176,6 +176,7 @@ public class ListBarActivity extends RootBaseActivity {
             }
         }catch(JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
         initAdapter();
     }

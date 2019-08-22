@@ -541,6 +541,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
 
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
         initRemark();
     }
@@ -578,6 +579,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
         if(!Flag) {
             postDetailAdapter.addData(mDataList);
@@ -616,6 +618,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
     }
     private void prasedWithJsonData5(String JosnData){
@@ -635,6 +638,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
     }
     private void prasedWithJsonData6(String JosnData){
@@ -653,6 +657,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
     }
     private void prasedWithJsonData7(String JosnData){
@@ -669,6 +674,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
     }
     private void prasedWithJsonData8(String JsonData){
@@ -686,6 +692,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
     }
     private void prasedWithJsonData9(String JsonData){
@@ -703,6 +710,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
     }
     private void prasedWithJsonData10(String JsonData){
@@ -741,6 +749,7 @@ public class DetailPost extends RootBaseActivity implements EasyPermissions.Perm
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
     }
 

@@ -262,6 +262,7 @@ public class SearchPostFragment extends Fragment implements EasyPermissions.Perm
             }
         } catch (JSONException e){
             e.printStackTrace();
+            Toast.makeText(getActivity(),"请求失败",Toast.LENGTH_LONG).show();
         }
 
         //*************************

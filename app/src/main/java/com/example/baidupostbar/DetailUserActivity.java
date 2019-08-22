@@ -520,8 +520,7 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Log.e("DetailUserActivity", response.body().string());
-                        Log.e("DetailUserActivity", String.valueOf(e));
+                        Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
                     }
 
                 }
@@ -596,6 +595,7 @@ public class DetailUserActivity extends BaseActivity implements EasyPermissions.
             //}
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
         runOnUiThread(new Runnable() {
             @Override

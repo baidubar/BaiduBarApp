@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.Resource;
+import com.example.baidupostbar.Utils.CheckNetUtil;
 import com.example.baidupostbar.Utils.HttpUtil;
 
 import org.json.JSONException;
@@ -90,9 +91,7 @@ public class LoginActivity extends RootBaseActivity {
                 HttpUtil httpUtil = new HttpUtil(LoginActivity.this,getApplicationContext());
                 httpUtil.PostUtilsWithCookie("http://139.199.84.147/mytieba.api/login",formBody,1);
                 doHandler();
-//                if(responseData!=null) {
-//                    prasedWithJsonData(responseData);
-//                }
+
             }
         });
         btn_register.setOnClickListener(new View.OnClickListener() {
@@ -198,6 +197,7 @@ public class LoginActivity extends RootBaseActivity {
             showResponse(msg);
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(LoginActivity.this,"请求失败",Toast.LENGTH_LONG).show();
         }
 
     }
@@ -228,16 +228,23 @@ public class LoginActivity extends RootBaseActivity {
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case 0:
-                        Toast.makeText(getApplicationContext(),String.valueOf(msg.obj),Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), String.valueOf(msg.obj), Toast.LENGTH_LONG).show();
                         break;
                     case 1:
                         prasedWithJsonData(String.valueOf(msg.obj));
                         break;
-                        default:
-                            break;
+                    default:
+                        break;
                 }
             }
 
         };
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewHandler.removeCallbacksAndMessages(null);
     }
 }

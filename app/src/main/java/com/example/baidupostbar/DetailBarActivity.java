@@ -199,6 +199,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
 
     }
@@ -249,6 +250,7 @@ public class DetailBarActivity extends RootBaseActivity implements EasyPermissio
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getApplicationContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
 
     }

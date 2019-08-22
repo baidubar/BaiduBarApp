@@ -211,6 +211,7 @@ public class SearchBarFragment extends Fragment {
                 }
         }catch(JSONException e) {
             e.printStackTrace();
+            Toast.makeText(getContext(),"请求失败",Toast.LENGTH_LONG).show();
         }
         initAdapter();
     }
