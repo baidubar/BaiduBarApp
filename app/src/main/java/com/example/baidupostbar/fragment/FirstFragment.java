@@ -78,7 +78,6 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     private int lastId=0;
     private String userId;
     private ArrayList<BooleanPraise>mDataList = new ArrayList<>();
-    private boolean Realpraise;
 
     private BGANinePhotoLayout mCurrentClickNpl;
     PullToRefreshLayout pullToRefreshLayout;
@@ -188,18 +187,18 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                     String pic = "http://139.199.84.147/" + jsonArray1.get(j);
                     picture.add(pic);
                 }
-
-
-                BooleanPraise booleanPraise = new BooleanPraise();
-                booleanPraise.setPraise_status(praise_status);
-                mDataList.add(booleanPraise);
-
                 String post_content = jsonObject1.getString("post_content");
                 String comment_number = jsonObject1.getString("comment_number");
                 String praise_number = jsonObject1.getString("praise_number");
                 String barId = jsonObject1.getString("bar_id");
                 String barName = jsonObject1.getString("bar_name");
                 String bar_tags = jsonObject1.getString("bar_tags");
+
+                BooleanPraise booleanPraise = new BooleanPraise();
+                booleanPraise.setPraise_status(praise_status);
+                booleanPraise.setPraiseNum(Integer.parseInt(praise_number));
+                mDataList.add(booleanPraise);
+
                 moments.add(new Post(post_content,picture,comment_number,praise_number,writer_avatar,writer_name,bar_tags,barName,barId,postId,writer_id,praise_status));
 
             }
@@ -214,23 +213,6 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
         postAdapter.setData(moments);
 
     }
-
-//    public void onClick(View v) {
-//        if (v.getId() == R.id.tv_moment_list_add) {
-//            startActivityForResult(new Intent(this, MomentAddActivity.class), RC_ADD_MOMENT);
-//        } else if (v.getId() == R.id.tv_moment_list_system) {
-//            startActivity(new Intent(this, SystemGalleryActivity.class));
-//        }
-//    }
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == RESULT_OK && requestCode == RC_ADD_MOMENT) {
-//            postAdapter.addFirstItem(getActivity().getMoment(data));
-//            mMomentRv.smoothScrollToPosition(0);
-//        }
-//    }
 
     /**
      * 图片预览，兼容6.0动态权限
@@ -307,18 +289,11 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
     private class PostAdapter extends BGARecyclerViewAdapter<Post> {
 
         private Context context;
-        public PostAdapter(RecyclerView recyclerView,Context context) {
+
+        public PostAdapter(RecyclerView recyclerView, Context context) {
             super(recyclerView, R.layout.item_post);
             this.context = context;
         }
-
-//        private  Handler handler = new Handler(){
-//            @Override
-//            public void handleMessage(Message msg) {
-//                super.handleMessage(msg);
-//
-//            }
-//        };
 
 
         @Override
@@ -328,31 +303,29 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
             } else {
                 helper.setVisibility(R.id.tv_content, View.VISIBLE);
                 helper.setText(R.id.tv_content, moment.content);
-                helper.setText(R.id.tv_commentNum,moment.comment_number);
-                helper.setText(R.id.tv_likeNum,moment.praise_number);
-                helper.setText(R.id.tv_label,"#"+moment.barLabel.substring(2,moment.barLabel.length()-2));
-                helper.setText(R.id.tv_bar,moment.barName);
-                helper.setText(R.id.tv_author,moment.writterName);
+                helper.setText(R.id.tv_commentNum, moment.comment_number);
+                helper.setText(R.id.tv_likeNum, moment.praise_number);
+                helper.setText(R.id.tv_label, "#" + moment.barLabel.substring(2, moment.barLabel.length() - 2));
+                helper.setText(R.id.tv_bar, moment.barName);
+                helper.setText(R.id.tv_author, moment.writterName);
             }
-//            BooleanPraise booleanPraise = mDataList.get(position);
-//            boolean praisePrasie = booleanPraise.getPraise_status();
-            if(moment.isPraise_status()){
-                helper.setImageResource(R.id.btn_like,R.drawable.like_fill);
-            }else {
-                helper.setImageResource(R.id.btn_like,R.drawable.like);
+            if (moment.isPraise_status()) {
+                helper.setImageResource(R.id.btn_like, R.drawable.like_fill);
+            } else {
+                helper.setImageResource(R.id.btn_like, R.drawable.like);
             }
             helper.getView(R.id.iv_author).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(moment.writer_id.equals(userId)){
+                    if (moment.writer_id.equals(userId)) {
                         Intent intent = new Intent();
                         intent.setClass(getContext(), DetailUserActivity.class);
-                        intent.putExtra("userId",userId);
+                        intent.putExtra("userId", userId);
                         startActivity(intent);
-                    }else {
+                    } else {
                         Intent intent = new Intent();
                         intent.setClass(getContext(), HomepageActivity.class);
-                        intent.putExtra("userId",moment.writer_id);
+                        intent.putExtra("userId", moment.writer_id);
                         startActivity(intent);
                     }
                 }
@@ -363,124 +336,178 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                     BooleanPraise booleanPraise = mDataList.get(position);
                     boolean praisePrasie = booleanPraise.getPraise_status();
                     helper.getView(R.id.iv_author).setEnabled(false);
-                    Log.e("FirstFragment","praisePrasie"+ praisePrasie);
-                    if(praisePrasie){
-                            //如果是已点赞状态
-                            //********************************
-                            //此处有个bug
-                            //********************************
-                            //deletePraise(moment.postId,position);
-                            sendRequestWithOkHttp(moment.postId);
-                            Realpraise = true;
-
-
-
-
-
-                            try {
-                                SharedPreferences sharedPreferences = getContext().getSharedPreferences("theUser", Context.MODE_PRIVATE);
-                                String cookie = sharedPreferences.getString("cookie", "");
-                                FormBody formBody = new FormBody.Builder()
-                                        .add("post_id",moment.postId)
-                                        .add("user_id",userId)
-                                        .build();
-                                OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                                        .retryOnConnectionFailure(true)
-                                        .connectTimeout(10, TimeUnit.SECONDS)
-                                        .writeTimeout(10, TimeUnit.SECONDS)
-                                        .readTimeout(10, TimeUnit.SECONDS)
-                                        .build();
-                                Request request = new Request.Builder()
-                                        .url("http://139.199.84.147/mytieba.api/praise")
-                                        .delete(formBody)
-                                        .addHeader("Connection", "close")
-                                        .addHeader("Cookie",cookie)
-                                        .build();
-                                okHttpClient.newCall(request).enqueue(new Callback() {
-                                    @Override
-                                    public void onFailure(okhttp3.Call call, IOException e) {
-                                        Log.e("onFailure", "获取数据失败");
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
-                                            }
-                                        });
-                                    }
-
-                                    @Override
-                                    public void onResponse(okhttp3.Call call, Response response) throws IOException {
-                                        responseData = response.body().string();
-                                        Log.e("HttpUtilsDelete",responseData);
-                                        if (response.isSuccessful()) {
-                                            try {
-                                                JSONObject jsonObject = new JSONObject(responseData);
-                                                boolean status = jsonObject.getBoolean("status");
-                                                getActivity().runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        if(status) {
-                                                            BooleanPraise booleanPraise = mDataList.get(position);
-                                                            booleanPraise.setPraise_status(true);
-                                                            Toast.makeText(getContext(), "点赞成功", Toast.LENGTH_LONG).show();
-                                                            Log.e("DeletePraise",responseData);
-                                                        }else {
-                                                            Toast.makeText(getContext(), "请求失败", Toast.LENGTH_LONG).show();
-                                                        }
-                                                    }
-                                                });
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                        } else {
-                                            getActivity().runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    Toast.makeText(getContext(),"服务器请求失败",Toast.LENGTH_LONG).show();
-                                                }
-                                            });
-                                        }
-                                    }
-
-                                });
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Toast.makeText(getContext(),"请求失败",Toast.LENGTH_LONG).show();
-                            }
-
-
-
-
-
-
-//                            helper.setImageResource(R.id.btn_like,R.drawable.like);
-//                            int likeNum = Integer.parseInt(moment.praise_number);
-//                            String lN = String.valueOf(likeNum);
-//                            helper.setText(R.id.tv_likeNum,lN);
-//                            booleanPraise.setPraise_status(false);
-//                            moment.setPraise_status(false);
-//                            helper.getView(R.id.iv_author).setEnabled(true);
-                    }else {
-                            //如果是已点赞状态
-                            //postPraise(moment.postId,position);
-                            sendRequestWithOkHttpa(moment.postId);
-                            Realpraise = false;
-//                            helper.setImageResource(R.id.btn_like,R.drawable.like_fill);
-//                            int likeNum = Integer.parseInt(moment.praise_number) + 1;
-//                            String lN = String.valueOf(likeNum);
-//                            helper.setText(R.id.tv_likeNum,lN);
-//                            booleanPraise.setPraise_status(true);
-//                            moment.setPraise_status(true);
-//                            helper.getView(R.id.iv_author).setEnabled(true);
+                    Log.e("FirstFragment", "praisePrasie" + praisePrasie);
+                    if (praisePrasie) {
+                        deletePraise(moment.postId, position, helper, moment.praise_number);
+                        Log.e("FirstFragment", "执行取消点赞");
+                    } else {
+                        postPraise(moment.postId, position, helper, moment.praise_number);
+                        Log.e("FirstFragment", "zhi");
                     }
                 }
             });
-            Glide.with(context).load("http://139.199.84.147"+moment.getHeadImage()).into(helper.getImageView(R.id.iv_author));
+            Glide.with(context).load("http://139.199.84.147" + moment.getHeadImage()).into(helper.getImageView(R.id.iv_author));
             BGANinePhotoLayout ninePhotoLayout = helper.getView(R.id.npl_item_moment_photos);
             ninePhotoLayout.setDelegate(FirstFragment.this::onClickNinePhotoItem);
             ninePhotoLayout.setData(moment.photos);
         }
 
+        private void deletePraise(String postId, int position, BGAViewHolderHelper helper, String praise_number) {
+            try {
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("theUser", Context.MODE_PRIVATE);
+                String cookie = sharedPreferences.getString("cookie", "");
+                FormBody formBody = new FormBody.Builder()
+                        .add("post_id", postId)
+                        .add("user_id", userId)
+                        .build();
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .retryOnConnectionFailure(true)
+                        .connectTimeout(10, TimeUnit.SECONDS)
+                        .writeTimeout(10, TimeUnit.SECONDS)
+                        .readTimeout(10, TimeUnit.SECONDS)
+                        .build();
+                Request request = new Request.Builder()
+                        .url("http://139.199.84.147/mytieba.api/praise")
+                        .delete(formBody)
+                        //.addHeader("Connection", "close")
+                        .addHeader("Cookie", cookie)
+                        .build();
+                okHttpClient.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(okhttp3.Call call, IOException e) {
+                        Log.e("onFailure", "获取数据失败");
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(), "网络请求失败", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                        responseData = response.body().string();
+                        Log.e("HttpUtilsDelete", responseData);
+                        if (response.isSuccessful()) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(responseData);
+                                boolean status = jsonObject.getBoolean("status");
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (status) {
+                                            BooleanPraise booleanPraise = mDataList.get(position);
+                                            booleanPraise.setPraise_status(false);
+                                            int likenum = booleanPraise.getPraiseNum()-1;
+                                            Log.e("DeletePraise", responseData);
+                                            helper.setImageResource(R.id.btn_like, R.drawable.like);
+                                            booleanPraise.setPraiseNum(Integer.parseInt(praise_number));
+                                            mDataList.set(position, booleanPraise);
+                                            helper.setText(R.id.tv_likeNum,String.valueOf(likenum));
+                                        } else {
+                                            Toast.makeText(getContext(), "请求失败", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Toast.makeText(getContext(), "请求失败", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getContext(), "服务器请求失败", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                    }
+
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "请求失败", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        private void postPraise(String postId, int position, BGAViewHolderHelper helper, String praise_number) {
+            try {
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("theUser", Context.MODE_PRIVATE);
+                String cookie = sharedPreferences.getString("cookie", "");
+                FormBody formBody = new FormBody.Builder()
+                        .add("post_id", postId)
+                        .add("user_id", userId)
+                        .build();
+                OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                        .retryOnConnectionFailure(true)
+                        .connectTimeout(10, TimeUnit.SECONDS)
+                        .writeTimeout(10, TimeUnit.SECONDS)
+                        .readTimeout(10, TimeUnit.SECONDS)
+                        .build();
+                Request request = new Request.Builder()
+                        .url("http://139.199.84.147/mytieba.api/praise")
+                        .post(formBody)
+                        .addHeader("Connection", "close")
+                        .addHeader("Cookie", cookie)
+                        .build();
+                okHttpClient.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(okhttp3.Call call, IOException e) {
+                        Log.e("onFailure", "获取数据失败");
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(), "网络请求失败", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                        responseData = response.body().string();
+                        Log.e("HttpUtilsDelete", responseData);
+                        if (response.isSuccessful()) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(responseData);
+                                boolean status = jsonObject.getBoolean("status");
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (status) {
+                                            BooleanPraise booleanPraise = mDataList.get(position);
+                                            booleanPraise.setPraise_status(true);
+                                            helper.setImageResource(R.id.btn_like, R.drawable.like_fill);
+                                            int likeNum = booleanPraise.getPraiseNum() + 1;
+                                            String lN = String.valueOf(likeNum);
+                                            booleanPraise.setPraiseNum(likeNum);
+                                            mDataList.set(position, booleanPraise);
+                                            helper.setText(R.id.tv_likeNum, lN);
+                                            helper.getView(R.id.iv_author).setEnabled(true);
+                                        } else {
+                                            Toast.makeText(getContext(), "请求失败", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Toast.makeText(getContext(), "请求失败", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getContext(), "服务器请求失败", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                    }
+
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "请求失败", Toast.LENGTH_LONG).show();
+            }
+        }
     }
     private void initData(String url){
                 try {
@@ -523,211 +550,7 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
                     Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
                 }
     }
-    private void deletePraise(String postId,int position){
-        try {
-            SharedPreferences sharedPreferences = getContext().getSharedPreferences("theUser", Context.MODE_PRIVATE);
-            String cookie = sharedPreferences.getString("cookie", "");
-            FormBody formBody = new FormBody.Builder()
-                    .add("post_id",postId)
-                    .add("user_id",userId)
-                    .build();
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .retryOnConnectionFailure(true)
-                    .connectTimeout(10, TimeUnit.SECONDS)
-                    .writeTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(10, TimeUnit.SECONDS)
-                    .build();
-            Request request = new Request.Builder()
-                    .url("http://139.199.84.147/mytieba.api/praise")
-                    .delete(formBody)
-                    //.addHeader("Connection", "close")
-                    .addHeader("Cookie",cookie)
-                    .build();
-            okHttpClient.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(okhttp3.Call call, IOException e) {
-                    Log.e("onFailure", "获取数据失败");
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
 
-                @Override
-                public void onResponse(okhttp3.Call call, Response response) throws IOException {
-                    responseData = response.body().string();
-                    Log.e("HttpUtilsDelete",responseData);
-                    if (response.isSuccessful()) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(responseData);
-                            boolean status = jsonObject.getBoolean("status");
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if(status) {
-                                            BooleanPraise booleanPraise = mDataList.get(position);
-                                            booleanPraise.setPraise_status(false);
-                                            Log.e("DeletePraise",responseData);
-                                            Toast.makeText(getContext(), "取消点赞成功", Toast.LENGTH_LONG).show();
-                                        }else {
-                                            Toast.makeText(getContext(), "请求失败", Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                });
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(getContext(),"请求失败",Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getContext(),"服务器请求失败",Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                }
-
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(),"请求失败",Toast.LENGTH_LONG).show();
-        }
-    }
-    private void postPraise(String postId,int position){
-        try {
-            SharedPreferences sharedPreferences = getContext().getSharedPreferences("theUser", Context.MODE_PRIVATE);
-            String cookie = sharedPreferences.getString("cookie", "");
-            FormBody formBody = new FormBody.Builder()
-                    .add("post_id",postId)
-                    .add("user_id",userId)
-                    .build();
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .retryOnConnectionFailure(true)
-                    .connectTimeout(10, TimeUnit.SECONDS)
-                    .writeTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(10, TimeUnit.SECONDS)
-                    .build();
-            Request request = new Request.Builder()
-                    .url("http://139.199.84.147/mytieba.api/praise")
-                    .delete(formBody)
-                    .addHeader("Connection", "close")
-                    .addHeader("Cookie",cookie)
-                    .build();
-            okHttpClient.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(okhttp3.Call call, IOException e) {
-                    Log.e("onFailure", "获取数据失败");
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getContext(),"网络请求失败",Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-
-                @Override
-                public void onResponse(okhttp3.Call call, Response response) throws IOException {
-                    responseData = response.body().string();
-                    Log.e("HttpUtilsDelete",responseData);
-                    if (response.isSuccessful()) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(responseData);
-                            boolean status = jsonObject.getBoolean("status");
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if(status) {
-                                        BooleanPraise booleanPraise = mDataList.get(position);
-                                        booleanPraise.setPraise_status(true);
-                                        Toast.makeText(getContext(), "点赞成功", Toast.LENGTH_LONG).show();
-                                        Log.e("DeletePraise",responseData);
-                                    }else {
-                                        Toast.makeText(getContext(), "请求失败", Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(getContext(),"请求失败",Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getContext(),"服务器请求失败",Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                }
-
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(getContext(),"请求失败",Toast.LENGTH_LONG).show();
-        }
-    }
-    private void sendRequestWithOkHttp(String postId){
-        //开启现线程发起网络请求
-        new Thread(new Runnable(){
-            @Override
-            public void run(){
-                try{
-                    OkHttpClient client = new OkHttpClient.Builder()
-                            .retryOnConnectionFailure(true)  //网查解决end of the stream问题
-                            .connectTimeout(10, TimeUnit.SECONDS)
-                            .readTimeout(20,TimeUnit.SECONDS)
-                            .build();
-                    RequestBody requestBody = new FormBody.Builder()
-                            .add("user_id",userId)
-                            .add("post_id",postId)
-                            .build();
-
-                    Request request = new Request.Builder()
-                            .url("http://139.199.84.147/mytieba.api/praise")
-                            .delete(requestBody)
-                            .addHeader("Cookie",cookie)
-                            .build();
-
-                    Response response = client.newCall(request).execute();
-                    String responseDate = response.body().string();
-                    Log.e("取消点赞，返回的是啥",responseDate);
-                    JSONTokener(responseDate);
-                    JSONObject jsonObject = new JSONObject(responseDate);
-                    boolean status = jsonObject.getBoolean("status");
-                    if (status){
-                        if(Realpraise){
-
-                        }
-                    }
-//                    Looper.prepare();
-//                    if (status){
-//                        Toast.makeText(view.getContext(),"已取消",Toast.LENGTH_LONG).show();
-////                        Intent intent = new Intent(view.getContext(), NewsDetail.class);
-////                        intent.putExtra("user_id",userName);
-////                        intent.putExtra("session",session);
-////                        intent.putExtra("newsId",newsId);
-////                        view.getContext().startActivity(intent);
-//                        //changeUi(position);
-//
-//
-//                    }else
-//                    {
-//                        Toast.makeText(view.getContext(), "操作失败", Toast.LENGTH_LONG).show();
-//                        holder.btn.setEnabled(true);
-//                    }
-//
-//                    Looper.loop();
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(getContext(),"请求失败",Toast.LENGTH_LONG).show();
-                }
-            }
-        }).start();
-    }
     private static String JSONTokener(String in) {
         // consume an optional byte order mark (BOM) if it exists
         if (in != null && in.startsWith("\ufeff")) {
@@ -735,58 +558,5 @@ public class FirstFragment extends Fragment implements EasyPermissions.Permissio
         }
         return in;
     }
-    private void sendRequestWithOkHttpa(String postId){
-        //开启现线程发起网络请求
-        new Thread(new Runnable(){
-            @Override
-            public void run(){
-                try{
-                    OkHttpClient client = new OkHttpClient.Builder()
-                            .retryOnConnectionFailure(true)  //网查解决end of the stream问题
-                            .connectTimeout(10, TimeUnit.SECONDS)
-                            .readTimeout(20,TimeUnit.SECONDS)
-                            .build();
-                    RequestBody requestBody = new FormBody.Builder()
-                            .add("user_id",userId)
-                            .add("post_id",postId)
-                            .build();
 
-                    Request request = new Request.Builder()
-                            .url("http://139.199.84.147/mytieba.api/praise")
-                            .post(requestBody)
-                            .addHeader("Cookie",cookie)
-                            .build();
-
-                    Response response = client.newCall(request).execute();
-                    String responseDate = response.body().string();
-                    Log.d("给帖子点赞，返回的是啥",responseDate);
-                    JSONTokener(responseDate);
-                    JSONObject jsonObject = new JSONObject(responseDate);
-                    //status = jsonObject.getBoolean("status");
-//                    Looper.prepare();
-//                    if (status){
-//                        Toast.makeText(view.getContext(),"已取消",Toast.LENGTH_LONG).show();
-////                        Intent intent = new Intent(view.getContext(), NewsDetail.class);
-////                        intent.putExtra("user_id",userName);
-////                        intent.putExtra("session",session);
-////                        intent.putExtra("newsId",newsId);
-////                        view.getContext().startActivity(intent);
-//                        //changeUi(position);
-//
-//
-//                    }else
-//                    {
-//                        Toast.makeText(view.getContext(), "操作失败", Toast.LENGTH_LONG).show();
-//                        holder.btn.setEnabled(true);
-//                    }
-//
-//                    Looper.loop();
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(getContext(),"请求失败",Toast.LENGTH_LONG).show();
-                }
-            }
-        }).start();
-    }
 }
